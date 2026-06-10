@@ -7,10 +7,17 @@ import { MeetingType } from '@prisma/client';
 import { saveSessionLog, requestSessionAssistant } from '@/features/sessions/actions';
 import type { SessionSummaryOutcome } from '@/features/sessions/summary';
 import { useOfflineForm } from '@/components/use-offline-form';
+import { AIContainer } from '@/components/ai-container';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+
+// Native <select> themed to match the design-system Select trigger (§19 §4):
+// 44px touch target, tokens, green focus ring. (Kept native here because these
+// are controlled value/onChange selects inside the offline form.)
+const SELECT_CLASS =
+  'flex h-11 w-full rounded-md border border-input bg-bg px-3 py-2 text-body text-ink focus:outline-none focus:ring-2 focus:ring-green/30 focus:ring-offset-2 focus:ring-offset-bg';
 
 type Assignee = 'mentee' | 'mentor' | 'none';
 interface ItemRow {
@@ -167,7 +174,7 @@ export function SessionForm({ mentees }: { mentees: { id: string; name: string |
             id="sf-mentee"
             value={v.menteeId}
             onChange={(e) => update({ menteeId: e.target.value })}
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            className={SELECT_CLASS}
           >
             {mentees.map((m) => (
               <option key={m.id} value={m.id}>
@@ -182,7 +189,7 @@ export function SessionForm({ mentees }: { mentees: { id: string; name: string |
             id="sf-type"
             value={v.meetingType}
             onChange={(e) => update({ meetingType: e.target.value })}
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            className={SELECT_CLASS}
           >
             <option value="">—</option>
             {MEETING_TYPES.map((mt) => (
@@ -196,32 +203,45 @@ export function SessionForm({ mentees }: { mentees: { id: string; name: string |
         <FieldInput id="sf-time" label={t('time')} value={v.time} onChange={(val) => update({ time: val })} />
       </div>
 
-      {/* Rough notes → AI */}
-      <div className="rounded border bg-muted/30 p-3 space-y-2">
-        <Label htmlFor="sf-rough">{t('roughNotes')}</Label>
+      {/* Rough notes → AI (§7 AI surface): rough notes in, structured editable
+          fields out. */}
+      <AIContainer
+        title={t('summarize')}
+        actions={
+          <Button
+            type="button"
+            size="sm"
+            onClick={runAssistant}
+            disabled={aiPending || !v.roughNotes.trim()}
+          >
+            {aiPending ? t('summarizing') : t('summarize')}
+          </Button>
+        }
+      >
+        <Label htmlFor="sf-rough" className="sr-only">
+          {t('roughNotes')}
+        </Label>
         <Textarea
           id="sf-rough"
           value={v.roughNotes}
           onChange={(e) => update({ roughNotes: e.target.value })}
           placeholder={t('roughNotesHint')}
           rows={3}
+          className="bg-bg"
         />
-        <div className="flex flex-wrap items-center gap-2">
-          <Button type="button" size="sm" variant="outline" onClick={runAssistant} disabled={aiPending || !v.roughNotes.trim()}>
-            {aiPending ? t('summarizing') : t('summarize')}
-          </Button>
-          <span className="text-xs text-muted-foreground">{t('assistantHint')}</span>
-        </div>
+        <p className="mt-2 text-small text-ink-2">{t('assistantHint')}</p>
         {ai && !ai.result ? (
-          <p className="text-xs text-muted-foreground">
+          <p className="mt-1 text-small text-ink-2">
             {ai.aiEnabled ? t('assistantNoResult') : t('assistantUnavailable')}
           </p>
         ) : null}
-        {ai?.result?.riskFlag ? <p className="text-sm text-destructive">{t('riskFlagged')}</p> : null}
+        {ai?.result?.riskFlag ? <p className="mt-1 text-small text-risk">{t('riskFlagged')}</p> : null}
         {ai?.result?.suggestedAgenda ? (
-          <p className="text-xs"><strong>{t('suggestedAgenda')}:</strong> {ai.result.suggestedAgenda}</p>
+          <p className="mt-1 text-small">
+            <strong>{t('suggestedAgenda')}:</strong> {ai.result.suggestedAgenda}
+          </p>
         ) : null}
-      </div>
+      </AIContainer>
 
       {/* Structured fields */}
       <div className="grid gap-4 sm:grid-cols-2">
@@ -250,7 +270,7 @@ export function SessionForm({ mentees }: { mentees: { id: string; name: string |
           </Button>
         </div>
         {v.actionItems.length === 0 ? (
-          <p className="text-xs text-muted-foreground">{t('noActionItemsYet')}</p>
+          <p className="text-small text-ink-2">{t('noActionItemsYet')}</p>
         ) : (
           <div className="space-y-2">
             {v.actionItems.map((item, i) => (
@@ -265,7 +285,7 @@ export function SessionForm({ mentees }: { mentees: { id: string; name: string |
                   value={item.assignee}
                   onChange={(e) => setItem(i, { assignee: e.target.value as Assignee })}
                   aria-label={t('owner')}
-                  className="h-10 rounded-md border border-input bg-background px-2 text-sm"
+                  className="h-11 rounded-md border border-input bg-bg px-2 text-body text-ink"
                 >
                   <option value="mentee">{t('owner_mentee')}</option>
                   <option value="mentor">{t('owner_mentor')}</option>
@@ -291,9 +311,9 @@ export function SessionForm({ mentees }: { mentees: { id: string; name: string |
         <Button type="submit" disabled={form.status === 'syncing' || !v.menteeId}>
           {form.status === 'syncing' ? tc('loading') : t('saveLog')}
         </Button>
-        {!form.online ? <span className="text-xs text-amber-600">{t('offline')}</span> : null}
+        {!form.online ? <span className="text-small text-warn">{t('offline')}</span> : null}
         {statusText[form.status] ? (
-          <span className="text-xs text-muted-foreground">{statusText[form.status]}</span>
+          <span className="text-small text-ink-2">{statusText[form.status]}</span>
         ) : null}
       </div>
     </form>

@@ -18,15 +18,15 @@ export async function DashboardHeader({
   return (
     <div className="flex flex-wrap items-center justify-between gap-3">
       <div>
-        <h1 className="text-2xl font-bold">{t(titleKey)}</h1>
-        <p className="text-muted-foreground">
+        <h1 className="font-display text-h1 text-ink">{t(titleKey)}</h1>
+        <p className="text-ink-2">
           {t('welcome')}
           {userName ? `, ${userName}` : ''}.
         </p>
       </div>
       <div className="flex flex-wrap gap-2">
         {roles.map((role) => (
-          <Badge key={role} variant="secondary">
+          <Badge key={role} variant="neutral">
             {role}
           </Badge>
         ))}

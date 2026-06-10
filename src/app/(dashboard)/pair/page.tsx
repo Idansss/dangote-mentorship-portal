@@ -18,8 +18,8 @@ export default async function PairIndexPage() {
   if (!isMentor && !isMentee) {
     return (
       <div className="space-y-4">
-        <h1 className="text-2xl font-bold">{t('title')}</h1>
-        <p className="text-muted-foreground">{t('noAccess')}</p>
+        <h1 className="font-display text-h1 text-ink">{t('title')}</h1>
+        <p className="text-ink-2">{t('noAccess')}</p>
       </div>
     );
   }
@@ -29,8 +29,8 @@ export default async function PairIndexPage() {
   if (pairs.length === 0) {
     return (
       <div className="space-y-4">
-        <h1 className="text-2xl font-bold">{t('title')}</h1>
-        <p className="text-muted-foreground">{t('noPair')}</p>
+        <h1 className="font-display text-h1 text-ink">{t('title')}</h1>
+        <p className="text-ink-2">{t('noPair')}</p>
       </div>
     );
   }
@@ -44,17 +44,17 @@ export default async function PairIndexPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">{t('title')}</h1>
-        <p className="text-muted-foreground">{t('pickMentee')}</p>
+        <h1 className="font-display text-h1 text-ink">{t('title')}</h1>
+        <p className="text-ink-2">{t('pickMentee')}</p>
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
         {pairs.map((p) => (
           <Link key={p.menteeId} href={`/pair/${p.menteeId}`} className="block">
-            <Card className="transition-colors hover:bg-accent">
+            <Card className="transition-colors hover:bg-surface-2">
               <CardHeader>
-                <CardTitle className="text-base">{p.menteeName ?? '—'}</CardTitle>
+                <CardTitle className="text-h3">{p.menteeName ?? '—'}</CardTitle>
               </CardHeader>
-              <CardContent className="text-sm text-muted-foreground">{t('openWorkspace')}</CardContent>
+              <CardContent className="text-small text-ink-2">{t('openWorkspace')}</CardContent>
             </Card>
           </Link>
         ))}

@@ -19,10 +19,10 @@ export default async function MentorDashboardPage() {
     <div className="space-y-6">
       <DashboardHeader titleKey="mentor" userName={user.name} roles={user.roles} />
       <OnboardingTour role="mentor" />
+      <JourneyRail result={journey} />
       <NextActionButton />
       <MatchPanel userId={user.id} role="mentor" />
       <MentorSummary data={dashboard} />
-      <JourneyRail result={journey} />
     </div>
   );
 }

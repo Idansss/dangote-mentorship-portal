@@ -4,6 +4,7 @@ import type { MenteeDashboard } from '@/features/dashboard/data';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ProgressRing } from '@/components/ui/progress-ring';
 
 // Mentee "what matters now" cards (experience-layer.md §1.1): my mentor, current
 // goals with progress bars, pending action items, next meeting. Mobile-first.
@@ -27,7 +28,7 @@ export async function MenteeSummary({ data }: { data: MenteeDashboard }) {
       {/* My mentor */}
       <Card>
         <CardHeader className="flex-row items-center justify-between space-y-0">
-          <CardTitle className="text-base">{t('myMentor')}</CardTitle>
+          <CardTitle className="text-h3">{t('myMentor')}</CardTitle>
           {data.mentor ? (
             <Button asChild size="sm" variant="ghost">
               <Link href="/pair">{t('openPair')}</Link>
@@ -55,7 +56,7 @@ export async function MenteeSummary({ data }: { data: MenteeDashboard }) {
       {/* Next meeting */}
       <Card>
         <CardHeader className="flex-row items-center justify-between space-y-0">
-          <CardTitle className="text-base">{t('nextMeeting')}</CardTitle>
+          <CardTitle className="text-h3">{t('nextMeeting')}</CardTitle>
           <Button asChild size="sm" variant="ghost">
             <Link href="/meetings">{t('all')}</Link>
           </Button>
@@ -75,30 +76,21 @@ export async function MenteeSummary({ data }: { data: MenteeDashboard }) {
       {/* Goals with progress bars */}
       <Card className="md:col-span-2">
         <CardHeader className="flex-row items-center justify-between space-y-0">
-          <CardTitle className="text-base">{t('myGoals')}</CardTitle>
+          <CardTitle className="text-h3">{t('myGoals')}</CardTitle>
           <Button asChild size="sm" variant="ghost">
             <Link href="/goals">{t('all')}</Link>
           </Button>
         </CardHeader>
-        <CardContent className="space-y-3 text-sm">
+        <CardContent className="space-y-3 text-body">
           {data.goals.length === 0 ? (
-            <p className="text-muted-foreground">{t('noGoals')}</p>
+            <p className="text-ink-3">{t('noGoals')}</p>
           ) : (
             data.goals.map((g) => (
-              <div key={g.id} className="space-y-1">
-                <div className="flex items-center justify-between gap-2">
-                  <span>{g.title}</span>
-                  <Badge variant="secondary">{tg(`status.${g.status}`)}</Badge>
-                </div>
-                <div
-                  className="h-2 w-full overflow-hidden rounded-full bg-muted"
-                  role="progressbar"
-                  aria-valuenow={g.percent}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                  aria-label={g.title}
-                >
-                  <div className="h-full bg-green-600 transition-all" style={{ width: `${g.percent}%` }} />
+              <div key={g.id} className="flex items-center gap-3">
+                <ProgressRing value={g.percent} size={48} strokeWidth={5} />
+                <div className="flex min-w-0 flex-1 items-center justify-between gap-2">
+                  <span className="truncate text-ink">{g.title}</span>
+                  <Badge variant="neutral">{tg(`status.${g.status}`)}</Badge>
                 </div>
               </div>
             ))
@@ -109,7 +101,7 @@ export async function MenteeSummary({ data }: { data: MenteeDashboard }) {
       {/* Pending action items */}
       <Card className="md:col-span-2">
         <CardHeader className="flex-row items-center justify-between space-y-0">
-          <CardTitle className="text-base">{t('myActions')}</CardTitle>
+          <CardTitle className="text-h3">{t('myActions')}</CardTitle>
           <Button asChild size="sm" variant="ghost">
             <Link href="/sessions">{t('all')}</Link>
           </Button>
@@ -123,7 +115,7 @@ export async function MenteeSummary({ data }: { data: MenteeDashboard }) {
                 <span>{a.title}</span>
                 <span className="flex items-center gap-2 text-xs">
                   {a.dueDate ? (
-                    <span className={a.overdue ? 'font-medium text-red-700' : 'text-muted-foreground'}>
+                    <span className={a.overdue ? 'font-medium text-risk' : 'text-ink-3'}>
                       {a.overdue ? ts('overdue') : ts('due')} {fmtDate(a.dueDate)}
                     </span>
                   ) : null}

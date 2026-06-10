@@ -16,9 +16,9 @@ export async function WeeklyTip() {
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-base">{t('weeklyTip')}</CardTitle>
+        <CardTitle className="text-h3">{t('weeklyTip')}</CardTitle>
       </CardHeader>
-      <CardContent className="text-sm text-muted-foreground">{t(`tips.tip${i}`)}</CardContent>
+      <CardContent className="text-small text-ink-2">{t(`tips.tip${i}`)}</CardContent>
     </Card>
   );
 }

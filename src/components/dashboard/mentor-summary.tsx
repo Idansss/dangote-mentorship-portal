@@ -4,6 +4,7 @@ import type { MentorDashboard } from '@/features/dashboard/data';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { StatTile } from '@/components/ui/stat-tile';
 
 // Mentor "what matters now" cards (experience-layer.md §1.1): my mentees, pending
 // goal reviews, next meetings, session logs awaiting completion. The risk-monitor
@@ -23,7 +24,7 @@ export async function MentorSummary({ data }: { data: MentorDashboard }) {
       {/* My mentees */}
       <Card className="md:col-span-2">
         <CardHeader>
-          <CardTitle className="text-base">{t('myMentees')}</CardTitle>
+          <CardTitle className="text-h3">{t('myMentees')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-sm">
           {data.mentees.length === 0 ? (
@@ -46,37 +47,35 @@ export async function MentorSummary({ data }: { data: MentorDashboard }) {
       </Card>
 
       {/* Pending goal reviews */}
-      <Card>
-        <CardHeader className="flex-row items-center justify-between space-y-0">
-          <CardTitle className="text-base">{t('pendingReviews')}</CardTitle>
-          <Button asChild size="sm" variant="ghost">
-            <Link href="/goals">{t('review')}</Link>
-          </Button>
-        </CardHeader>
-        <CardContent>
-          <p className="text-3xl font-bold">{data.pendingReviewCount}</p>
-          <p className="text-sm text-muted-foreground">{t('pendingReviewsHint')}</p>
-        </CardContent>
-      </Card>
+      <Link
+        href="/goals"
+        className="rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green/30 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+      >
+        <StatTile
+          label={t('pendingReviews')}
+          value={data.pendingReviewCount}
+          hint={t('pendingReviewsHint')}
+          tone={data.pendingReviewCount > 0 ? 'warn' : 'default'}
+        />
+      </Link>
 
       {/* Session logs awaiting completion */}
-      <Card>
-        <CardHeader className="flex-row items-center justify-between space-y-0">
-          <CardTitle className="text-base">{t('logsAwaiting')}</CardTitle>
-          <Button asChild size="sm" variant="ghost">
-            <Link href="/sessions">{t('logNow')}</Link>
-          </Button>
-        </CardHeader>
-        <CardContent>
-          <p className="text-3xl font-bold">{data.logsAwaiting}</p>
-          <p className="text-sm text-muted-foreground">{t('logsAwaitingHint')}</p>
-        </CardContent>
-      </Card>
+      <Link
+        href="/sessions"
+        className="rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green/30 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+      >
+        <StatTile
+          label={t('logsAwaiting')}
+          value={data.logsAwaiting}
+          hint={t('logsAwaitingHint')}
+          tone={data.logsAwaiting > 0 ? 'warn' : 'default'}
+        />
+      </Link>
 
       {/* Next meetings */}
       <Card className="md:col-span-2">
         <CardHeader className="flex-row items-center justify-between space-y-0">
-          <CardTitle className="text-base">{t('nextMeetings')}</CardTitle>
+          <CardTitle className="text-h3">{t('nextMeetings')}</CardTitle>
           <Button asChild size="sm" variant="ghost">
             <Link href="/meetings">{t('all')}</Link>
           </Button>

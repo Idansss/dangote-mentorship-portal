@@ -3,6 +3,7 @@ import { ActionItemStatus } from '@prisma/client';
 import type { SessionLogWithDetail } from '@/features/sessions/data';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { AIContainer } from '@/components/ai-container';
 import { ActionItemStatusControl } from './action-item-controls';
 import { AddActionItemForm } from './add-action-item-form';
 import { ReflectionForm } from './reflection-form';
@@ -50,10 +51,9 @@ export async function SessionLogCard({
 
       <CardContent className="space-y-3 text-sm">
         {log.aiSummary ? (
-          <div className="rounded border bg-muted/30 p-2">
-            <p className="text-xs font-medium uppercase text-muted-foreground">{t('aiSummary')}</p>
+          <AIContainer title={t('aiSummary')}>
             <p className="whitespace-pre-wrap">{log.aiSummary}</p>
-          </div>
+          </AIContainer>
         ) : log.discussionSummary ? (
           <p className="whitespace-pre-wrap">{log.discussionSummary}</p>
         ) : null}

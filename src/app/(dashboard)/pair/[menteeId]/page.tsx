@@ -28,8 +28,8 @@ export default async function PairPage({ params }: { params: Promise<{ menteeId:
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">{t('title')}</h1>
-        <p className="text-muted-foreground">{t('subtitle')}</p>
+        <h1 className="font-display text-h1 text-ink">{t('title')}</h1>
+        <p className="text-ink-2">{t('subtitle')}</p>
       </div>
 
       {/* Who's in the pair */}
@@ -44,7 +44,7 @@ export default async function PairPage({ params }: { params: Promise<{ menteeId:
       {/* Agreements */}
       <Card>
         <CardHeader className="flex-row items-center justify-between space-y-0">
-          <CardTitle className="text-base">{t('agreementsTitle')}</CardTitle>
+          <CardTitle className="text-h3">{t('agreementsTitle')}</CardTitle>
           <Button asChild size="sm" variant="ghost">
             <Link href="/agreements">{t('open')}</Link>
           </Button>
@@ -75,7 +75,7 @@ export default async function PairPage({ params }: { params: Promise<{ menteeId:
       {/* Meetings + logistics */}
       <Card>
         <CardHeader className="flex-row items-center justify-between space-y-0">
-          <CardTitle className="text-base">{t('meetingsTitle')}</CardTitle>
+          <CardTitle className="text-h3">{t('meetingsTitle')}</CardTitle>
           <Button asChild size="sm" variant="ghost">
             <Link href="/meetings">{t('open')}</Link>
           </Button>
@@ -84,7 +84,7 @@ export default async function PairPage({ params }: { params: Promise<{ menteeId:
           <p>
             <span className="text-muted-foreground">{t('nextMeeting')}: </span>
             {pair.nextMeeting ? (
-              <Link className="text-primary hover:underline" href={`/meetings/${pair.nextMeeting.id}/prepare`}>
+              <Link className="text-green hover:underline" href={`/meetings/${pair.nextMeeting.id}/prepare`}>
                 {pair.nextMeeting.title} · {fmtDateTime(pair.nextMeeting.startsAt)}
               </Link>
             ) : (
@@ -101,7 +101,7 @@ export default async function PairPage({ params }: { params: Promise<{ menteeId:
       {/* Goals */}
       <Card>
         <CardHeader className="flex-row items-center justify-between space-y-0">
-          <CardTitle className="text-base">{t('goalsTitle')}</CardTitle>
+          <CardTitle className="text-h3">{t('goalsTitle')}</CardTitle>
           <Button asChild size="sm" variant="ghost">
             <Link href="/goals">{t('open')}</Link>
           </Button>
@@ -115,7 +115,7 @@ export default async function PairPage({ params }: { params: Promise<{ menteeId:
                 <span>{g.title}</span>
                 <span className="flex gap-1">
                   <Badge variant="outline">{tg(`stage.${g.stage}`)}</Badge>
-                  <Badge variant="secondary">{tg(`status.${g.status}`)}</Badge>
+                  <Badge variant="neutral">{tg(`status.${g.status}`)}</Badge>
                 </span>
               </div>
             ))
@@ -126,7 +126,7 @@ export default async function PairPage({ params }: { params: Promise<{ menteeId:
       {/* Open action items */}
       <Card>
         <CardHeader className="flex-row items-center justify-between space-y-0">
-          <CardTitle className="text-base">{t('actionItemsTitle')}</CardTitle>
+          <CardTitle className="text-h3">{t('actionItemsTitle')}</CardTitle>
           <Button asChild size="sm" variant="ghost">
             <Link href="/sessions">{t('open')}</Link>
           </Button>
@@ -141,7 +141,7 @@ export default async function PairPage({ params }: { params: Promise<{ menteeId:
                 <span className="flex items-center gap-2 text-xs">
                   {a.assigneeName ? <span className="text-muted-foreground">{a.assigneeName}</span> : null}
                   {a.dueDate ? (
-                    <span className={a.overdue ? 'font-medium text-red-700' : 'text-muted-foreground'}>
+                    <span className={a.overdue ? 'font-medium text-risk' : 'text-ink-3'}>
                       {a.overdue ? ts('overdue') : ts('due')} {fmtDate(a.dueDate)}
                     </span>
                   ) : null}
@@ -156,7 +156,7 @@ export default async function PairPage({ params }: { params: Promise<{ menteeId:
       {/* Direct messages — lands with the M4 community features */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">{t('messagesTitle')}</CardTitle>
+          <CardTitle className="text-h3">{t('messagesTitle')}</CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-muted-foreground">{t('messagesComingSoon')}</CardContent>
       </Card>
@@ -171,8 +171,8 @@ async function PersonCard({ label, person }: { label: string; person: PairPerson
   return (
     <Card>
       <CardHeader className="space-y-1">
-        <p className="text-xs font-medium uppercase text-muted-foreground">{label}</p>
-        <CardTitle className="text-base">{person.name ?? '—'}</CardTitle>
+        <p className="text-micro uppercase text-ink-3">{label}</p>
+        <CardTitle className="text-h3">{person.name ?? '—'}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-1 text-sm text-muted-foreground">
         {person.jobTitle ? <p>{person.jobTitle}</p> : null}
@@ -209,7 +209,7 @@ function SignBadge({
   pendingLabel: string;
 }) {
   return (
-    <Badge variant={signedAt ? 'default' : 'outline'} title={who}>
+    <Badge variant={signedAt ? 'ok' : 'neutral'} title={who}>
       {who.split(' ')[0]}: {signedAt ? signedLabel : pendingLabel}
     </Badge>
   );

@@ -28,8 +28,8 @@ export default async function SessionsPage() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-2xl font-bold">{t('title')}</h1>
-        <p className="text-muted-foreground">{t('subtitle')}</p>
+        <h1 className="font-display text-h1 text-ink">{t('title')}</h1>
+        <p className="text-ink-2">{t('subtitle')}</p>
       </div>
 
       {/* Mentor: log a session + review past logs */}

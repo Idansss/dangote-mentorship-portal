@@ -20,10 +20,10 @@ export default async function MenteeDashboardPage() {
     <div className="space-y-6">
       <DashboardHeader titleKey="mentee" userName={user.name} roles={user.roles} />
       <OnboardingTour role="mentee" />
+      <JourneyRail result={journey} />
       <NextActionButton />
       <MatchPanel userId={user.id} role="mentee" />
       <MenteeSummary data={dashboard} />
-      <JourneyRail result={journey} />
       <WeeklyTip />
     </div>
   );
