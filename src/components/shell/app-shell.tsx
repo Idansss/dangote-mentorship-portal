@@ -1,0 +1,373 @@
+'use client';
+
+import * as React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import {
+  LayoutDashboard,
+  Users,
+  Target,
+  NotebookPen,
+  Video,
+  CalendarDays,
+  BookOpen,
+  FileSignature,
+  ClipboardCheck,
+  Award,
+  LifeBuoy,
+  HelpCircle,
+  Bell,
+  FolderKanban,
+  Layers,
+  Upload,
+  Workflow,
+  ClipboardList,
+  GraduationCap,
+  Mail,
+  Menu,
+  X,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Search,
+  LogOut,
+  type LucideIcon,
+} from 'lucide-react';
+import { signOutAction } from '@/lib/auth/actions';
+import { LocaleSwitcher } from '@/components/locale-switcher';
+import { cn } from '@/lib/utils';
+
+// AppShell (§19 §3) — the authenticated chrome shared by the participant and
+// admin areas: a collapsible left sidebar (icons + grouped nav), a slim top bar
+// (search · language · notifications · profile), and a mobile bottom tab bar for
+// the primary destinations. Server layouts pass role-filtered, translated nav so
+// this stays presentation-only. All colour comes from the design tokens.
+
+export type IconKey =
+  | 'dashboard'
+  | 'pair'
+  | 'goals'
+  | 'sessions'
+  | 'meetings'
+  | 'calendar'
+  | 'journal'
+  | 'agreements'
+  | 'midterm'
+  | 'final'
+  | 'support'
+  | 'help'
+  | 'notifications'
+  | 'programmes'
+  | 'cohorts'
+  | 'imports'
+  | 'matching'
+  | 'forms'
+  | 'mentors'
+  | 'mentees'
+  | 'invites';
+
+const ICONS: Record<IconKey, LucideIcon> = {
+  dashboard: LayoutDashboard,
+  pair: Users,
+  goals: Target,
+  sessions: NotebookPen,
+  meetings: Video,
+  calendar: CalendarDays,
+  journal: BookOpen,
+  agreements: FileSignature,
+  midterm: ClipboardCheck,
+  final: Award,
+  support: LifeBuoy,
+  help: HelpCircle,
+  notifications: Bell,
+  programmes: FolderKanban,
+  cohorts: Layers,
+  imports: Upload,
+  matching: Workflow,
+  forms: ClipboardList,
+  mentors: Users,
+  mentees: GraduationCap,
+  invites: Mail,
+};
+
+export interface NavItem {
+  href: string;
+  label: string;
+  icon: IconKey;
+  /** Shown in the mobile bottom tab bar (cap at 4). */
+  primary?: boolean;
+  badge?: number;
+  /** Index routes (e.g. /admin) match exactly so they don't light up on children. */
+  exact?: boolean;
+}
+
+export interface NavSection {
+  label?: string;
+  items: NavItem[];
+}
+
+export interface AppShellLabels {
+  brand: string;
+  search: string;
+  notifications: string;
+  signOut: string;
+  openMenu: string;
+  closeMenu: string;
+  collapse: string;
+  expand: string;
+  more: string;
+}
+
+export interface AppShellUser {
+  name: string;
+  roleLabel: string;
+  initials: string;
+}
+
+export interface AppShellProps {
+  sections: NavSection[];
+  user: AppShellUser;
+  unread: number;
+  labels: AppShellLabels;
+  children: React.ReactNode;
+}
+
+function isActive(pathname: string, href: string, exact?: boolean): boolean {
+  if (href === pathname) return true;
+  if (exact) return false;
+  // Avoid '/'-style false positives; match nested routes only on a segment edge.
+  return href !== '/' && pathname.startsWith(href + '/');
+}
+
+export function AppShell({ sections, user, unread, labels, children }: AppShellProps) {
+  const pathname = usePathname();
+  const [collapsed, setCollapsed] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  // Persist the desktop collapse preference so it doesn't reset on navigation.
+  React.useEffect(() => {
+    const saved = window.localStorage.getItem('shell:collapsed');
+    if (saved) setCollapsed(saved === '1');
+  }, []);
+  React.useEffect(() => {
+    window.localStorage.setItem('shell:collapsed', collapsed ? '1' : '0');
+  }, [collapsed]);
+
+  // Close the mobile drawer on route change.
+  React.useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  const allItems = sections.flatMap((s) => s.items);
+  const primary = allItems.filter((i) => i.primary).slice(0, 4);
+
+  return (
+    <div className="min-h-screen bg-bg">
+      {/* ── Mobile backdrop ── */}
+      {mobileOpen && (
+        <div
+          aria-hidden
+          className="fixed inset-0 z-40 bg-ink/30 backdrop-blur-sm lg:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      {/* ── Sidebar ── */}
+      <aside
+        className={cn(
+          'fixed inset-y-0 left-0 z-50 flex flex-col border-r border-border bg-surface transition-[width,transform] duration-200 ease-out motion-reduce:transition-none',
+          collapsed ? 'lg:w-[4.5rem]' : 'lg:w-64',
+          'w-64', // mobile drawer width
+          mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+        )}
+      >
+        {/* Brand */}
+        <div className="flex h-16 items-center gap-2.5 px-4">
+          <Link href="/" className="flex items-center gap-2.5 overflow-hidden">
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-green font-display text-h3 font-medium text-white">
+              D
+            </span>
+            {!collapsed && (
+              <span className="truncate font-display text-h3 font-medium text-ink">
+                {labels.brand}
+              </span>
+            )}
+          </Link>
+          <button
+            type="button"
+            aria-label={labels.closeMenu}
+            className="ml-auto rounded-md p-1.5 text-ink-2 hover:bg-surface-2 lg:hidden"
+            onClick={() => setMobileOpen(false)}
+          >
+            <X className="size-5" />
+          </button>
+        </div>
+
+        {/* Nav */}
+        <nav className="flex-1 space-y-5 overflow-y-auto px-3 py-2">
+          {sections.map((section, si) => (
+            <div key={section.label ?? si} className="space-y-1">
+              {section.label && !collapsed && (
+                <p className="px-3 pb-1 text-micro uppercase text-ink-3">{section.label}</p>
+              )}
+              {section.items.map((item) => {
+                const Icon = ICONS[item.icon];
+                const active = isActive(pathname, item.href, item.exact);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    title={collapsed ? item.label : undefined}
+                    aria-current={active ? 'page' : undefined}
+                    className={cn(
+                      'group flex items-center gap-3 rounded-md px-3 py-2 text-body font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green/30',
+                      collapsed && 'lg:justify-center lg:px-0',
+                      active
+                        ? 'bg-green-soft text-green-strong'
+                        : 'text-ink-2 hover:bg-surface-2 hover:text-ink',
+                    )}
+                  >
+                    <Icon className={cn('size-5 shrink-0', active && 'text-green')} />
+                    {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
+                    {!collapsed && item.badge ? (
+                      <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-green px-1.5 text-micro text-white">
+                        {item.badge}
+                      </span>
+                    ) : null}
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
+        </nav>
+
+        {/* Collapse toggle (desktop) + sign out */}
+        <div className="space-y-1 border-t border-border p-3">
+          <button
+            type="button"
+            onClick={() => setCollapsed((c) => !c)}
+            aria-label={collapsed ? labels.expand : labels.collapse}
+            className={cn(
+              'hidden w-full items-center gap-3 rounded-md px-3 py-2 text-body font-medium text-ink-2 transition-colors hover:bg-surface-2 hover:text-ink lg:flex',
+              collapsed && 'lg:justify-center lg:px-0',
+            )}
+          >
+            {collapsed ? (
+              <PanelLeftOpen className="size-5 shrink-0" />
+            ) : (
+              <>
+                <PanelLeftClose className="size-5 shrink-0" />
+                <span>{labels.collapse}</span>
+              </>
+            )}
+          </button>
+          <form action={signOutAction}>
+            <button
+              type="submit"
+              className={cn(
+                'flex w-full items-center gap-3 rounded-md px-3 py-2 text-body font-medium text-ink-2 transition-colors hover:bg-surface-2 hover:text-ink',
+                collapsed && 'lg:justify-center lg:px-0',
+              )}
+              title={collapsed ? labels.signOut : undefined}
+            >
+              <LogOut className="size-5 shrink-0" />
+              {!collapsed && <span>{labels.signOut}</span>}
+            </button>
+          </form>
+        </div>
+      </aside>
+
+      {/* ── Main column ── */}
+      <div
+        className={cn(
+          'flex min-h-screen flex-col transition-[padding] duration-200 ease-out motion-reduce:transition-none',
+          collapsed ? 'lg:pl-[4.5rem]' : 'lg:pl-64',
+        )}
+      >
+        {/* Top bar */}
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-bg/80 px-4 backdrop-blur sm:px-6">
+          <button
+            type="button"
+            aria-label={labels.openMenu}
+            className="rounded-md p-2 text-ink-2 hover:bg-surface-2 lg:hidden"
+            onClick={() => setMobileOpen(true)}
+          >
+            <Menu className="size-5" />
+          </button>
+
+          {/* Search (visual placeholder for the upcoming command palette) */}
+          <div className="relative hidden max-w-md flex-1 sm:block">
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-ink-3" />
+            <input
+              type="search"
+              placeholder={labels.search}
+              className="h-10 w-full rounded-md border border-border bg-surface pl-9 pr-3 text-body text-ink placeholder:text-ink-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green/30"
+            />
+          </div>
+
+          <div className="ml-auto flex items-center gap-2">
+            <LocaleSwitcher />
+            <Link
+              href="/notifications"
+              aria-label={labels.notifications}
+              className="relative rounded-md p-2 text-ink-2 hover:bg-surface-2"
+            >
+              <Bell className="size-5" />
+              {unread > 0 && (
+                <span className="absolute right-1 top-1 inline-flex min-w-4 items-center justify-center rounded-full bg-risk px-1 text-[0.625rem] font-semibold leading-none text-white">
+                  {unread > 9 ? '9+' : unread}
+                </span>
+              )}
+            </Link>
+            <Link
+              href="/profile"
+              className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 hover:bg-surface-2"
+            >
+              <span className="flex size-8 items-center justify-center rounded-full bg-green-soft text-small font-semibold text-green-strong">
+                {user.initials}
+              </span>
+              <span className="hidden text-left leading-tight md:block">
+                <span className="block text-small font-medium text-ink">{user.name}</span>
+                <span className="block text-micro text-ink-3">{user.roleLabel}</span>
+              </span>
+            </Link>
+          </div>
+        </header>
+
+        {/* Content */}
+        <main className="mx-auto w-full max-w-[1280px] flex-1 px-4 py-8 pb-24 sm:px-6 lg:pb-8">
+          {children}
+        </main>
+      </div>
+
+      {/* ── Mobile bottom tab bar ── */}
+      <nav className="fixed inset-x-0 bottom-0 z-30 flex border-t border-border bg-bg lg:hidden">
+        {primary.map((item) => {
+          const Icon = ICONS[item.icon];
+          const active = isActive(pathname, item.href, item.exact);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              aria-current={active ? 'page' : undefined}
+              className={cn(
+                'flex flex-1 flex-col items-center gap-0.5 py-2 text-micro',
+                active ? 'text-green-strong' : 'text-ink-3',
+              )}
+            >
+              <Icon className="size-5" />
+              <span className="truncate">{item.label}</span>
+            </Link>
+          );
+        })}
+        <button
+          type="button"
+          onClick={() => setMobileOpen(true)}
+          className="flex flex-1 flex-col items-center gap-0.5 py-2 text-micro text-ink-3"
+        >
+          <Menu className="size-5" />
+          <span>{labels.more}</span>
+        </button>
+      </nav>
+    </div>
+  );
+}

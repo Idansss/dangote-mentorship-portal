@@ -1,9 +1,25 @@
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { getCurrentUser, hasAnyRole } from '@/lib/auth/rbac';
 import { ADMIN_ROLES } from '@/lib/auth/roles';
-import { SiteHeader } from '@/components/site-header';
+import { getUnreadCount } from '@/lib/notifications/data';
+import { AppShell, type AppShellLabels, type NavSection } from '@/components/shell/app-shell';
+
+function initialsOf(name?: string | null, email?: string): string {
+  const source = (name ?? email ?? '?').trim();
+  const parts = source.split(/\s+/).filter(Boolean);
+  const [a, b] = parts;
+  if (a && b) return (a.charAt(0) + b.charAt(0)).toUpperCase();
+  return source.slice(0, 2).toUpperCase();
+}
+
+function roleLabelOf(role: string): string {
+  return role
+    .toLowerCase()
+    .split('_')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   // Server-side gate (CLAUDE.md §3, §4): the admin area requires an admin role.
@@ -11,48 +27,74 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (!user) redirect('/login');
   if (!hasAnyRole(user, ADMIN_ROLES)) redirect('/dashboard');
 
-  const t = await getTranslations('admin');
-  const tImports = await getTranslations('imports');
-  const tMatching = await getTranslations('matching');
-  const tPeople = await getTranslations('people');
-  const tInvites = await getTranslations('invites');
-  const tSupport = await getTranslations('support');
+  const [t, tImports, tMatching, tPeople, tInvites, tSupport, tForms, tNav, tShell, tCommon, unread] =
+    await Promise.all([
+      getTranslations('admin'),
+      getTranslations('imports'),
+      getTranslations('matching'),
+      getTranslations('people'),
+      getTranslations('invites'),
+      getTranslations('support'),
+      getTranslations('forms'),
+      getTranslations('nav'),
+      getTranslations('shell'),
+      getTranslations('common'),
+      getUnreadCount(user.id),
+    ]);
+
+  const sections: NavSection[] = [
+    {
+      label: tShell('navManage'),
+      items: [
+        { href: '/admin', label: tNav('dashboard'), icon: 'dashboard', primary: true, exact: true },
+        { href: '/admin/matching', label: tMatching('title'), icon: 'matching', primary: true },
+        { href: '/admin/programmes', label: t('programmes'), icon: 'programmes' },
+        { href: '/admin/cohorts', label: t('cohorts'), icon: 'cohorts' },
+        { href: '/admin/imports', label: tImports('title'), icon: 'imports' },
+        { href: '/admin/forms', label: tForms('title'), icon: 'forms' },
+      ],
+    },
+    {
+      label: tShell('navPeople'),
+      items: [
+        { href: '/admin/mentors', label: tPeople('mentorsTitle'), icon: 'mentors', primary: true },
+        { href: '/admin/mentees', label: tPeople('menteesTitle'), icon: 'mentees', primary: true },
+        { href: '/admin/invites', label: tInvites('title'), icon: 'invites' },
+      ],
+    },
+    {
+      label: tShell('navHelp'),
+      items: [
+        { href: '/notifications', label: tNav('notifications'), icon: 'notifications', badge: unread || undefined },
+        { href: '/admin/support', label: tSupport('queueTitle'), icon: 'support' },
+      ],
+    },
+  ];
+
+  const labels: AppShellLabels = {
+    brand: tCommon('appName'),
+    search: tShell('search'),
+    notifications: tNav('notifications'),
+    signOut: tCommon('signOut'),
+    openMenu: tShell('openMenu'),
+    closeMenu: tShell('closeMenu'),
+    collapse: tShell('collapse'),
+    expand: tShell('expand'),
+    more: tShell('more'),
+  };
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <SiteHeader />
-      <div className="container flex flex-1 gap-8 py-10">
-        <aside className="w-48 shrink-0 space-y-1 text-sm">
-          <Link href="/admin" className="block rounded px-3 py-2 hover:bg-accent">
-            {t('title')}
-          </Link>
-          <Link href="/admin/programmes" className="block rounded px-3 py-2 hover:bg-accent">
-            {t('programmes')}
-          </Link>
-          <Link href="/admin/cohorts" className="block rounded px-3 py-2 hover:bg-accent">
-            {t('cohorts')}
-          </Link>
-          <Link href="/admin/imports" className="block rounded px-3 py-2 hover:bg-accent">
-            {tImports('title')}
-          </Link>
-          <Link href="/admin/matching" className="block rounded px-3 py-2 hover:bg-accent">
-            {tMatching('title')}
-          </Link>
-          <Link href="/admin/mentors" className="block rounded px-3 py-2 hover:bg-accent">
-            {tPeople('mentorsTitle')}
-          </Link>
-          <Link href="/admin/mentees" className="block rounded px-3 py-2 hover:bg-accent">
-            {tPeople('menteesTitle')}
-          </Link>
-          <Link href="/admin/invites" className="block rounded px-3 py-2 hover:bg-accent">
-            {tInvites('title')}
-          </Link>
-          <Link href="/admin/support" className="block rounded px-3 py-2 hover:bg-accent">
-            {tSupport('queueTitle')}
-          </Link>
-        </aside>
-        <main className="flex-1">{children}</main>
-      </div>
-    </div>
+    <AppShell
+      sections={sections}
+      unread={unread}
+      user={{
+        name: user.name ?? user.email,
+        roleLabel: user.roles.map(roleLabelOf).join(' · '),
+        initials: initialsOf(user.name, user.email),
+      }}
+      labels={labels}
+    >
+      {children}
+    </AppShell>
   );
 }
