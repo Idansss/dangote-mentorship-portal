@@ -6,6 +6,7 @@ import { MatchStatus, MatchingStatus, Prisma, RoleName } from '@prisma/client';
 import { prisma } from '@/lib/db/prisma';
 import { requireRole, requireUser } from '@/lib/auth/rbac';
 import { writeAuditLog } from '@/lib/audit/audit';
+import { notifyMany } from '@/lib/notifications/notify';
 import { mapActionError, ok, fail, type ActionResult } from '@/lib/actions/result';
 import {
   scoreMatch,
@@ -195,6 +196,13 @@ export async function approveMatch(formData: FormData): Promise<ActionResult<{ i
       metadata: { mentorId: match.mentorId, menteeId: match.menteeId, score: match.score },
     });
 
+    // Tell both participants their match is ready to act on (§1.10 match_ready).
+    await notifyMany([match.mentorId, match.menteeId], {
+      type: 'match_ready',
+      link: '/dashboard',
+      cohortId: match.cohortId,
+    });
+
     revalidatePath('/admin/matching');
     return ok({ id: matchId });
   } catch (error) {
@@ -288,6 +296,13 @@ export async function overrideMatch(formData: FormData): Promise<ActionResult<{ 
         failedRules: result.eligible ? [] : result.failedRules,
         score: result.score,
       },
+    });
+
+    // Tell both participants their match is ready to act on (§1.10 match_ready).
+    await notifyMany([mentorId, menteeId], {
+      type: 'match_ready',
+      link: '/dashboard',
+      cohortId,
     });
 
     revalidatePath('/admin/matching');

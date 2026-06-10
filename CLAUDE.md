@@ -1,6 +1,6 @@
 # Dangote Mentorship Portal — Master Build Prompt
 
-> \*\*How to use this file.\*\* Save it as `CLAUDE.md` (or `/docs/SPEC.md`) at the root of the repo and treat it as the project constitution. Do \*\*not\*\* ask the model to build everything in one shot. Run it milestone by milestone: paste the relevant milestone section as your active task, let the model complete it to its Definition of Done, review, then advance. The model should always re-read this file before starting a milestone.
+> \\\*\\\*How to use this file.\\\*\\\* Save it as `CLAUDE.md` (or `/docs/SPEC.md`) at the root of the repo and treat it as the project constitution. Do \\\*\\\*not\\\*\\\* ask the model to build everything in one shot. Run it milestone by milestone: paste the relevant milestone section as your active task, let the model complete it to its Definition of Done, review, then advance. The model should always re-read this file before starting a milestone.
 
 \---
 
@@ -61,10 +61,10 @@ Use current stable versions; do not pin to numbers in this doc.
 
 * App Router with route groups: `(public)`, `(auth)`, `(dashboard)`, `(admin)`. Role gating in `middleware.ts` plus a server-side `requireRole()` guard in every action.
 * Folder layout: `app/`, `components/`, `features/<feature>/` (each feature owns its actions, schema, components), `lib/` (ai, db, auth, i18n, mail, meetings, utils), `prisma/`, `tests/`.
-* Every mutation is a typed server action that: authenticates → authorizes (`requireRole`) → validates (Zod) → executes → writes an `audit\_logs` row → returns a typed result.
-* Soft-delete (`deleted\_at`) on all primary entities. Never hard-delete user-generated content.
+* Every mutation is a typed server action that: authenticates → authorizes (`requireRole`) → validates (Zod) → executes → writes an `audit\\\_logs` row → returns a typed result.
+* Soft-delete (`deleted\\\_at`) on all primary entities. Never hard-delete user-generated content.
 * All timestamps UTC; render in user timezone.
-* Feature flags via a simple `feature\_flags` table so integrations can ship dark.
+* Feature flags via a simple `feature\\\_flags` table so integrations can ship dark.
 * Seed a realistic **bilingual demo cohort** (≥ 15 mentors, ≥ 30 mentees, mix of EN/FR, varied departments/competencies, a few intentionally messy rows for the validator to catch) so every feature is demoable immediately.
 
 \---
@@ -92,25 +92,25 @@ Use current stable versions; do not pin to numbers in this doc.
 
 ## 5\. Data model
 
-Implement in Prisma. Names are guidance; keep them consistent. Add `id`, `created\_at`, `updated\_at`, `deleted\_at` to every table and `cohort\_id` to every cohort-scoped table.
+Implement in Prisma. Names are guidance; keep them consistent. Add `id`, `created\\\_at`, `updated\\\_at`, `deleted\\\_at` to every table and `cohort\\\_id` to every cohort-scoped table.
 
-**Core / identity:** `users`, `roles`, `user\_roles`, `programmes`, `cohorts`, `feature\_flags`, `audit\_logs`, `notifications`.
+**Core / identity:** `users`, `roles`, `user\\\_roles`, `programmes`, `cohorts`, `feature\\\_flags`, `audit\\\_logs`, `notifications`.
 
-**Profiles:** `mentor\_profiles`, `mentee\_profiles` (fields per §6), `competencies` (taxonomy: general vs technical), `profile\_competencies`.
+**Profiles:** `mentor\\\_profiles`, `mentee\\\_profiles` (fields per §6), `competencies` (taxonomy: general vs technical), `profile\\\_competencies`.
 
-**Intake \& matching:** `imports` (file metadata, status), `import\_rows` (raw + validation result), `matching\_criteria` (per-cohort weights + hard rules), `matches` (mentor\_id, mentee\_id, score, status: suggested/admin\_approved/accepted/rejected/overridden, ai\_rationale, accepted\_at).
+**Intake \& matching:** `imports` (file metadata, status), `import\\\_rows` (raw + validation result), `matching\\\_criteria` (per-cohort weights + hard rules), `matches` (mentor\_id, mentee\_id, score, status: suggested/admin\_approved/accepted/rejected/overridden, ai\_rationale, accepted\_at).
 
-**Training:** `training\_batches`, `training\_attendance`, `training\_materials`, `training\_assessments`.
+**Training:** `training\\\_batches`, `training\\\_attendance`, `training\\\_materials`, `training\\\_assessments`.
 
-**Mentorship loop:** `agreements` (type: mentoring|confidentiality, signed\_by, signed\_at, pdf\_url, terms\_json), `goals` (SMART fields per §7, status, mentor\_comments), `goal\_reviews`, `meetings` (type, recurrence, provider, join\_url, status), `session\_logs` (fields per §6.9, ai\_summary, mentee\_reflection), `action\_items` (linked to session/goal, due, status).
+**Mentorship loop:** `agreements` (type: mentoring|confidentiality, signed\_by, signed\_at, pdf\_url, terms\_json), `goals` (SMART fields per §7, status, mentor\_comments), `goal\\\_reviews`, `meetings` (type, recurrence, provider, join\_url, status), `session\\\_logs` (fields per §6.9, ai\_summary, mentee\_reflection), `action\\\_items` (linked to session/goal, due, status).
 
-**Reviews:** `midterm\_reviews`, `final\_reviews` (role-specific question sets stored as `form\_definitions` + `form\_responses` so admins can edit forms without code changes).
+**Reviews:** `midterm\\\_reviews`, `final\\\_reviews` (role-specific question sets stored as `form\\\_definitions` + `form\\\_responses` so admins can edit forms without code changes).
 
-**Engagement:** `clinics`, `clinic\_rsvps`, `clinic\_questions` (with `is\_anonymous`), `clinic\_summaries`, `newsletters`, `newsletter\_recipients`, `resources`.
+**Engagement:** `clinics`, `clinic\\\_rsvps`, `clinic\\\_questions` (with `is\\\_anonymous`), `clinic\\\_summaries`, `newsletters`, `newsletter\\\_recipients`, `resources`.
 
-**Forum (new):** `forum\_categories` (cohort-scoped, e.g. General, Goal-setting, French-speaking corner, Success stories, Q\&A), `forum\_threads` (title, category, author, is\_anonymous, is\_pinned, is\_locked), `forum\_posts` (thread\_id, author, body\_original, body\_lang, body\_translated, body\_translated\_lang), `forum\_reactions`, `forum\_reports` (moderation queue).
+**Forum (new):** `forum\\\_categories` (cohort-scoped, e.g. General, Goal-setting, French-speaking corner, Success stories, Q\&A), `forum\\\_threads` (title, category, author, is\_anonymous, is\_pinned, is\_locked), `forum\\\_posts` (thread\_id, author, body\_original, body\_lang, body\_translated, body\_translated\_lang), `forum\\\_reactions`, `forum\\\_reports` (moderation queue).
 
-**Messaging (new):** `conversations` (cohort-scoped; type: direct|group; default direct = matched pair), `conversation\_participants`, `messages` (conversation\_id, sender\_id, body\_original, body\_lang, body\_translated, attachment\_id?), `message\_reads` (per-participant read cursor), `message\_attachments`. Real-time delivery via Realtime channels keyed by conversation\_id.
+**Messaging (new):** `conversations` (cohort-scoped; type: direct|group; default direct = matched pair), `conversation\\\_participants`, `messages` (conversation\_id, sender\_id, body\_original, body\_lang, body\_translated, attachment\_id?), `message\\\_reads` (per-participant read cursor), `message\\\_attachments`. Real-time delivery via Realtime channels keyed by conversation\_id.
 
 **Translation:** `translations` (entity\_type, entity\_id, source\_lang, target\_lang, source\_text, translated\_text, model) — cache so the same content is never re-translated.
 
@@ -234,9 +234,10 @@ Accept Excel, CSV, Google Sheets connection, and Google Form response exports. O
 
 ## 17\. Definition of done (every feature)
 
-Typed end-to-end · Zod-validated inputs · server-side authz · audited mutations · empty/loading/error states · responsive + AA-accessible · EN/FR · at least a smoke test (matching/validation: full unit coverage) · seed data demonstrates it · a one-line entry in `CHANGELOG.md`.
----
-18. Experience Layer 
+## Typed end-to-end · Zod-validated inputs · server-side authz · audited mutations · empty/loading/error states · responsive + AA-accessible · EN/FR · at least a smoke test (matching/validation: full unit coverage) · seed data demonstrates it · a one-line entry in `CHANGELOG.md`.
+
+18. Experience Layer
 See docs/experience-layer.md. Tier 1 items are part of the M2–M4 Definitions of Done. Tier 2 and Tier 3 are out of scope until instructed.
 
+## 19. Design System — See docs/design-system.md. This governs ALL UI. Build the token file and shared component library FIRST, before any feature screen. No raw shadcn defaults; every component is themed to these tokens.
 
