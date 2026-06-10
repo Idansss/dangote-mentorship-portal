@@ -9,17 +9,26 @@
  * Idempotent: safe to run repeatedly. Run with `npm run db:seed`.
  */
 import {
+  ActionItemStatus,
   AttendanceStatus,
   CohortStatus,
   CompetencyType,
+  GoalStage,
+  GoalStatus,
   ImportSourceType,
+  MeetingType,
   ImportStatus,
   ImportRowStatus,
   InviteStatus,
   Language,
+  MatchingStatus,
+  MatchStatus,
+  MeetingStatus,
   PrismaClient,
   ProgrammeStatus,
   RoleName,
+  SupportRequestReason,
+  SupportRequestStatus,
   TrainingStatus,
 } from '@prisma/client';
 import bcrypt from 'bcryptjs';
@@ -248,6 +257,10 @@ async function main() {
       },
     }));
 
+  // Captured to build one fully-paired demo relationship below.
+  let demoMentorId: string | null = null;
+  let demoMenteeId: string | null = null;
+
   // --- Mentors -------------------------------------------------------------
   const MENTOR_COUNT = 15;
   for (let i = 0; i < MENTOR_COUNT; i++) {
@@ -258,6 +271,7 @@ async function main() {
     const email = `mentor.${first}.${last}.${i}@dangote.com`.toLowerCase();
     const user = await ensureUser({ email, name: `${first} ${last}`, locale, passwordHash });
     await grantRole(user.id, roles.MENTOR, cohort.id);
+    if (i === 0) demoMentorId = user.id; // EN mentor for the demo pair
 
     // A handful of mentors are left intentionally light on data so the M3 risk
     // monitor and M1 validator have something to flag.
@@ -320,6 +334,7 @@ async function main() {
     const email = `mentee.${first}.${last}.${i}@dangote.com`.toLowerCase();
     const user = await ensureUser({ email, name: `${first} ${last}`, locale, passwordHash });
     await grantRole(user.id, roles.MENTEE, cohort.id);
+    if (i === 0) demoMenteeId = user.id; // EN mentee for the demo pair
 
     const sparse = i % 9 === 0; // a few mentees missing career goals, etc.
     const profile = await prisma.menteeProfile.upsert({
@@ -359,6 +374,256 @@ async function main() {
       if (!exists) {
         await prisma.profileCompetency.create({ data: { menteeProfileId: profile.id, ...link } });
       }
+    }
+  }
+
+  // --- A fully-paired demo relationship ------------------------------------
+  // One ACCEPTED pair (same language) so agreements (M2) and goals are demoable
+  // immediately, plus two sample goals: one awaiting mentor review, one approved
+  // and in progress.
+  if (demoMentorId && demoMenteeId) {
+    await prisma.match.upsert({
+      where: {
+        cohortId_mentorId_menteeId: {
+          cohortId: cohort.id,
+          mentorId: demoMentorId,
+          menteeId: demoMenteeId,
+        },
+      },
+      update: {},
+      create: {
+        cohortId: cohort.id,
+        mentorId: demoMentorId,
+        menteeId: demoMenteeId,
+        score: 82,
+        status: MatchStatus.ACCEPTED,
+        acceptedAt: new Date(),
+        approvedById: superAdmin.id,
+        aiRationale:
+          'Same language: English. Strong competency and experience alignment; availability confirmed.',
+      },
+    });
+    await prisma.mentorProfile.updateMany({
+      where: { userId: demoMentorId, cohortId: cohort.id },
+      data: { matchingStatus: MatchingStatus.MATCHED },
+    });
+    await prisma.menteeProfile.updateMany({
+      where: { userId: demoMenteeId, cohortId: cohort.id },
+      data: { matchingStatus: MatchingStatus.MATCHED },
+    });
+
+    const existingGoals = await prisma.goal.count({
+      where: { menteeId: demoMenteeId, deletedAt: null },
+    });
+    if (existingGoals === 0) {
+      await prisma.goal.create({
+        data: {
+          cohortId: cohort.id,
+          menteeId: demoMenteeId,
+          title: 'Strengthen stakeholder communication',
+          competency: 'Communication',
+          whyMatters: 'I need to influence senior stakeholders to move into a managerial role.',
+          currentLevel: 'I prepare updates but rarely lead the conversation.',
+          desiredLevel: 'Confidently lead steering-committee updates.',
+          learningActivity: 'Co-present two updates with my mentor and debrief each.',
+          successMeasure: 'Deliver a steering-committee update rated positively by my manager.',
+          endDate: new Date('2026-08-01'),
+          status: GoalStatus.SUBMITTED,
+          stage: GoalStage.DRAFTED,
+        },
+      });
+      await prisma.goal.create({
+        data: {
+          cohortId: cohort.id,
+          menteeId: demoMenteeId,
+          title: 'Lead a cross-functional cost-saving initiative',
+          competency: 'Leadership',
+          whyMatters: 'Demonstrates readiness for a team-lead position.',
+          currentLevel: 'Contribute to projects but have not led one.',
+          desiredLevel: 'Own a small cross-functional initiative end to end.',
+          learningActivity: 'Shadow my mentor, then lead a scoped workstream.',
+          successMeasure: 'A costed proposal adopted by the department.',
+          endDate: new Date('2026-09-15'),
+          status: GoalStatus.APPROVED,
+          stage: GoalStage.IN_PROGRESS,
+          approvedById: demoMentorId,
+          approvedAt: new Date(),
+        },
+      });
+    }
+
+    // A sample session log + action items so session logging is demoable.
+    const existingLogs = await prisma.sessionLog.count({
+      where: { mentorId: demoMentorId, menteeId: demoMenteeId, deletedAt: null },
+    });
+    if (existingLogs === 0) {
+      const log = await prisma.sessionLog.create({
+        data: {
+          cohortId: cohort.id,
+          mentorId: demoMentorId,
+          menteeId: demoMenteeId,
+          date: new Date('2026-02-12'),
+          time: '14:00',
+          meetingType: MeetingType.ZOOM,
+          competencyDiscussed: 'Communication',
+          goalDiscussed: 'Strengthen stakeholder communication',
+          discussionSummary:
+            'Reviewed how the mentee prepares for steering-committee updates and where confidence drops.',
+          aiSummary:
+            'Discussed presentation skills, confidence, and stakeholder engagement. The mentee will prepare a short presentation before the next session.',
+          actionsAgreed: 'Mentee to draft a 5-minute update; mentor to share a feedback checklist.',
+          challenges: 'Mentee finds it hard to field unexpected questions live.',
+          nextActionPlan: 'Rehearse the update together and run a mock Q&A.',
+          timeline: '2 weeks',
+          nextMeetingDate: new Date('2026-02-26'),
+        },
+      });
+      await prisma.actionItem.createMany({
+        data: [
+          {
+            cohortId: cohort.id,
+            sessionLogId: log.id,
+            createdById: demoMentorId,
+            assigneeId: demoMenteeId,
+            title: 'Prepare a 5-minute steering-committee update',
+            dueDate: new Date('2026-02-24'),
+            status: ActionItemStatus.IN_PROGRESS,
+          },
+          {
+            cohortId: cohort.id,
+            sessionLogId: log.id,
+            createdById: demoMentorId,
+            assigneeId: demoMentorId,
+            title: 'Share a stakeholder-feedback checklist',
+            dueDate: new Date('2026-02-18'),
+            status: ActionItemStatus.OPEN,
+          },
+        ],
+      });
+    }
+
+    // Reflection journal (§1.16): one private entry + one the mentee has shared.
+    const existingReflections = await prisma.reflectionJournalEntry.count({
+      where: { authorId: demoMenteeId, deletedAt: null },
+    });
+    if (existingReflections === 0) {
+      await prisma.reflectionJournalEntry.create({
+        data: {
+          cohortId: cohort.id,
+          authorId: demoMenteeId,
+          title: 'After my first session',
+          body: 'I learned that I freeze when questions come out of order. I will rehearse a mock Q&A so I feel ready next time.',
+          bodyLang: Language.EN,
+          isSharedWithMentor: true,
+          sharedAt: new Date('2026-02-13'),
+        },
+      });
+      await prisma.reflectionJournalEntry.create({
+        data: {
+          cohortId: cohort.id,
+          authorId: demoMenteeId,
+          title: 'Private note to self',
+          body: 'Still nervous about presenting to senior leaders — keeping this one to myself for now.',
+          bodyLang: Language.EN,
+          isSharedWithMentor: false,
+        },
+      });
+    }
+
+    // Mentor private note (§1.16): visible only to the mentor.
+    const existingNotes = await prisma.mentorPrivateNote.count({
+      where: { mentorId: demoMentorId, menteeId: demoMenteeId, deletedAt: null },
+    });
+    if (existingNotes === 0) {
+      await prisma.mentorPrivateNote.create({
+        data: {
+          cohortId: cohort.id,
+          mentorId: demoMentorId,
+          menteeId: demoMenteeId,
+          kind: 'growth',
+          body: 'Strong analytical thinker; main growth area is composure under live questioning. Pair her with a clinic on executive presence.',
+          bodyLang: Language.EN,
+        },
+      });
+    }
+
+    // One open support request (§1.13) so the admin queue is demoable.
+    const existingSupport = await prisma.supportRequest.count({
+      where: { requesterId: demoMenteeId, deletedAt: null },
+    });
+    if (existingSupport === 0) {
+      await prisma.supportRequest.create({
+        data: {
+          cohortId: cohort.id,
+          requesterId: demoMenteeId,
+          reason: SupportRequestReason.NEED_GOAL_HELP,
+          message: 'I would like a second opinion on whether my goals are ambitious enough.',
+          status: SupportRequestStatus.OPEN,
+        },
+      });
+    }
+
+    // A couple of notifications (§1.10) so the inbox + unread badge are demoable.
+    const existingNotifications = await prisma.notification.count({
+      where: { userId: demoMenteeId, deletedAt: null },
+    });
+    if (existingNotifications === 0) {
+      await prisma.notification.createMany({
+        data: [
+          {
+            userId: demoMenteeId,
+            cohortId: cohort.id,
+            type: 'goal_commented',
+            title: 'Goal feedback from your mentor',
+            body: 'Your mentor reviewed your goal “Strengthen stakeholder communication”.',
+            link: '/goals',
+            emailPending: true,
+          },
+          {
+            userId: demoMenteeId,
+            cohortId: cohort.id,
+            type: 'meeting_scheduled',
+            title: 'New session scheduled',
+            body: 'Your mentor scheduled “Monthly mentoring session” for 2026-06-20.',
+            link: '/meetings',
+            readAt: new Date('2026-06-09'),
+            emailedAt: new Date('2026-06-09'),
+          },
+        ],
+      });
+    }
+
+    // Sample meetings: one upcoming, one past awaiting no-show confirmation.
+    const existingMeetings = await prisma.meeting.count({
+      where: { mentorId: demoMentorId, menteeId: demoMenteeId, deletedAt: null },
+    });
+    if (existingMeetings === 0) {
+      await prisma.meeting.createMany({
+        data: [
+          {
+            cohortId: cohort.id,
+            organizerId: demoMentorId,
+            mentorId: demoMentorId,
+            menteeId: demoMenteeId,
+            title: 'Monthly mentoring session',
+            type: MeetingType.ZOOM,
+            startsAt: new Date('2026-06-20T14:00:00Z'),
+            endsAt: new Date('2026-06-20T15:00:00Z'),
+            status: MeetingStatus.SCHEDULED,
+          },
+          {
+            cohortId: cohort.id,
+            organizerId: demoMentorId,
+            mentorId: demoMentorId,
+            menteeId: demoMenteeId,
+            title: 'Kick-off session',
+            type: MeetingType.PHYSICAL,
+            startsAt: new Date('2026-02-12T14:00:00Z'),
+            endsAt: new Date('2026-02-12T15:00:00Z'),
+            status: MeetingStatus.SCHEDULED,
+          },
+        ],
+      });
     }
   }
 

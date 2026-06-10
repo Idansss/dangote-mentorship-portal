@@ -135,6 +135,9 @@ enum ActionItemStatus {
   OPEN
   IN_PROGRESS
   DONE
+  // Added for the Action Item Tracker (experience-layer.md §1.6) — an item the
+  // owner is stuck on, surfaced distinctly from "not started".
+  BLOCKED
 }
 
 enum ReviewType {
@@ -178,6 +181,49 @@ enum InviteStatus {
   REVOKED
 }
 
+// ── Experience Layer (§18 Tier 1) ─────────────────────────────────────────────
+
+// Goal progress stages for the visualization (experience-layer.md §1.7). Distinct
+// from GoalStatus (the approval workflow): stage tracks where a goal sits on the
+// Drafted → … → Achieved timeline shown to the pair.
+enum GoalStage {
+  DRAFTED
+  MENTOR_REVIEWED
+  APPROVED
+  IN_PROGRESS
+  EVIDENCE_SUBMITTED
+  ACHIEVED
+}
+
+// Why a scheduled meeting did not happen (experience-layer.md §1.14). Captured
+// with one tap when a meeting passes without a session log; feeds the risk
+// monitor and engagement heatmap with the reason, not just the absence.
+enum NoShowReason {
+  MENTOR_CANCELLED
+  MENTEE_CANCELLED
+  FORGOT
+  RESCHEDULED
+  OTHER
+}
+
+// Reasons a participant can raise a private support request (experience-layer.md
+// §1.13). Routes to a private admin queue.
+enum SupportRequestReason {
+  CANNOT_REACH_PARTNER
+  NEED_GOAL_HELP
+  UNCOMFORTABLE_WITH_MATCH
+  NEED_ADMIN_INTERVENTION
+  COMMUNICATION_ISSUE
+  LANGUAGE_SUPPORT
+  OTHER
+}
+
+enum SupportRequestStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+}
+
 // ──────────────────────────────────────────────────────────────────────────
 // Core / identity
 // ──────────────────────────────────────────────────────────────────────────
@@ -210,18 +256,20 @@ model User {
   notifications Notification[]
 
   uploadedImports Import[]
-  mentorMatches   Match[]    @relation("MatchMentor")
-  menteeMatches   Match[]    @relation("MatchMentee")
-  approvedMatches Match[]    @relation("MatchApprovedBy")
+  mentorMatches   Match[]  @relation("MatchMentor")
+  menteeMatches   Match[]  @relation("MatchMentee")
+  approvedMatches Match[]  @relation("MatchApprovedBy")
 
   trainingAttendance  TrainingAttendance[]
   trainingAssessments TrainingAssessment[]
 
-  agreements      Agreement[]
-  goals           Goal[]        @relation("GoalMentee")
-  approvedGoals   Goal[]        @relation("GoalApprovedBy")
-  goalReviews     GoalReview[]
-  organizedMeetings Meeting[]   @relation("MeetingOrganizer")
+  agreements        Agreement[]
+  goals             Goal[]       @relation("GoalMentee")
+  approvedGoals     Goal[]       @relation("GoalApprovedBy")
+  goalReviews       GoalReview[]
+  organizedMeetings Meeting[]    @relation("MeetingOrganizer")
+  mentorMeetings    Meeting[]    @relation("MeetingMentor")
+  menteeMeetings    Meeting[]    @relation("MeetingMentee")
 
   mentorSessionLogs SessionLog[] @relation("SessionLogMentor")
   menteeSessionLogs SessionLog[] @relation("SessionLogMentee")
@@ -231,27 +279,38 @@ model User {
 
   formResponses FormResponse[]
 
-  hostedClinics   Clinic[]        @relation("ClinicHost")
+  hostedClinics   Clinic[]         @relation("ClinicHost")
   clinicRsvps     ClinicRsvp[]
   clinicQuestions ClinicQuestion[]
 
   createdNewsletters   Newsletter[]
   newsletterRecipients NewsletterRecipient[]
 
-  forumThreads       ForumThread[]
-  forumPosts         ForumPost[]
-  forumReactions     ForumReaction[]
-  forumReports       ForumReport[]  @relation("ForumReportReporter")
-  resolvedReports    ForumReport[]  @relation("ForumReportResolvedBy")
+  forumThreads    ForumThread[]
+  forumPosts      ForumPost[]
+  forumReactions  ForumReaction[]
+  forumReports    ForumReport[]   @relation("ForumReportReporter")
+  resolvedReports ForumReport[]   @relation("ForumReportResolvedBy")
 
   conversationParticipants ConversationParticipant[]
   messages                 Message[]
   messageReads             MessageRead[]
 
-  sentInvites   Invite[] @relation("InviteCreatedBy")
+  sentInvites     Invite[] @relation("InviteCreatedBy")
   acceptedInvites Invite[] @relation("InviteAcceptedBy")
 
   passwordResetTokens PasswordResetToken[]
+
+  // Experience Layer (§18 Tier 1)
+  supportRequests        SupportRequest[]         @relation("SupportRequester")
+  handledSupportRequests SupportRequest[]         @relation("SupportHandler")
+  reflectionEntries      ReflectionJournalEntry[]
+  mentorPrivateNotes     MentorPrivateNote[]      @relation("PrivateNoteMentor")
+  privateNotesAboutMe    MentorPrivateNote[]      @relation("PrivateNoteMentee")
+  formDrafts             FormDraft[]
+  uploadedGoalEvidence   GoalEvidence[]
+  notificationPreference NotificationPreference?
+  reportedNoShows        Meeting[]                @relation("MeetingNoShowReporter")
 
   @@index([email])
   @@map("users")
@@ -271,9 +330,9 @@ model Role {
 }
 
 model UserRole {
-  id     String @id @default(cuid())
-  userId String @map("user_id")
-  roleId String @map("role_id")
+  id       String  @id @default(cuid())
+  userId   String  @map("user_id")
+  roleId   String  @map("role_id")
   // A role grant can be scoped to a single cohort (e.g. Mentor in Cohort 2026)
   // or global (cohortId null), e.g. Super Admin.
   cohortId String? @map("cohort_id")
@@ -307,17 +366,17 @@ model Programme {
 }
 
 model Cohort {
-  id          String       @id @default(cuid())
-  programmeId String       @map("programme_id")
-  name        String
-  description String?
-  status      CohortStatus @default(DRAFT)
-  startDate   DateTime?    @map("start_date")
-  endDate     DateTime?    @map("end_date")
+  id            String       @id @default(cuid())
+  programmeId   String       @map("programme_id")
+  name          String
+  description   String?
+  status        CohortStatus @default(DRAFT)
+  startDate     DateTime?    @map("start_date")
+  endDate       DateTime?    @map("end_date")
   // Languages offered in this cohort (CLAUDE.md §1: EN + FR).
-  languages   Language[]   @default([EN, FR])
+  languages     Language[]   @default([EN, FR])
   // Per-cohort data-retention window in days (CLAUDE.md §14).
-  retentionDays Int?       @map("retention_days")
+  retentionDays Int?         @map("retention_days")
 
   programme Programme @relation(fields: [programmeId], references: [id])
 
@@ -325,32 +384,39 @@ model Cohort {
   updatedAt DateTime  @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
 
-  userRoles         UserRole[]
-  mentorProfiles    MentorProfile[]
-  menteeProfiles    MenteeProfile[]
-  competencies      Competency[]
-  imports           Import[]
-  matchingCriteria  MatchingCriteria[]
-  matches           Match[]
-  trainingBatches   TrainingBatch[]
-  agreements        Agreement[]
-  goals             Goal[]
-  meetings          Meeting[]
-  sessionLogs       SessionLog[]
-  actionItems       ActionItem[]
-  midtermReviews    MidtermReview[]
-  finalReviews      FinalReview[]
-  formDefinitions   FormDefinition[]
-  clinics           Clinic[]
-  newsletters       Newsletter[]
-  resources         Resource[]
-  forumCategories   ForumCategory[]
-  conversations     Conversation[]
-  invites           Invite[]
-  featureFlags      FeatureFlag[]
-  notifications     Notification[]
-  auditLogs         AuditLog[]
-  translations      Translation[]
+  userRoles        UserRole[]
+  mentorProfiles   MentorProfile[]
+  menteeProfiles   MenteeProfile[]
+  competencies     Competency[]
+  imports          Import[]
+  matchingCriteria MatchingCriteria[]
+  matches          Match[]
+  trainingBatches  TrainingBatch[]
+  agreements       Agreement[]
+  goals            Goal[]
+  meetings         Meeting[]
+  sessionLogs      SessionLog[]
+  actionItems      ActionItem[]
+  midtermReviews   MidtermReview[]
+  finalReviews     FinalReview[]
+  formDefinitions  FormDefinition[]
+  clinics          Clinic[]
+  newsletters      Newsletter[]
+  resources        Resource[]
+  forumCategories  ForumCategory[]
+  conversations    Conversation[]
+  invites          Invite[]
+  featureFlags     FeatureFlag[]
+  notifications    Notification[]
+  auditLogs        AuditLog[]
+  translations     Translation[]
+
+  // Experience Layer (§18 Tier 1)
+  supportRequests    SupportRequest[]
+  reflectionEntries  ReflectionJournalEntry[]
+  mentorPrivateNotes MentorPrivateNote[]
+  formDrafts         FormDraft[]
+  goalEvidence       GoalEvidence[]
 
   @@map("cohorts")
 }
@@ -374,15 +440,15 @@ model FeatureFlag {
 }
 
 model AuditLog {
-  id        String  @id @default(cuid())
-  actorId   String? @map("actor_id")
-  cohortId  String? @map("cohort_id")
-  action    String
-  entityType String @map("entity_type")
-  entityId  String? @map("entity_id")
+  id         String  @id @default(cuid())
+  actorId    String? @map("actor_id")
+  cohortId   String? @map("cohort_id")
+  action     String
+  entityType String  @map("entity_type")
+  entityId   String? @map("entity_id")
   // Structured before/after or context. Never store PII-heavy message content.
-  metadata  Json?
-  ipAddress String? @map("ip_address")
+  metadata   Json?
+  ipAddress  String? @map("ip_address")
 
   actor  User?   @relation(fields: [actorId], references: [id])
   cohort Cohort? @relation(fields: [cohortId], references: [id])
@@ -398,14 +464,22 @@ model AuditLog {
 }
 
 model Notification {
-  id       String  @id @default(cuid())
-  userId   String  @map("user_id")
-  cohortId String? @map("cohort_id")
+  id       String    @id @default(cuid())
+  userId   String    @map("user_id")
+  cohortId String?   @map("cohort_id")
+  // `type` is a free string backed by the NOTIFICATION_TYPES union in
+  // lib/notifications (experience-layer.md §1.10) — kept as a column rather than a
+  // DB enum so new types ship across milestones without a migration each time.
   type     String
   title    String
   body     String?
   link     String?
   readAt   DateTime? @map("read_at")
+  // Email channel state (§1.10): time-critical types email immediately; the rest
+  // wait in a daily digest. `emailPending` means "still owed an email"; once sent
+  // (immediately or via the digest) `emailedAt` is stamped and pending cleared.
+  emailPending Boolean   @default(false) @map("email_pending")
+  emailedAt    DateTime? @map("emailed_at")
 
   user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   cohort Cohort? @relation(fields: [cohortId], references: [id])
@@ -415,25 +489,46 @@ model Notification {
   deletedAt DateTime? @map("deleted_at")
 
   @@index([userId])
+  @@index([emailPending])
   @@map("notifications")
+}
+
+// Per-user notification preferences (experience-layer.md §1.10). Language comes
+// from the user's locale (respected when rendering each notification); this holds
+// the channel + per-type opt-outs. One row per user, created on first change.
+model NotificationPreference {
+  id            String   @id @default(cuid())
+  userId        String   @unique @map("user_id")
+  emailEnabled  Boolean  @default(true) @map("email_enabled")
+  digestEnabled Boolean  @default(true) @map("digest_enabled")
+  // Notification `type` values the user has muted (no in-app row, no email).
+  mutedTypes    String[] @default([]) @map("muted_types")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("notification_preferences")
 }
 
 // Invite links for admin-created accounts (CLAUDE.md §2).
 model Invite {
-  id          String       @id @default(cuid())
-  cohortId    String?      @map("cohort_id")
-  email       String
-  roleName    RoleName     @map("role_name")
-  tokenHash   String       @unique @map("token_hash")
-  status      InviteStatus @default(PENDING)
-  expiresAt   DateTime     @map("expires_at")
-  invitedById String       @map("invited_by_id")
-  acceptedByUserId String?  @map("accepted_by_user_id")
-  acceptedAt  DateTime?    @map("accepted_at")
+  id               String       @id @default(cuid())
+  cohortId         String?      @map("cohort_id")
+  email            String
+  roleName         RoleName     @map("role_name")
+  tokenHash        String       @unique @map("token_hash")
+  status           InviteStatus @default(PENDING)
+  expiresAt        DateTime     @map("expires_at")
+  invitedById      String       @map("invited_by_id")
+  acceptedByUserId String?      @map("accepted_by_user_id")
+  acceptedAt       DateTime?    @map("accepted_at")
 
-  cohort       Cohort? @relation(fields: [cohortId], references: [id])
-  invitedBy    User    @relation("InviteCreatedBy", fields: [invitedById], references: [id])
-  acceptedBy   User?   @relation("InviteAcceptedBy", fields: [acceptedByUserId], references: [id])
+  cohort     Cohort? @relation(fields: [cohortId], references: [id])
+  invitedBy  User    @relation("InviteCreatedBy", fields: [invitedById], references: [id])
+  acceptedBy User?   @relation("InviteAcceptedBy", fields: [acceptedByUserId], references: [id])
 
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
@@ -513,27 +608,27 @@ model MentorProfile {
   userId   String @unique @map("user_id")
   cohortId String @map("cohort_id")
 
-  fullName        String   @map("full_name")
-  email           String
-  phone           String?
-  department      String?
-  jobTitle        String?  @map("job_title")
-  location        String?
-  preferredLanguage Language @default(EN) @map("preferred_language")
-  yearsExperience Int?     @map("years_experience")
-  currentRole     String?  @map("current_role")
-  previousRoles   String?  @map("previous_roles")
-  whyMentor       String?  @map("why_mentor")
-  personality     String?
-  whatCanLearn    String?  @map("what_can_learn")
-  interests       String?
-  availability    String?
-  maxMentees      Int      @default(2) @map("max_mentees")
-  trainingStatus  TrainingStatus @default(NOT_STARTED) @map("training_status")
-  matchingStatus  MatchingStatus @default(UNMATCHED) @map("matching_status")
+  fullName          String         @map("full_name")
+  email             String
+  phone             String?
+  department        String?
+  jobTitle          String?        @map("job_title")
+  location          String?
+  preferredLanguage Language       @default(EN) @map("preferred_language")
+  yearsExperience   Int?           @map("years_experience")
+  currentRole       String?        @map("current_role")
+  previousRoles     String?        @map("previous_roles")
+  whyMentor         String?        @map("why_mentor")
+  personality       String?
+  whatCanLearn      String?        @map("what_can_learn")
+  interests         String?
+  availability      String?
+  maxMentees        Int            @default(2) @map("max_mentees")
+  trainingStatus    TrainingStatus @default(NOT_STARTED) @map("training_status")
+  matchingStatus    MatchingStatus @default(UNMATCHED) @map("matching_status")
 
-  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  cohort      Cohort  @relation(fields: [cohortId], references: [id])
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cohort       Cohort              @relation(fields: [cohortId], references: [id])
   competencies ProfileCompetency[]
 
   createdAt DateTime  @default(now()) @map("created_at")
@@ -549,24 +644,24 @@ model MenteeProfile {
   userId   String @unique @map("user_id")
   cohortId String @map("cohort_id")
 
-  fullName        String   @map("full_name")
-  email           String
-  phone           String?
-  department      String?
-  jobTitle        String?  @map("job_title")
-  location        String?
-  preferredLanguage Language @default(EN) @map("preferred_language")
-  currentGrade    String?  @map("current_grade")
-  previousPositions String? @map("previous_positions")
-  whyMentor       String?  @map("why_mentor")
-  careerGoals     String?  @map("career_goals")
-  personality     String?
-  interests       String?
-  trainingStatus  TrainingStatus @default(NOT_STARTED) @map("training_status")
-  matchingStatus  MatchingStatus @default(UNMATCHED) @map("matching_status")
+  fullName          String         @map("full_name")
+  email             String
+  phone             String?
+  department        String?
+  jobTitle          String?        @map("job_title")
+  location          String?
+  preferredLanguage Language       @default(EN) @map("preferred_language")
+  currentGrade      String?        @map("current_grade")
+  previousPositions String?        @map("previous_positions")
+  whyMentor         String?        @map("why_mentor")
+  careerGoals       String?        @map("career_goals")
+  personality       String?
+  interests         String?
+  trainingStatus    TrainingStatus @default(NOT_STARTED) @map("training_status")
+  matchingStatus    MatchingStatus @default(UNMATCHED) @map("matching_status")
 
-  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  cohort      Cohort  @relation(fields: [cohortId], references: [id])
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cohort       Cohort              @relation(fields: [cohortId], references: [id])
   competencies ProfileCompetency[]
 
   createdAt DateTime  @default(now()) @map("created_at")
@@ -584,7 +679,7 @@ model Competency {
   type     CompetencyType
   category String?
 
-  cohort  Cohort  @relation(fields: [cohortId], references: [id])
+  cohort   Cohort              @relation(fields: [cohortId], references: [id])
   profiles ProfileCompetency[]
 
   createdAt DateTime  @default(now()) @map("created_at")
@@ -596,14 +691,14 @@ model Competency {
 }
 
 model ProfileCompetency {
-  id           String  @id @default(cuid())
-  competencyId String  @map("competency_id")
+  id              String  @id @default(cuid())
+  competencyId    String  @map("competency_id")
   mentorProfileId String? @map("mentor_profile_id")
   menteeProfileId String? @map("mentee_profile_id")
   // For mentees: marks a competency they want to strengthen (CLAUDE.md §6).
-  isStrength   Boolean @default(false) @map("is_strength")
-  isToStrengthen Boolean @default(false) @map("is_to_strengthen")
-  proficiency  Int?
+  isStrength      Boolean @default(false) @map("is_strength")
+  isToStrengthen  Boolean @default(false) @map("is_to_strengthen")
+  proficiency     Int?
 
   competency    Competency     @relation(fields: [competencyId], references: [id], onDelete: Cascade)
   mentorProfile MentorProfile? @relation(fields: [mentorProfileId], references: [id], onDelete: Cascade)
@@ -646,12 +741,12 @@ model Import {
 }
 
 model ImportRow {
-  id        String          @id @default(cuid())
-  importId  String          @map("import_id")
-  rowNumber Int             @map("row_number")
+  id         String          @id @default(cuid())
+  importId   String          @map("import_id")
+  rowNumber  Int             @map("row_number")
   // Raw parsed row, untrusted (CLAUDE.md §14).
-  raw       Json
-  status    ImportRowStatus @default(PENDING)
+  raw        Json
+  status     ImportRowStatus @default(PENDING)
   // AI/validator findings, e.g. [{ field, code, message, severity }].
   validation Json?
 
@@ -666,13 +761,13 @@ model ImportRow {
 }
 
 model MatchingCriteria {
-  id       String @id @default(cuid())
-  cohortId String @map("cohort_id")
+  id        String  @id @default(cuid())
+  cohortId  String  @map("cohort_id")
   // Layer-2 weights (CLAUDE.md §8). Defaults applied in the engine.
-  weights  Json
+  weights   Json
   // Cohort-configurable hard rules (e.g. enforce-same-department=false).
   hardRules Json
-  isActive Boolean @default(true) @map("is_active")
+  isActive  Boolean @default(true) @map("is_active")
 
   cohort Cohort @relation(fields: [cohortId], references: [id])
 
@@ -685,16 +780,21 @@ model MatchingCriteria {
 }
 
 model Match {
-  id        String      @id @default(cuid())
-  cohortId  String      @map("cohort_id")
-  mentorId  String      @map("mentor_id")
-  menteeId  String      @map("mentee_id")
-  score     Float
-  status    MatchStatus @default(SUGGESTED)
-  aiRationale String?   @map("ai_rationale")
-  flags     Json?
-  approvedById String?  @map("approved_by_id")
-  acceptedAt DateTime?  @map("accepted_at")
+  id           String      @id @default(cuid())
+  cohortId     String      @map("cohort_id")
+  mentorId     String      @map("mentor_id")
+  menteeId     String      @map("mentee_id")
+  score        Float
+  status       MatchStatus @default(SUGGESTED)
+  aiRationale  String?     @map("ai_rationale")
+  flags        Json?
+  approvedById String?     @map("approved_by_id")
+  acceptedAt   DateTime?   @map("accepted_at")
+
+  // First-session icebreaker cache (experience-layer.md §1.17). Generated from
+  // both profiles when the pair is active; regenerating overwrites it.
+  icebreakerJson        Json?     @map("icebreaker_json")
+  icebreakerGeneratedAt DateTime? @map("icebreaker_generated_at")
 
   cohort     Cohort @relation(fields: [cohortId], references: [id])
   mentor     User   @relation("MatchMentor", fields: [mentorId], references: [id])
@@ -715,9 +815,9 @@ model Match {
 // ──────────────────────────────────────────────────────────────────────────
 
 model TrainingBatch {
-  id       String @id @default(cuid())
-  cohortId String @map("cohort_id")
-  name     String
+  id        String    @id @default(cuid())
+  cohortId  String    @map("cohort_id")
+  name      String
   startDate DateTime? @map("start_date")
   endDate   DateTime? @map("end_date")
 
@@ -735,11 +835,11 @@ model TrainingBatch {
 }
 
 model TrainingAttendance {
-  id      String           @id @default(cuid())
-  batchId String           @map("batch_id")
-  userId  String           @map("user_id")
-  status  AttendanceStatus @default(REGISTERED)
-  attendedAt DateTime?     @map("attended_at")
+  id         String           @id @default(cuid())
+  batchId    String           @map("batch_id")
+  userId     String           @map("user_id")
+  status     AttendanceStatus @default(REGISTERED)
+  attendedAt DateTime?        @map("attended_at")
 
   batch TrainingBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
   user  User          @relation(fields: [userId], references: [id])
@@ -753,8 +853,8 @@ model TrainingAttendance {
 }
 
 model TrainingMaterial {
-  id      String @id @default(cuid())
-  batchId String @map("batch_id")
+  id      String   @id @default(cuid())
+  batchId String   @map("batch_id")
   title   String
   url     String?
   lang    Language @default(EN)
@@ -769,11 +869,11 @@ model TrainingMaterial {
 }
 
 model TrainingAssessment {
-  id      String @id @default(cuid())
-  batchId String @map("batch_id")
-  userId  String @map("user_id")
-  score   Float?
-  passed  Boolean?
+  id        String   @id @default(cuid())
+  batchId   String   @map("batch_id")
+  userId    String   @map("user_id")
+  score     Float?
+  passed    Boolean?
   responses Json?
 
   batch TrainingBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
@@ -791,13 +891,13 @@ model TrainingAssessment {
 // ──────────────────────────────────────────────────────────────────────────
 
 model Agreement {
-  id       String        @id @default(cuid())
-  cohortId String        @map("cohort_id")
-  type     AgreementType
-  signedById String      @map("signed_by_id")
-  signedAt DateTime?     @map("signed_at")
-  pdfUrl   String?       @map("pdf_url")
-  terms    Json?         @map("terms_json")
+  id         String        @id @default(cuid())
+  cohortId   String        @map("cohort_id")
+  type       AgreementType
+  signedById String        @map("signed_by_id")
+  signedAt   DateTime?     @map("signed_at")
+  pdfUrl     String?       @map("pdf_url")
+  terms      Json?         @map("terms_json")
 
   cohort   Cohort @relation(fields: [cohortId], references: [id])
   signedBy User   @relation(fields: [signedById], references: [id])
@@ -811,29 +911,33 @@ model Agreement {
 }
 
 model Goal {
-  id       String     @id @default(cuid())
-  cohortId String     @map("cohort_id")
-  menteeId String     @map("mentee_id")
-  title    String
-  competency String?
-  whyMatters String?  @map("why_matters")
-  currentLevel String? @map("current_level")
-  desiredLevel String? @map("desired_level")
-  learningActivity String? @map("learning_activity")
-  startDate DateTime? @map("start_date")
-  endDate   DateTime? @map("end_date")
-  successMeasure String? @map("success_measure")
-  evidence  String?
-  mentorComments String? @map("mentor_comments")
-  status    GoalStatus @default(DRAFT)
-  approvedById String? @map("approved_by_id")
-  approvedAt DateTime? @map("approved_at")
-  adminVisible Boolean @default(true) @map("admin_visible")
+  id               String     @id @default(cuid())
+  cohortId         String     @map("cohort_id")
+  menteeId         String     @map("mentee_id")
+  title            String
+  competency       String?
+  whyMatters       String?    @map("why_matters")
+  currentLevel     String?    @map("current_level")
+  desiredLevel     String?    @map("desired_level")
+  learningActivity String?    @map("learning_activity")
+  startDate        DateTime?  @map("start_date")
+  endDate          DateTime?  @map("end_date")
+  successMeasure   String?    @map("success_measure")
+  // Free-text "evidence of progress" (§7); uploaded files live in GoalEvidence.
+  evidence         String?
+  mentorComments   String?    @map("mentor_comments")
+  status           GoalStatus @default(DRAFT)
+  // Progress-visualization stage (experience-layer.md §1.7), distinct from status.
+  stage            GoalStage  @default(DRAFTED)
+  approvedById     String?    @map("approved_by_id")
+  approvedAt       DateTime?  @map("approved_at")
+  adminVisible     Boolean    @default(true) @map("admin_visible")
 
-  cohort     Cohort @relation(fields: [cohortId], references: [id])
-  mentee     User   @relation("GoalMentee", fields: [menteeId], references: [id])
-  approvedBy User?  @relation("GoalApprovedBy", fields: [approvedById], references: [id])
-  reviews    GoalReview[]
+  cohort        Cohort         @relation(fields: [cohortId], references: [id])
+  mentee        User           @relation("GoalMentee", fields: [menteeId], references: [id])
+  approvedBy    User?          @relation("GoalApprovedBy", fields: [approvedById], references: [id])
+  reviews       GoalReview[]
+  evidenceFiles GoalEvidence[]
 
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
@@ -845,11 +949,13 @@ model Goal {
 }
 
 model GoalReview {
-  id        String @id @default(cuid())
-  goalId    String @map("goal_id")
-  reviewerId String @map("reviewer_id")
-  comment   String?
-  rating    Int?
+  id         String     @id @default(cuid())
+  goalId     String     @map("goal_id")
+  reviewerId String     @map("reviewer_id")
+  comment    String?
+  rating     Int?
+  // Stage this feedback attaches to (experience-layer.md §1.7), if any.
+  stage      GoalStage?
 
   goal     Goal @relation(fields: [goalId], references: [id], onDelete: Cascade)
   reviewer User @relation(fields: [reviewerId], references: [id])
@@ -865,54 +971,78 @@ model Meeting {
   id          String        @id @default(cuid())
   cohortId    String        @map("cohort_id")
   organizerId String        @map("organizer_id")
+  // The matched pair this meeting is for (mirrors SessionLog). organizerId is
+  // whoever scheduled it (either party); mentor/mentee identify the pairing.
+  mentorId    String        @map("mentor_id")
+  menteeId    String        @map("mentee_id")
   title       String
   type        MeetingType
   provider    String?
+  // External calendar event id (e.g. Microsoft Graph), when pushed (§1.12).
+  externalId  String?       @map("external_id")
   recurrence  String?
   joinUrl     String?       @map("join_url")
   startsAt    DateTime?     @map("starts_at")
   endsAt      DateTime?     @map("ends_at")
   status      MeetingStatus @default(SCHEDULED)
 
-  cohort      Cohort       @relation(fields: [cohortId], references: [id])
-  organizer   User         @relation("MeetingOrganizer", fields: [organizerId], references: [id])
-  sessionLogs SessionLog[]
+  // No-show capture (experience-layer.md §1.14). didHappen is null until a
+  // participant answers "Did this meeting happen?"; reason is set when false.
+  didHappen          Boolean?      @map("did_happen")
+  noShowReason       NoShowReason? @map("no_show_reason")
+  noShowReportedById String?       @map("no_show_reported_by_id")
+  noShowReportedAt   DateTime?     @map("no_show_reported_at")
+
+  // AI meeting preparation cache (experience-layer.md §1.5). Generated on demand
+  // and cached per meeting; regenerating overwrites it.
+  prepJson         Json?     @map("prep_json")
+  prepGeneratedAt  DateTime? @map("prep_generated_at")
+
+  cohort           Cohort       @relation(fields: [cohortId], references: [id])
+  organizer        User         @relation("MeetingOrganizer", fields: [organizerId], references: [id])
+  mentor           User         @relation("MeetingMentor", fields: [mentorId], references: [id])
+  mentee           User         @relation("MeetingMentee", fields: [menteeId], references: [id])
+  noShowReportedBy User?        @relation("MeetingNoShowReporter", fields: [noShowReportedById], references: [id])
+  sessionLogs      SessionLog[]
 
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
 
   @@index([cohortId])
+  @@index([mentorId])
+  @@index([menteeId])
   @@map("meetings")
 }
 
 model SessionLog {
-  id        String @id @default(cuid())
-  cohortId  String @map("cohort_id")
-  meetingId String? @map("meeting_id")
-  mentorId  String @map("mentor_id")
-  menteeId  String @map("mentee_id")
-  date      DateTime?
-  time      String?
-  meetingType MeetingType? @map("meeting_type")
-  competencyDiscussed String? @map("competency_discussed")
-  goalDiscussed String? @map("goal_discussed")
-  discussionSummary String? @map("discussion_summary")
-  actionsAgreed String? @map("actions_agreed")
-  challenges String?
-  resourcesNeeded String? @map("resources_needed")
-  nextActionPlan String? @map("next_action_plan")
-  timeline   String?
-  nextMeetingDate DateTime? @map("next_meeting_date")
-  mentorNotes String? @map("mentor_notes")
-  menteeReflection String? @map("mentee_reflection")
-  aiSummary  String? @map("ai_summary")
+  id                  String       @id @default(cuid())
+  cohortId            String       @map("cohort_id")
+  meetingId           String?      @map("meeting_id")
+  mentorId            String       @map("mentor_id")
+  menteeId            String       @map("mentee_id")
+  date                DateTime?
+  time                String?
+  meetingType         MeetingType? @map("meeting_type")
+  competencyDiscussed String?      @map("competency_discussed")
+  goalDiscussed       String?      @map("goal_discussed")
+  discussionSummary   String?      @map("discussion_summary")
+  actionsAgreed       String?      @map("actions_agreed")
+  challenges          String?
+  resourcesNeeded     String?      @map("resources_needed")
+  nextActionPlan      String?      @map("next_action_plan")
+  timeline            String?
+  nextMeetingDate     DateTime?    @map("next_meeting_date")
+  mentorNotes         String?      @map("mentor_notes")
+  menteeReflection    String?      @map("mentee_reflection")
+  aiSummary           String?      @map("ai_summary")
 
-  cohort  Cohort   @relation(fields: [cohortId], references: [id])
-  meeting Meeting? @relation(fields: [meetingId], references: [id])
-  mentor  User     @relation("SessionLogMentor", fields: [mentorId], references: [id])
-  mentee  User     @relation("SessionLogMentee", fields: [menteeId], references: [id])
-  actionItems ActionItem[]
+  cohort            Cohort                   @relation(fields: [cohortId], references: [id])
+  meeting           Meeting?                 @relation(fields: [meetingId], references: [id])
+  mentor            User                     @relation("SessionLogMentor", fields: [mentorId], references: [id])
+  mentee            User                     @relation("SessionLogMentee", fields: [menteeId], references: [id])
+  actionItems       ActionItem[]
+  reflectionEntries ReflectionJournalEntry[]
 
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
@@ -923,15 +1053,15 @@ model SessionLog {
 }
 
 model ActionItem {
-  id         String           @id @default(cuid())
-  cohortId   String           @map("cohort_id")
-  sessionLogId String?        @map("session_log_id")
-  goalId     String?          @map("goal_id")
-  assigneeId String?          @map("assignee_id")
-  createdById String          @map("created_by_id")
-  title      String
-  dueDate    DateTime?        @map("due_date")
-  status     ActionItemStatus @default(OPEN)
+  id           String           @id @default(cuid())
+  cohortId     String           @map("cohort_id")
+  sessionLogId String?          @map("session_log_id")
+  goalId       String?          @map("goal_id")
+  assigneeId   String?          @map("assignee_id")
+  createdById  String           @map("created_by_id")
+  title        String
+  dueDate      DateTime?        @map("due_date")
+  status       ActionItemStatus @default(OPEN)
 
   cohort     Cohort      @relation(fields: [cohortId], references: [id])
   sessionLog SessionLog? @relation(fields: [sessionLogId], references: [id])
@@ -972,14 +1102,14 @@ model FormDefinition {
 }
 
 model FormResponse {
-  id           String       @id @default(cuid())
-  formId       String       @map("form_id")
-  respondentId String       @map("respondent_id")
-  answers      Json
-  status       ReviewStatus @default(IN_PROGRESS)
-  submittedAt  DateTime?    @map("submitted_at")
-  midtermReviewId String?   @map("midterm_review_id")
-  finalReviewId   String?   @map("final_review_id")
+  id              String       @id @default(cuid())
+  formId          String       @map("form_id")
+  respondentId    String       @map("respondent_id")
+  answers         Json
+  status          ReviewStatus @default(IN_PROGRESS)
+  submittedAt     DateTime?    @map("submitted_at")
+  midtermReviewId String?      @map("midterm_review_id")
+  finalReviewId   String?      @map("final_review_id")
 
   form          FormDefinition @relation(fields: [formId], references: [id], onDelete: Cascade)
   respondent    User           @relation(fields: [respondentId], references: [id])
@@ -994,10 +1124,10 @@ model FormResponse {
 }
 
 model MidtermReview {
-  id       String       @id @default(cuid())
-  cohortId String       @map("cohort_id")
-  status   ReviewStatus @default(NOT_STARTED)
-  aiSummary String?     @map("ai_summary")
+  id        String       @id @default(cuid())
+  cohortId  String       @map("cohort_id")
+  status    ReviewStatus @default(NOT_STARTED)
+  aiSummary String?      @map("ai_summary")
 
   cohort    Cohort         @relation(fields: [cohortId], references: [id])
   responses FormResponse[]
@@ -1011,10 +1141,10 @@ model MidtermReview {
 }
 
 model FinalReview {
-  id       String       @id @default(cuid())
-  cohortId String       @map("cohort_id")
-  status   ReviewStatus @default(NOT_STARTED)
-  aiSummary String?     @map("ai_summary")
+  id        String       @id @default(cuid())
+  cohortId  String       @map("cohort_id")
+  status    ReviewStatus @default(NOT_STARTED)
+  aiSummary String?      @map("ai_summary")
 
   cohort    Cohort         @relation(fields: [cohortId], references: [id])
   responses FormResponse[]
@@ -1032,14 +1162,14 @@ model FinalReview {
 // ──────────────────────────────────────────────────────────────────────────
 
 model Clinic {
-  id       String       @id @default(cuid())
-  cohortId String       @map("cohort_id")
-  hostId   String?      @map("host_id")
-  title    String
-  topic    String?
-  scheduledAt DateTime? @map("scheduled_at")
-  joinUrl  String?      @map("join_url")
-  status   ClinicStatus @default(SCHEDULED)
+  id          String       @id @default(cuid())
+  cohortId    String       @map("cohort_id")
+  hostId      String?      @map("host_id")
+  title       String
+  topic       String?
+  scheduledAt DateTime?    @map("scheduled_at")
+  joinUrl     String?      @map("join_url")
+  status      ClinicStatus @default(SCHEDULED)
 
   cohort    Cohort           @relation(fields: [cohortId], references: [id])
   host      User?            @relation("ClinicHost", fields: [hostId], references: [id])
@@ -1056,9 +1186,9 @@ model Clinic {
 }
 
 model ClinicRsvp {
-  id       String @id @default(cuid())
-  clinicId String @map("clinic_id")
-  userId   String @map("user_id")
+  id        String  @id @default(cuid())
+  clinicId  String  @map("clinic_id")
+  userId    String  @map("user_id")
   attending Boolean @default(true)
 
   clinic Clinic @relation(fields: [clinicId], references: [id], onDelete: Cascade)
@@ -1090,11 +1220,11 @@ model ClinicQuestion {
 }
 
 model ClinicSummary {
-  id          String @id @default(cuid())
-  clinicId    String @map("clinic_id")
-  summary     String
-  actionPoints Json?  @map("action_points")
-  lang        Language @default(EN)
+  id           String   @id @default(cuid())
+  clinicId     String   @map("clinic_id")
+  summary      String
+  actionPoints Json?    @map("action_points")
+  lang         Language @default(EN)
 
   clinic Clinic @relation(fields: [clinicId], references: [id], onDelete: Cascade)
 
@@ -1129,9 +1259,9 @@ model Newsletter {
 }
 
 model NewsletterRecipient {
-  id           String @id @default(cuid())
-  newsletterId String @map("newsletter_id")
-  userId       String @map("user_id")
+  id           String    @id @default(cuid())
+  newsletterId String    @map("newsletter_id")
+  userId       String    @map("user_id")
   sentAt       DateTime? @map("sent_at")
   openedAt     DateTime? @map("opened_at")
 
@@ -1147,8 +1277,8 @@ model NewsletterRecipient {
 }
 
 model Resource {
-  id       String @id @default(cuid())
-  cohortId String @map("cohort_id")
+  id       String   @id @default(cuid())
+  cohortId String   @map("cohort_id")
   title    String
   url      String?
   lang     Language @default(EN)
@@ -1169,11 +1299,11 @@ model Resource {
 // ──────────────────────────────────────────────────────────────────────────
 
 model ForumCategory {
-  id       String @id @default(cuid())
-  cohortId String @map("cohort_id")
-  name     String
+  id          String  @id @default(cuid())
+  cohortId    String  @map("cohort_id")
+  name        String
   description String?
-  sortOrder Int   @default(0) @map("sort_order")
+  sortOrder   Int     @default(0) @map("sort_order")
 
   cohort  Cohort        @relation(fields: [cohortId], references: [id])
   threads ForumThread[]
@@ -1187,13 +1317,13 @@ model ForumCategory {
 }
 
 model ForumThread {
-  id         String  @id @default(cuid())
-  categoryId String  @map("category_id")
-  authorId   String  @map("author_id")
-  title      String
+  id          String  @id @default(cuid())
+  categoryId  String  @map("category_id")
+  authorId    String  @map("author_id")
+  title       String
   isAnonymous Boolean @default(false) @map("is_anonymous")
-  isPinned   Boolean @default(false) @map("is_pinned")
-  isLocked   Boolean @default(false) @map("is_locked")
+  isPinned    Boolean @default(false) @map("is_pinned")
+  isLocked    Boolean @default(false) @map("is_locked")
 
   category ForumCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   author   User          @relation(fields: [authorId], references: [id])
@@ -1208,14 +1338,14 @@ model ForumThread {
 }
 
 model ForumPost {
-  id        String  @id @default(cuid())
-  threadId  String  @map("thread_id")
-  authorId  String  @map("author_id")
-  bodyOriginal String @map("body_original")
-  bodyLang  Language @map("body_lang")
-  bodyTranslated String? @map("body_translated")
+  id                 String    @id @default(cuid())
+  threadId           String    @map("thread_id")
+  authorId           String    @map("author_id")
+  bodyOriginal       String    @map("body_original")
+  bodyLang           Language  @map("body_lang")
+  bodyTranslated     String?   @map("body_translated")
   bodyTranslatedLang Language? @map("body_translated_lang")
-  isAnonymous Boolean @default(false) @map("is_anonymous")
+  isAnonymous        Boolean   @default(false) @map("is_anonymous")
 
   thread    ForumThread     @relation(fields: [threadId], references: [id], onDelete: Cascade)
   author    User            @relation(fields: [authorId], references: [id])
@@ -1248,13 +1378,13 @@ model ForumReaction {
 }
 
 model ForumReport {
-  id         String            @id @default(cuid())
-  postId     String            @map("post_id")
-  reporterId String            @map("reporter_id")
-  reason     String
-  status     ForumReportStatus @default(OPEN)
-  resolvedById String?         @map("resolved_by_id")
-  resolvedAt DateTime?         @map("resolved_at")
+  id           String            @id @default(cuid())
+  postId       String            @map("post_id")
+  reporterId   String            @map("reporter_id")
+  reason       String
+  status       ForumReportStatus @default(OPEN)
+  resolvedById String?           @map("resolved_by_id")
+  resolvedAt   DateTime?         @map("resolved_at")
 
   post       ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
   reporter   User      @relation("ForumReportReporter", fields: [reporterId], references: [id])
@@ -1306,14 +1436,14 @@ model ConversationParticipant {
 }
 
 model Message {
-  id             String @id @default(cuid())
-  conversationId String @map("conversation_id")
-  senderId       String @map("sender_id")
-  bodyOriginal   String @map("body_original")
-  bodyLang       Language @map("body_lang")
-  bodyTranslated String? @map("body_translated")
+  id                 String    @id @default(cuid())
+  conversationId     String    @map("conversation_id")
+  senderId           String    @map("sender_id")
+  bodyOriginal       String    @map("body_original")
+  bodyLang           Language  @map("body_lang")
+  bodyTranslated     String?   @map("body_translated")
   bodyTranslatedLang Language? @map("body_translated_lang")
-  attachmentId   String? @map("attachment_id")
+  attachmentId       String?   @map("attachment_id")
 
   conversation Conversation       @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   sender       User               @relation(fields: [senderId], references: [id])
@@ -1346,10 +1476,10 @@ model MessageRead {
 }
 
 model MessageAttachment {
-  id       String @id @default(cuid())
-  fileName String @map("file_name")
+  id       String    @id @default(cuid())
+  fileName String    @map("file_name")
   url      String
-  mimeType String? @map("mime_type")
+  mimeType String?   @map("mime_type")
   size     Int?
   messages Message[]
 
@@ -1365,15 +1495,15 @@ model MessageAttachment {
 // ──────────────────────────────────────────────────────────────────────────
 
 model Translation {
-  id         String   @id @default(cuid())
-  cohortId   String?  @map("cohort_id")
-  entityType String   @map("entity_type")
-  entityId   String   @map("entity_id")
-  sourceLang Language @map("source_lang")
-  targetLang Language @map("target_lang")
-  sourceText String   @map("source_text")
-  translatedText String @map("translated_text")
-  model      String?
+  id             String   @id @default(cuid())
+  cohortId       String?  @map("cohort_id")
+  entityType     String   @map("entity_type")
+  entityId       String   @map("entity_id")
+  sourceLang     Language @map("source_lang")
+  targetLang     Language @map("target_lang")
+  sourceText     String   @map("source_text")
+  translatedText String   @map("translated_text")
+  model          String?
 
   cohort Cohort? @relation(fields: [cohortId], references: [id])
 
@@ -1383,4 +1513,141 @@ model Translation {
 
   @@unique([entityType, entityId, sourceLang, targetLang])
   @@map("translations")
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// Experience Layer (§18 Tier 1) — see docs/experience-layer.md
+// Feature CODE for these arrives in later Phase-0+ work; this migration only
+// lands the tables those features will fill, so capture precedes computation.
+// ──────────────────────────────────────────────────────────────────────────
+
+// Uploaded evidence of goal progress (experience-layer.md §1.7). Files live in
+// storage; this row holds the signed-URL pointer + metadata.
+model GoalEvidence {
+  id           String     @id @default(cuid())
+  goalId       String     @map("goal_id")
+  cohortId     String     @map("cohort_id")
+  uploadedById String     @map("uploaded_by_id")
+  // Stage the evidence was submitted against, if any.
+  stage        GoalStage?
+  fileName     String     @map("file_name")
+  url          String
+  mimeType     String?    @map("mime_type")
+  size         Int?
+  note         String?
+
+  goal       Goal   @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  cohort     Cohort @relation(fields: [cohortId], references: [id])
+  uploadedBy User   @relation(fields: [uploadedById], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([goalId])
+  @@index([cohortId])
+  @@map("goal_evidence")
+}
+
+// Private support request routed to the admin queue (experience-layer.md §1.13).
+// Anonymous to other participants; the programme team always sees the requester.
+model SupportRequest {
+  id            String               @id @default(cuid())
+  cohortId      String               @map("cohort_id")
+  requesterId   String               @map("requester_id")
+  reason        SupportRequestReason
+  message       String?
+  status        SupportRequestStatus @default(OPEN)
+  handledById   String?              @map("handled_by_id")
+  adminResponse String?              @map("admin_response")
+  resolvedAt    DateTime?            @map("resolved_at")
+
+  cohort    Cohort @relation(fields: [cohortId], references: [id])
+  requester User   @relation("SupportRequester", fields: [requesterId], references: [id])
+  handledBy User?  @relation("SupportHandler", fields: [handledById], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([cohortId])
+  @@index([requesterId])
+  @@map("support_requests")
+}
+
+// Mentee's private reflection journal (experience-layer.md §1.16). Private by
+// default; an entry can be explicitly shared with the mentor. Same confidentiality
+// posture as DMs: content private, metadata-only to the risk monitor. Translate
+// toggles persist via the `translations` cache, not as columns here.
+model ReflectionJournalEntry {
+  id                 String    @id @default(cuid())
+  cohortId           String    @map("cohort_id")
+  authorId           String    @map("author_id")
+  sessionLogId       String?   @map("session_log_id")
+  title              String?
+  body               String
+  bodyLang           Language  @default(EN) @map("body_lang")
+  isSharedWithMentor Boolean   @default(false) @map("is_shared_with_mentor")
+  sharedAt           DateTime? @map("shared_at")
+
+  cohort     Cohort      @relation(fields: [cohortId], references: [id])
+  author     User        @relation(fields: [authorId], references: [id])
+  sessionLog SessionLog? @relation(fields: [sessionLogId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([cohortId])
+  @@index([authorId])
+  @@map("reflection_journal_entries")
+}
+
+// Mentor's private notes about a mentee (experience-layer.md §1.16). Private to
+// the mentor — never visible to admins or the mentee. DM-grade confidentiality.
+model MentorPrivateNote {
+  id       String   @id @default(cuid())
+  cohortId String   @map("cohort_id")
+  mentorId String   @map("mentor_id")
+  menteeId String   @map("mentee_id")
+  // Optional free-form categorization (observation / strength / growth area /
+  // follow-up / next-session idea) — mentors aren't boxed into fixed buckets.
+  kind     String?
+  body     String
+  bodyLang Language @default(EN) @map("body_lang")
+
+  cohort Cohort @relation(fields: [cohortId], references: [id])
+  mentor User   @relation("PrivateNoteMentor", fields: [mentorId], references: [id])
+  mentee User   @relation("PrivateNoteMentee", fields: [menteeId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([cohortId])
+  @@index([mentorId])
+  @@map("mentor_private_notes")
+}
+
+// Autosaved form drafts (experience-layer.md §1.11). One row per (user, formKey);
+// transient working state, cleared on successful submit so closing the browser
+// never destroys input.
+model FormDraft {
+  id       String  @id @default(cuid())
+  userId   String  @map("user_id")
+  cohortId String? @map("cohort_id")
+  // Stable key for the form instance, e.g. "goal:new" or "session-log:<meetingId>".
+  formKey  String  @map("form_key")
+  data     Json
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cohort Cohort? @relation(fields: [cohortId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@unique([userId, formKey])
+  @@index([userId])
+  @@map("form_drafts")
 }

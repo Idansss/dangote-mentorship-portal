@@ -1,5 +1,6 @@
 import 'server-only';
 import type { MailTransport, SendEmailInput } from './types';
+import { createGraphMailTransport, isGraphMailConfigured } from './graph';
 
 export type { MailTransport, SendEmailInput } from './types';
 
@@ -20,11 +21,12 @@ const logTransport: MailTransport = {
 
 let cached: MailTransport | null = null;
 
-// Selects the active transport. A Resend/Graph transport slots in here behind an
-// env check — exactly like getAiAdapter() — without touching call sites.
+// Selects the active transport behind an env check — exactly like getAiAdapter().
+// Microsoft Graph when its credentials exist (CLAUDE.md §2), else the log
+// transport so flows stay shippable dark. Call sites never change.
 export function getMailTransport(): MailTransport {
   if (cached) return cached;
-  cached = logTransport;
+  cached = isGraphMailConfigured() ? createGraphMailTransport() : logTransport;
   return cached;
 }
 

@@ -36,6 +36,9 @@ yarn-error.log*
 # prisma
 /prisma/*.db
 
+# local object storage (lib/storage local provider)
+/.storage/
+
 # vercel
 .vercel
 

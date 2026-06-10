@@ -1,0 +1,61 @@
+// Notification taxonomy + pure channel rules (experience-layer.md §1.10). Kept
+// free of `server-only`/Prisma so the routing logic is unit-testable. The string
+// values double as the i18n key under the `notifications.types` namespace and as
+// the `Notification.type` column value.
+
+export const NOTIFICATION_TYPES = [
+  'profile_incomplete',
+  'match_ready',
+  'goal_commented',
+  'meeting_scheduled',
+  'meeting_reminder',
+  'session_log_due',
+  'review_due',
+  'clinic_tomorrow',
+  'support_received',
+  'support_responded',
+] as const;
+
+export type NotificationType = (typeof NOTIFICATION_TYPES)[number];
+
+// Time-critical types carry a deadline/time element, so their email is sent
+// immediately rather than waiting for the daily digest (§1.10 batching rule).
+const TIME_CRITICAL: ReadonlySet<NotificationType> = new Set([
+  'meeting_reminder',
+  'session_log_due',
+  'review_due',
+  'clinic_tomorrow',
+]);
+
+export function isTimeCritical(type: NotificationType): boolean {
+  return TIME_CRITICAL.has(type);
+}
+
+export interface ChannelPrefs {
+  emailEnabled: boolean;
+  digestEnabled: boolean;
+}
+
+export type EmailChannel = 'immediate' | 'digest' | 'none';
+
+/**
+ * Decide how (if at all) a notification should reach email. In-app delivery is
+ * always immediate and decided separately — this governs the email channel only.
+ * Time-critical → immediate; otherwise the daily digest (when enabled).
+ */
+export function selectEmailChannel(type: NotificationType, prefs: ChannelPrefs): EmailChannel {
+  if (!prefs.emailEnabled) return 'none';
+  if (isTimeCritical(type)) return 'immediate';
+  return prefs.digestEnabled ? 'digest' : 'none';
+}
+
+/** A muted type produces no notification at all (no in-app row, no email). */
+export function isMuted(type: NotificationType, mutedTypes: readonly string[]): boolean {
+  return mutedTypes.includes(type);
+}
+
+export const DEFAULT_PREFS = {
+  emailEnabled: true,
+  digestEnabled: true,
+  mutedTypes: [] as string[],
+};

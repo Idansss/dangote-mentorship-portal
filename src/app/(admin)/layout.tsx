@@ -16,6 +16,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const tMatching = await getTranslations('matching');
   const tPeople = await getTranslations('people');
   const tInvites = await getTranslations('invites');
+  const tSupport = await getTranslations('support');
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -45,6 +46,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </Link>
           <Link href="/admin/invites" className="block rounded px-3 py-2 hover:bg-accent">
             {tInvites('title')}
+          </Link>
+          <Link href="/admin/support" className="block rounded px-3 py-2 hover:bg-accent">
+            {tSupport('queueTitle')}
           </Link>
         </aside>
         <main className="flex-1">{children}</main>

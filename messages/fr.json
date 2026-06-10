@@ -26,6 +26,16 @@
     "faq": "FAQ",
     "dashboard": "Tableau de bord",
     "admin": "Administration",
+    "agreements": "Accords",
+    "goals": "Objectifs",
+    "sessions": "Séances",
+    "meetings": "Rencontres",
+    "calendar": "Calendrier",
+    "journal": "Journal",
+    "support": "Soutien",
+    "pair": "Mon binôme",
+    "help": "Aide",
+    "notifications": "Notifications",
     "login": "Connexion"
   },
   "home": {
@@ -79,6 +89,42 @@
     "reviewer": "Tableau de bord de l’évaluateur",
     "generic": "Tableau de bord",
     "stub": "Davantage de fonctionnalités pour cette section arriveront lors d’une prochaine étape."
+  },
+  "dashboardCards": {
+    "all": "Tout voir",
+    "myMentor": "Mon mentor",
+    "openPair": "Ouvrir l'espace",
+    "noMentor": "Vous verrez votre mentor ici une fois jumelé.",
+    "nextMeeting": "Prochaine rencontre",
+    "noNextMeeting": "Aucune rencontre à venir — planifiez votre prochaine séance.",
+    "myGoals": "Mes objectifs",
+    "noGoals": "Aucun objectif pour l'instant. Définissez le premier.",
+    "myActions": "Mes actions",
+    "noActions": "Rien à votre charge pour le moment.",
+    "myMentees": "Mes mentorés",
+    "noMentees": "Vous n'avez pas encore de mentorés acceptés.",
+    "pendingReviews": "Objectifs à évaluer",
+    "review": "Évaluer",
+    "pendingReviewsHint": "Objectifs soumis en attente de votre évaluation.",
+    "logsAwaiting": "Comptes rendus à compléter",
+    "logNow": "Saisir",
+    "logsAwaitingHint": "Rencontres ayant eu lieu sans compte rendu de séance.",
+    "nextMeetings": "Prochaines rencontres",
+    "activePairs": "Binômes actifs",
+    "unmatchedMentees": "Mentorés non jumelés",
+    "unmatchedMentors": "Mentors non jumelés",
+    "openSupport": "Demandes de soutien ouvertes",
+    "goalsSubmitted": "Objectifs soumis",
+    "goalsApproved": "Objectifs approuvés",
+    "upcomingMeetings": "Rencontres à venir",
+    "trainingCompleted": "Formations complétées",
+    "weeklyTip": "Conseil de la semaine",
+    "tips": {
+      "tip1": "Venez à chaque séance avec un élément précis à travailler — cela garde la conversation ciblée.",
+      "tip2": "Après chaque rencontre, écrivez une courte réflexion. De petites notes dressent un portrait clair de votre progression.",
+      "tip3": "Bloqué sur un objectif ? Décomposez-le en la prochaine action concrète à faire cette semaine.",
+      "tip4": "Le temps de votre mentor est précieux — donnez suite aux actions convenues et dites-lui ce qui a fonctionné."
+    }
   },
   "admin": {
     "title": "Administration",
@@ -217,5 +263,623 @@
     "expires": "Expire le",
     "revoke": "Révoquer",
     "noInvites": "Aucune invitation pour l’instant. Créez la première."
+  },
+  "translate": {
+    "toEN": "Traduire en anglais",
+    "toFR": "Traduire en français",
+    "viewOriginal": "Voir l’original",
+    "showTranslation": "Afficher la traduction",
+    "translating": "Traduction en cours…",
+    "unavailable": "La traduction n’est pas disponible pour le moment."
+  },
+  "drafts": {
+    "saving": "Enregistrement…",
+    "saved": "Brouillon enregistré",
+    "error": "Impossible d’enregistrer votre brouillon.",
+    "resume": "Nous avons restauré votre brouillon non enregistré.",
+    "discard": "Supprimer le brouillon"
+  },
+  "agreements": {
+    "title": "Accords",
+    "subtitle": "Consultez et signez vos accords avec votre binôme — ils posent les bases de votre mentorat.",
+    "notEligible": "Vos accords seront accessibles une fois que vous et votre partenaire aurez accepté votre jumelage.",
+    "signedOn": "Signé",
+    "download": "Télécharger le PDF",
+    "preparingPdf": "Votre PDF signé est en cours de préparation.",
+    "sign": "Signer l’accord",
+    "signing": "Signature…",
+    "typedNameLabel": "Saisissez votre nom complet pour signer",
+    "signedConfirmation": "Signé — merci.",
+    "conflict": "Vous avez déjà signé cet accord.",
+    "forbidden": "Vous devez avoir un jumelage actif avant de pouvoir signer."
+  },
+  "goals": {
+    "title": "Objectifs",
+    "subtitle": "Définissez des objectifs de développement SMART, faites-les approuver par votre mentor et suivez vos progrès.",
+    "myGoals": "Mes objectifs",
+    "newGoal": "Définir un nouvel objectif",
+    "notEligible": "Les objectifs seront accessibles une fois que vous et votre mentor aurez accepté votre jumelage.",
+    "noGoalsMentee": "Vous n'avez pas encore défini d'objectif. Commencez avec le formulaire ci-dessus.",
+    "menteeGoals": "Les objectifs de mes mentorés",
+    "noPairings": "Vous n'avez pas encore de mentoré accepté.",
+    "noGoalsMentor": "Aucun objectif soumis pour l'instant.",
+    "noAccess": "Les objectifs sont réservés aux mentors et aux mentorés.",
+    "titleField": "Titre de l'objectif",
+    "competency": "Compétence à développer",
+    "whyMatters": "Pourquoi c'est important",
+    "currentLevel": "Niveau actuel",
+    "desiredLevel": "Niveau souhaité",
+    "learningActivity": "Activité d'apprentissage",
+    "successMeasure": "Comment mesurer la réussite",
+    "startDate": "Date de début",
+    "endDate": "Date cible",
+    "save": "Enregistrer les modifications",
+    "createGoal": "Enregistrer l'objectif",
+    "editGoal": "Modifier l'objectif",
+    "submitForReview": "Soumettre à l'examen du mentor",
+    "awaitingReview": "Soumis — en attente de l'examen de votre mentor.",
+    "updateProgress": "Mettre à jour l'avancement",
+    "coachTitle": "Coach d'objectifs IA",
+    "coachIntro": "Obtenez une proposition de réécriture SMART de votre objectif. Ce n'est qu'une suggestion — vous gardez le contrôle de ce que vous enregistrez.",
+    "askCoach": "Demander au coach",
+    "coaching": "Réflexion…",
+    "smartScore": "Préparation SMART",
+    "coachMissing": "Encore manquant",
+    "applySuggestion": "Appliquer la suggestion",
+    "coachNoSuggestion": "Pas de proposition de réécriture cette fois — utilisez la vérification ci-dessus.",
+    "coachUnavailable": "Le coach IA n'est pas configuré. Utilisez la vérification ci-dessus pour renforcer votre objectif.",
+    "reviewComment": "Retour pour votre mentoré",
+    "reviewCommentHint": "Facultatif — expliquez ce qui est solide ou ce qu'il faut améliorer.",
+    "approve": "Approuver",
+    "requestChanges": "Demander des modifications",
+    "commentOnly": "Commenter seulement",
+    "mentorFeedback": "Retour du mentor",
+    "noComment": "(pas de commentaire)",
+    "evidence": "Preuves",
+    "evidenceFile": "Fichier de preuve",
+    "evidenceHint": "PDF, image, Word, PowerPoint ou texte — jusqu'à 10 Mo.",
+    "evidenceNote": "Note (facultatif)",
+    "uploadEvidence": "Téléverser une preuve",
+    "status": {
+      "DRAFT": "Brouillon",
+      "SUBMITTED": "Soumis",
+      "APPROVED": "Approuvé",
+      "REJECTED": "Modifications demandées",
+      "COMPLETED": "Terminé",
+      "ARCHIVED": "Archivé"
+    },
+    "stage": {
+      "DRAFTED": "Rédigé",
+      "MENTOR_REVIEWED": "Examiné par le mentor",
+      "APPROVED": "Approuvé",
+      "IN_PROGRESS": "En cours",
+      "EVIDENCE_SUBMITTED": "Preuve soumise",
+      "ACHIEVED": "Atteint"
+    },
+    "smart": {
+      "specific": "Spécifique",
+      "measurable": "Mesurable",
+      "achievable": "Atteignable",
+      "relevant": "Pertinent",
+      "timeBound": "Temporellement défini"
+    }
+  },
+  "sessions": {
+    "title": "Comptes rendus de séance",
+    "subtitle": "Notez vos échanges, capturez les actions à mener et réfléchissez — l'IA peut structurer vos notes brutes.",
+    "noPairings": "Vous n'avez pas encore de mentoré accepté.",
+    "logSession": "Enregistrer une séance",
+    "noLogsYet": "Aucune séance enregistrée pour l'instant.",
+    "mySessions": "Mes séances",
+    "notEligible": "Les comptes rendus apparaissent une fois que vous et votre mentor avez accepté votre jumelage.",
+    "noLogsMentee": "Votre mentor n'a pas encore enregistré de séance.",
+    "noAccess": "Les comptes rendus sont réservés aux mentors et aux mentorés.",
+    "mentee": "Mentoré",
+    "meetingType": "Type de rencontre",
+    "date": "Date",
+    "time": "Heure",
+    "roughNotes": "Notes brutes",
+    "roughNotesHint": "Saisissez des notes en vrac — p. ex. « discuté des compétences de présentation, confiance ; le mentoré préparera un court exposé avant la prochaine séance ».",
+    "summarize": "Structurer avec l'IA",
+    "summarizing": "En cours…",
+    "assistantHint": "L'IA remplit les champs ci-dessous comme suggestion modifiable — rien n'est enregistré tant que vous ne le faites pas.",
+    "assistantNoResult": "Pas de suggestion structurée cette fois — remplissez les champs manuellement.",
+    "assistantUnavailable": "L'assistant IA n'est pas configuré. Remplissez les champs manuellement.",
+    "riskFlagged": "L'assistant a signalé cette séance comme potentiellement à risque — vérifiez avant d'enregistrer.",
+    "suggestedAgenda": "Ordre du jour suggéré",
+    "competencyDiscussed": "Compétence abordée",
+    "goalDiscussed": "Objectif abordé",
+    "discussionSummary": "Résumé de la discussion",
+    "actionsAgreed": "Actions convenues",
+    "challenges": "Difficultés soulevées",
+    "resourcesNeeded": "Ressources nécessaires",
+    "nextActionPlan": "Plan d'action suivant",
+    "timeline": "Échéancier",
+    "nextMeetingDate": "Date de la prochaine séance",
+    "mentorNotes": "Notes du mentor (privées)",
+    "actionItems": "Actions à mener",
+    "addActionItem": "Ajouter une action",
+    "noActionItemsYet": "Aucune action pour l'instant — ajoutez-en une ou laissez l'IA les extraire.",
+    "noActionItems": "Aucune action.",
+    "taskPlaceholder": "Que faut-il faire ?",
+    "task": "Tâche",
+    "owner": "Responsable",
+    "dueDate": "Échéance",
+    "due": "échéance",
+    "overdue": "En retard",
+    "owner_mentee": "Mentoré",
+    "owner_mentor": "Mentor",
+    "owner_none": "Non attribué",
+    "saveLog": "Enregistrer le compte rendu",
+    "offline": "Hors ligne",
+    "savedLocally": "Enregistré sur cet appareil",
+    "syncing": "Enregistrement…",
+    "synced": "Enregistré",
+    "offlineQueued": "Enregistré localement — sera synchronisé une fois de retour en ligne.",
+    "aiSummary": "Résumé IA",
+    "menteeReflection": "Réflexion du mentoré",
+    "yourReflection": "Votre réflexion",
+    "reflectionHint": "Qu'avez-vous retenu ? Que ferez-vous ensuite ?",
+    "saveReflection": "Enregistrer la réflexion",
+    "status": "Statut",
+    "type": {
+      "ZOOM": "Zoom",
+      "PHYSICAL": "En personne",
+      "PHONE": "Téléphone",
+      "TEAMS": "Teams",
+      "MEET": "Google Meet"
+    },
+    "itemStatus": {
+      "OPEN": "À commencer",
+      "IN_PROGRESS": "En cours",
+      "DONE": "Terminé",
+      "BLOCKED": "Bloqué"
+    }
+  },
+  "meetings": {
+    "title": "Rencontres",
+    "subtitle": "Planifiez vos séances et confirmez si elles ont eu lieu. Les rencontres planifiées se synchronisent avec Outlook lorsqu'il est connecté.",
+    "noAccess": "Les rencontres sont réservées aux mentors et aux mentorés.",
+    "notEligible": "La planification de rencontres est accessible une fois que vous et votre partenaire avez accepté votre jumelage.",
+    "scheduleTitle": "Planifier une rencontre",
+    "schedule": "Planifier la rencontre",
+    "with": "Avec",
+    "type": "Type de rencontre",
+    "titleField": "Titre",
+    "titlePlaceholder": "p. ex. Séance de mentorat mensuelle",
+    "startsAt": "Début",
+    "endsAt": "Fin (facultatif)",
+    "location": "Lieu (facultatif)",
+    "locationPlaceholder": "Salle, adresse, ou laissez vide pour en ligne",
+    "description": "Notes (facultatif)",
+    "needsCapture": "À confirmer",
+    "prepare": "Préparer",
+    "upcoming": "À venir",
+    "noUpcoming": "Aucune rencontre à venir. Planifiez-en une ci-dessus.",
+    "past": "Rencontres passées",
+    "joinLink": "Rejoindre la rencontre",
+    "cancel": "Annuler la rencontre",
+    "scheduled": "Planifiée",
+    "cancelled": "Annulée",
+    "tookPlace": "A eu lieu",
+    "didNotTakePlace": "N'a pas eu lieu",
+    "reason": "Raison",
+    "didItHappen": "Cette rencontre a-t-elle eu lieu ?",
+    "yesHappened": "Oui, elle a eu lieu",
+    "noDidnt": "Non",
+    "chooseReason": "Pourquoi pas ?",
+    "back": "Retour",
+    "role": {
+      "mentor": "mentor",
+      "mentee": "mentoré"
+    },
+    "meetingType": {
+      "ZOOM": "Zoom",
+      "PHYSICAL": "En personne",
+      "PHONE": "Téléphone",
+      "TEAMS": "Teams",
+      "MEET": "Google Meet"
+    },
+    "reasonOption": {
+      "MENTOR_CANCELLED": "Le mentor a annulé",
+      "MENTEE_CANCELLED": "Le mentoré a annulé",
+      "FORGOT": "Nous avons oublié",
+      "RESCHEDULED": "Reportée",
+      "OTHER": "Autre"
+    }
+  },
+  "journal": {
+    "title": "Journal et notes privées",
+    "subtitle": "Votre espace privé pour réfléchir et prendre des notes. Rien n'est partagé sans votre accord.",
+    "noAccess": "Le journal est réservé aux mentors et aux mentorés.",
+    "myJournal": "Mon journal de réflexion",
+    "noCohort": "Votre journal s'activera dès que vous ferez partie d'une cohorte active.",
+    "newEntry": "Nouvelle réflexion",
+    "entryTitle": "Titre (facultatif)",
+    "entryTitleHint": "ex. Après ma deuxième séance",
+    "entryBody": "Votre réflexion",
+    "entryBodyHint": "Écrivez librement — ces questions ne sont qu'un guide :",
+    "prompts": {
+      "learned": "Qu'ai-je appris ?",
+      "action": "Quelle action vais-je entreprendre ?",
+      "challenge": "Quel défi reste-t-il ?",
+      "feedback": "Quels retours ai-je reçus ?",
+      "support": "De quel soutien ai-je besoin ?"
+    },
+    "linkSession": "Lier à une séance (facultatif)",
+    "noSession": "Pas lié à une séance précise",
+    "writtenIn": "Rédigé en",
+    "saveEntry": "Enregistrer la réflexion",
+    "privateNotice": "Vos réflexions sont privées. Partagez-en une avec votre mentor uniquement si vous le souhaitez.",
+    "noEntries": "Aucune réflexion pour le moment. Rédigez la première ci-dessus.",
+    "untitled": "Réflexion sans titre",
+    "privateBadge": "Privée",
+    "sharedBadge": "Partagée avec le mentor",
+    "fromSession": "de la séance",
+    "share": "Partager avec le mentor",
+    "unshare": "Rendre à nouveau privée",
+    "confirmDelete": "Supprimer cette entrée ?",
+    "sharedWithMe": "Réflexions partagées avec moi",
+    "noShared": "Aucun mentoré n'a encore partagé de réflexion avec vous.",
+    "myNotes": "Mes notes privées",
+    "notesPrivateNotice": "Ces notes vous sont privées — jamais visibles par le mentoré ni par les administrateurs.",
+    "noMentees": "Vous n'avez pas encore de jumelage accepté.",
+    "addNote": "Ajouter une note privée",
+    "notePlaceholder": "Observations, points forts, axes de progrès, suivis, idées pour la prochaine séance…",
+    "noteKind": "Type",
+    "noteKindNone": "Aucun",
+    "noteKinds": {
+      "observation": "Observation",
+      "strength": "Point fort",
+      "growth": "Axe de progrès",
+      "followup": "Suivi",
+      "idea": "Idée pour la prochaine séance"
+    },
+    "saveNote": "Enregistrer la note",
+    "noNotesYet": "Aucune note sur ce mentoré pour le moment."
+  },
+  "support": {
+    "title": "Demander du soutien en privé",
+    "subtitle": "Dites à l'équipe du programme si quelque chose ne va pas. Votre demande est privée.",
+    "newRequest": "Nouvelle demande",
+    "privacyNotice": "Ceci est anonyme pour les autres participants, mais l'équipe du programme (les administrateurs) verra que vous avez fait la demande afin de pouvoir vous aider. Ce n'est jamais montré à votre mentor ni à votre mentoré.",
+    "reasonLabel": "Pour quoi avez-vous besoin d'aide ?",
+    "chooseReason": "Choisissez une raison…",
+    "reason": {
+      "CANNOT_REACH_PARTNER": "Je n'arrive pas à joindre mon mentor / mentoré",
+      "NEED_GOAL_HELP": "J'ai besoin d'aide pour définir des objectifs",
+      "UNCOMFORTABLE_WITH_MATCH": "Je ne suis pas à l'aise avec mon jumelage",
+      "NEED_ADMIN_INTERVENTION": "J'ai besoin qu'un administrateur intervienne",
+      "COMMUNICATION_ISSUE": "Nous avons un problème de communication",
+      "LANGUAGE_SUPPORT": "J'ai besoin d'un soutien linguistique",
+      "OTHER": "Autre chose"
+    },
+    "messageLabel": "Dites-nous en plus (facultatif)",
+    "messageHint": "Ajoutez tout détail utile à notre compréhension.",
+    "submit": "Envoyer la demande",
+    "submitted": "Votre demande a été envoyée à l'équipe du programme.",
+    "myRequests": "Mes demandes",
+    "noRequests": "Vous n'avez fait aucune demande de soutien.",
+    "adminResponse": "Réponse de l'équipe",
+    "awaitingResponse": "En attente d'une réponse de l'équipe du programme.",
+    "status": {
+      "OPEN": "Ouverte",
+      "IN_PROGRESS": "En cours",
+      "RESOLVED": "Résolue"
+    },
+    "queueTitle": "Demandes de soutien",
+    "queueSubtitle": "{open} ouverte(s). Les demandeurs ne sont visibles que par l'équipe du programme.",
+    "queueEmpty": "Aucune demande de soutien.",
+    "noMessage": "Aucun détail supplémentaire fourni.",
+    "handledBy": "Dernier traitement par {name}",
+    "responseLabel": "Réponse au demandeur",
+    "responseHint": "Ce message est montré à la personne qui a fait la demande.",
+    "saveResponse": "Enregistrer et mettre à jour"
+  },
+  "pair": {
+    "title": "Votre binôme",
+    "subtitle": "Tout ce que vous partagez avec votre partenaire — accords, rencontres, objectifs et actions au même endroit.",
+    "noAccess": "L'espace du binôme est réservé aux mentors et aux mentorés.",
+    "noPair": "Votre espace de binôme s'ouvre une fois que vous et votre partenaire avez accepté votre jumelage.",
+    "pickMentee": "Choisissez un mentoré pour ouvrir son espace partagé.",
+    "openWorkspace": "Ouvrir l'espace",
+    "mentorLabel": "Mentor",
+    "menteeLabel": "Mentoré",
+    "phone": "Téléphone",
+    "availability": "Disponibilité",
+    "open": "Ouvrir",
+    "agreementsTitle": "Accords",
+    "agreementType": {
+      "MENTORING": "Accord de mentorat",
+      "CONFIDENTIALITY": "Accord de confidentialité"
+    },
+    "signed": "signé",
+    "notSigned": "en attente",
+    "meetingsTitle": "Rencontres",
+    "nextMeeting": "Prochaine rencontre",
+    "noNextMeeting": "Aucune planifiée — planifiez votre prochaine séance.",
+    "meetingsHeld": "{count} rencontre(s)",
+    "sessionsLogged": "{count} compte(s) rendu(s) de séance",
+    "lastSession": "dernière le",
+    "goalsTitle": "Objectifs",
+    "noGoals": "Aucun objectif soumis pour l'instant.",
+    "actionItemsTitle": "Actions en cours",
+    "noActionItems": "Aucune action en cours.",
+    "messagesTitle": "Messages directs",
+    "messagesComingSoon": "La messagerie privée entre vous et votre partenaire arrivera avec les fonctionnalités communautaires."
+  },
+  "tour": {
+    "skip": "Passer",
+    "back": "Précédent",
+    "next": "Suivant",
+    "done": "Compris",
+    "stepLabel": "Étape {current} sur {total}",
+    "mentee": {
+      "steps": [
+        { "title": "Bienvenue", "body": "Voici votre point d'ancrage. Le bouton en haut vous indique quoi faire ensuite en cas de doute." },
+        { "title": "Votre mentor", "body": "Une fois jumelé, votre mentor apparaît ici. Ouvrez votre espace partagé pour voir accords, objectifs et rencontres au même endroit." },
+        { "title": "Définir des objectifs SMART", "body": "Utilisez Objectifs pour rédiger vos objectifs — le coach IA peut les peaufiner, et votre mentor les approuve." },
+        { "title": "Se rencontrer et réfléchir", "body": "Planifiez des séances, puis notez une courte réflexion ensuite. Le Journal garde vos notes privées." },
+        { "title": "Besoin d'aide ?", "body": "Utilisez le bouton + pour les actions rapides, et Demander du soutien en privé si quelque chose ne va pas." }
+      ]
+    },
+    "mentor": {
+      "steps": [
+        { "title": "Bienvenue", "body": "Voici votre point d'ancrage. Le bouton en haut fait ressortir votre prochaine action la plus importante." },
+        { "title": "Vos mentorés", "body": "Chaque mentoré a un espace partagé. Ouvrez-le pour ses objectifs, accords, séances et le brise-glace de première rencontre." },
+        { "title": "Évaluer les objectifs", "body": "Quand un mentoré soumet un objectif, approuvez-le, demandez des modifications ou commentez depuis la page Objectifs." },
+        { "title": "Consigner les séances", "body": "Après chaque séance, notez ce que vous avez abordé — collez des notes brutes et laissez l'IA les structurer et en extraire les actions." },
+        { "title": "Garder le cap", "body": "Le tableau de bord signale les évaluations et comptes rendus en attente. Utilisez le bouton + pour les actions rapides." }
+      ]
+    }
+  },
+  "help": {
+    "title": "Centre d'aide",
+    "subtitle": "De courts guides pour tirer le meilleur du programme.",
+    "searchPlaceholder": "Rechercher des articles d'aide…",
+    "noResults": "Aucun article ne correspond à votre recherche.",
+    "back": "Retour au centre d'aide",
+    "replayTour": "Revoir la visite guidée",
+    "tourReset": "La visite réapparaîtra",
+    "articles": {
+      "matching": {
+        "title": "Comment fonctionne le jumelage",
+        "summary": "Comment les mentors et mentorés sont jumelés.",
+        "body": [
+          "Le jumelage associe chaque mentoré à un mentor selon la langue, les compétences, les objectifs de carrière, l'expérience, le service et la disponibilité.",
+          "La langue est une règle stricte : les anglophones sont jumelés avec des anglophones et les francophones avec des francophones — aucun jumelage interlangue n'est jamais créé.",
+          "Le système suggère et explique les jumelages, mais un administrateur examine et approuve chaque jumelage. Vous serez averti lorsque le vôtre sera prêt et pourrez l'accepter depuis votre tableau de bord."
+        ]
+      },
+      "goals": {
+        "title": "Soumettre des objectifs",
+        "summary": "Rédiger, affiner et faire approuver vos objectifs.",
+        "body": [
+          "Ouvrez Objectifs et créez un objectif de développement à l'aide des champs SMART : ce que vous voulez développer, pourquoi, votre niveau actuel et souhaité, et comment mesurer la réussite.",
+          "Le coach IA peut proposer une reformulation plus claire et mesurable — ce n'est qu'une suggestion, vous gardez le contrôle de ce que vous enregistrez.",
+          "Soumettez l'objectif à l'évaluation de votre mentor. Il peut l'approuver, demander des modifications ou commenter. Les objectifs approuvés progressent par étapes, et vous pouvez téléverser des preuves en chemin."
+        ]
+      },
+      "scheduling": {
+        "title": "Planifier des rencontres",
+        "summary": "Planifier des séances et confirmer leur tenue.",
+        "body": [
+          "Vous ou votre partenaire pouvez planifier une séance depuis Rencontres : indiquez un titre, un type et une heure.",
+          "Lorsque Outlook est connecté, l'événement est ajouté automatiquement à votre calendrier.",
+          "Une fois la rencontre passée, une question en un clic vous est posée : a-t-elle eu lieu ? Y répondre garde les dossiers exacts."
+        ]
+      },
+      "sessions": {
+        "title": "Consigner les séances",
+        "summary": "Saisir ce que vous avez abordé et convenu.",
+        "body": [
+          "Les mentors consignent chaque séance depuis Séances. Vous pouvez remplir les champs directement, ou coller des notes brutes et laisser l'IA les structurer avec les actions à suivre.",
+          "Tout ce que l'IA produit est une suggestion modifiable — rien n'est enregistré tant que vous ne l'avez pas confirmé.",
+          "Les actions précisent qui fait quoi et pour quand. Les mentorés peuvent ajouter une réflexion privée à chaque séance de leur côté."
+        ]
+      },
+      "journal": {
+        "title": "Journal et notes privées",
+        "summary": "Votre espace privé pour réfléchir.",
+        "body": [
+          "Votre journal est privé par défaut. Utilisez les invites pour réfléchir après une séance : ce que vous avez appris, ce que vous ferez ensuite, le défi qui demeure.",
+          "Vous pouvez choisir de partager une entrée avec votre mentor — et la rendre privée à nouveau à tout moment.",
+          "Les mentors disposent de leurs propres notes privées par mentoré. Elles ne sont jamais visibles par le mentoré ni par les administrateurs."
+        ]
+      },
+      "translation": {
+        "title": "Travailler en anglais et en français",
+        "summary": "Traduire tout texte, garder l'original.",
+        "body": [
+          "Vous n'êtes jamais forcé d'écrire en anglais. Écrivez dans la langue qui vous convient.",
+          "La plupart des zones de texte offrent un bouton de traduction pour afficher le contenu en anglais ou en français ; l'original est toujours conservé.",
+          "Les traductions sont enregistrées afin qu'un même contenu ne soit jamais retraduit."
+        ]
+      },
+      "support": {
+        "title": "Demander du soutien",
+        "summary": "Joindre l'équipe du programme en privé.",
+        "body": [
+          "Si quelque chose ne va pas — vous ne joignez pas votre partenaire, le jumelage vous met mal à l'aise, ou vous avez besoin d'aide — utilisez Demander du soutien.",
+          "Votre demande est privée : elle est anonyme pour les autres participants, mais l'équipe du programme la voit afin de vous aider. Elle n'est jamais montrée à votre mentor ou mentoré.",
+          "Un administrateur répondra en privé, et vous verrez sa réponse sur votre page de soutien."
+        ]
+      }
+    }
+  },
+  "quickActions": {
+    "title": "Actions rapides",
+    "scheduleMeeting": "Planifier une rencontre",
+    "addSessionLog": "Ajouter un compte rendu",
+    "submitGoal": "Soumettre un objectif",
+    "addReflection": "Ajouter une réflexion",
+    "requestSupport": "Demander du soutien"
+  },
+  "calendar": {
+    "title": "Calendrier",
+    "subtitle": "Vos séances et les jalons du programme. Les rencontres planifiées se synchronisent avec Outlook lorsqu'il est connecté.",
+    "view": { "month": "Mois", "week": "Semaine", "list": "Liste" },
+    "previous": "Précédent",
+    "next": "Suivant",
+    "today": "Aujourd'hui",
+    "empty": "Aucun événement sur cette période.",
+    "milestoneStart": "Début du programme",
+    "milestoneEnd": "Fin du programme",
+    "months": {
+      "m0": "Janvier", "m1": "Février", "m2": "Mars", "m3": "Avril", "m4": "Mai", "m5": "Juin",
+      "m6": "Juillet", "m7": "Août", "m8": "Septembre", "m9": "Octobre", "m10": "Novembre", "m11": "Décembre"
+    },
+    "weekdaysShort": {
+      "d0": "Lun", "d1": "Mar", "d2": "Mer", "d3": "Jeu", "d4": "Ven", "d5": "Sam", "d6": "Dim"
+    }
+  },
+  "nextAction": {
+    "prompt": "Vous ne savez pas par où commencer ?",
+    "cta": "Que dois-je faire ensuite ?",
+    "again": "Actualiser",
+    "thinking": "Réflexion…",
+    "open": "Ouvrir",
+    "error": "Impossible de déterminer cela pour l'instant. Veuillez réessayer.",
+    "allCaughtUp": "Vous êtes à jour — rien ne requiert votre attention pour l'instant.",
+    "overdueActions": "Vous avez {count} action(s) en retard à faire avancer.",
+    "confirmMeeting": "Confirmez si vos récentes rencontres ont eu lieu — {count} en attente.",
+    "scheduleMeeting": "Planifiez votre prochaine séance de mentorat.",
+    "goalChanges": "Votre mentor a demandé des modifications sur {count} objectif(s) — jetez-y un œil.",
+    "setGoal": "Définissez votre premier objectif de développement avec votre mentor.",
+    "goalReviews": "Vous avez {count} objectif(s) en attente de votre évaluation.",
+    "openSupport": "Il y a {count} demande(s) de soutien ouverte(s) dans la file.",
+    "pendingMatches": "Il y a {count} jumelage(s) en attente de votre approbation."
+  },
+  "icebreaker": {
+    "title": "Brise-glace pour la première rencontre",
+    "subtitle": "Un guide personnalisé créé à partir de vos deux profils pour faciliter votre première séance.",
+    "fallbackBadge": "À partir de vos profils",
+    "cachedBadge": "Généré par l'IA",
+    "generate": "Générer avec l'IA",
+    "regenerate": "Régénérer",
+    "generating": "Génération…",
+    "aiOff": "Les suggestions de l'IA sont désactivées — voici un guide créé à partir de vos profils.",
+    "sharedInterests": "Intérêts communs",
+    "openingQuestions": "Questions d'ouverture",
+    "menteeWants": "Ce que le mentoré veut apprendre",
+    "mentorOffers": "Ce que le mentor peut offrir",
+    "agenda": "Ordre du jour suggéré pour la première rencontre",
+    "none": "Rien à suggérer pour l'instant."
+  },
+  "journey": {
+    "title": "Votre parcours de mentorat",
+    "progress": "{percent} % terminé",
+    "steps": {
+      "profile": "Profil",
+      "training": "Formation",
+      "matched": "Jumelé",
+      "confidentiality": "Accord de confidentialité",
+      "goals": "Objectifs soumis",
+      "sessions": "Séances mensuelles",
+      "midterm": "Évaluation à mi-parcours",
+      "final": "Évaluation finale",
+      "completion": "Certificat d'achevement"
+    },
+    "states": {
+      "completed": "Fait",
+      "needs_action": "À vous de jouer",
+      "overdue": "En retard",
+      "pending": "À venir"
+    }
+  },
+  "prepare": {
+    "title": "Préparez votre séance",
+    "backToMeetings": "Retour aux rencontres",
+    "previousSession": "Séance précédente",
+    "noPreviousSession": "Aucune séance enregistrée pour ce binôme.",
+    "pendingActions": "Actions en attente",
+    "noPendingActions": "Aucune action ouverte.",
+    "goalsToReview": "Objectifs à revoir",
+    "noGoals": "Aucun objectif actif enregistré.",
+    "suggestions": "Préparation suggérée",
+    "fallbackBadge": "Guide standard",
+    "cachedBadge": "Généré par l'IA",
+    "generate": "Générer avec l'IA",
+    "regenerate": "Régénérer",
+    "generating": "Génération…",
+    "aiOff": "Les suggestions IA sont désactivées — affichage du guide de préparation standard.",
+    "agenda": "Ordre du jour suggéré",
+    "questions": "Questions à poser",
+    "challenges": "Défis à aborder",
+    "resources": "Ressources recommandées",
+    "none": "Aucune suggestion."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "subtitle": "Ce qui requiert votre attention, et comment vous souhaitez en être informé.",
+    "inbox": "Boîte de réception",
+    "unreadCount": "{count} non lue(s)",
+    "markAllRead": "Tout marquer comme lu",
+    "markRead": "Marquer comme lu",
+    "open": "Ouvrir",
+    "empty": "Vous êtes à jour.",
+    "prefsTitle": "Préférences de notification",
+    "prefEmail": "M'envoyer les notifications par courriel",
+    "prefDigest": "Regrouper les courriels non urgents dans un résumé quotidien",
+    "prefMute": "Désactiver certaines notifications",
+    "prefMuteHint": "Les notifications désactivées n'apparaîtront pas dans votre boîte de réception et ne seront pas envoyées par courriel.",
+    "savePrefs": "Enregistrer les préférences",
+    "prefsSaved": "Préférences enregistrées.",
+    "digest": {
+      "subject": "Votre résumé de mentorat ({count})",
+      "intro": "Voici ce qui s'est passé dans votre programme — {count} mise(s) à jour :"
+    },
+    "types": {
+      "profile_incomplete": {
+        "label": "Profil incomplet",
+        "title": "Complétez votre profil",
+        "body": "Il manque des informations à votre profil. Le compléter facilite le jumelage et les rapports."
+      },
+      "match_ready": {
+        "label": "Jumelage prêt",
+        "title": "Vous avez été jumelé",
+        "body": "Ouvrez votre tableau de bord pour découvrir votre jumelage et commencer."
+      },
+      "goal_commented": {
+        "label": "Retour sur objectif",
+        "title": "Retour de {mentorName} sur un objectif",
+        "body": "{mentorName} a examiné votre objectif « {goalTitle} »."
+      },
+      "meeting_scheduled": {
+        "label": "Séance planifiée",
+        "title": "Nouvelle séance planifiée",
+        "body": "{organizerName} a planifié « {title} » pour le {date}."
+      },
+      "meeting_reminder": {
+        "label": "Rappel de séance",
+        "title": "Séance à venir",
+        "body": "Rappel : « {title} » le {date}."
+      },
+      "session_log_due": {
+        "label": "Compte rendu attendu",
+        "title": "Compte rendu de séance attendu",
+        "body": "Ajoutez un compte rendu de votre récente séance pour garder une trace des progrès."
+      },
+      "review_due": {
+        "label": "Évaluation attendue",
+        "title": "Une évaluation vous attend",
+        "body": "Une évaluation de mentorat est attendue. Cela ne prend que quelques minutes."
+      },
+      "clinic_tomorrow": {
+        "label": "Rappel de clinique",
+        "title": "Clinique demain",
+        "body": "« {title} » a lieu demain. Ne la manquez pas."
+      },
+      "support_received": {
+        "label": "Demande de soutien (admin)",
+        "title": "Nouvelle demande de soutien",
+        "body": "Un participant a demandé un soutien privé. Consultez-la dans la file d'attente."
+      },
+      "support_responded": {
+        "label": "Réponse de soutien",
+        "title": "Mise à jour de soutien",
+        "body": "L'équipe du programme a répondu à votre demande de soutien."
+      }
+    }
   }
 }

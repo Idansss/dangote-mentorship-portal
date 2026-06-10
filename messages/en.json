@@ -26,6 +26,16 @@
     "faq": "FAQ",
     "dashboard": "Dashboard",
     "admin": "Admin",
+    "agreements": "Agreements",
+    "goals": "Goals",
+    "sessions": "Sessions",
+    "meetings": "Meetings",
+    "calendar": "Calendar",
+    "journal": "Journal",
+    "support": "Support",
+    "pair": "My pair",
+    "help": "Help",
+    "notifications": "Notifications",
     "login": "Login"
   },
   "home": {
@@ -79,6 +89,42 @@
     "reviewer": "Reviewer dashboard",
     "generic": "Dashboard",
     "stub": "More for this area arrives in a later milestone."
+  },
+  "dashboardCards": {
+    "all": "View all",
+    "myMentor": "My mentor",
+    "openPair": "Open workspace",
+    "noMentor": "You'll see your mentor here once you're matched.",
+    "nextMeeting": "Next meeting",
+    "noNextMeeting": "No upcoming meeting — schedule your next session.",
+    "myGoals": "My goals",
+    "noGoals": "No goals yet. Set your first one.",
+    "myActions": "My action items",
+    "noActions": "Nothing on your plate right now.",
+    "myMentees": "My mentees",
+    "noMentees": "You don't have any accepted mentees yet.",
+    "pendingReviews": "Goals to review",
+    "review": "Review",
+    "pendingReviewsHint": "Submitted goals awaiting your review.",
+    "logsAwaiting": "Logs to complete",
+    "logNow": "Log now",
+    "logsAwaitingHint": "Meetings that happened with no session log yet.",
+    "nextMeetings": "Next meetings",
+    "activePairs": "Active pairs",
+    "unmatchedMentees": "Unmatched mentees",
+    "unmatchedMentors": "Unmatched mentors",
+    "openSupport": "Open support requests",
+    "goalsSubmitted": "Goals submitted",
+    "goalsApproved": "Goals approved",
+    "upcomingMeetings": "Upcoming meetings",
+    "trainingCompleted": "Training completed",
+    "weeklyTip": "Tip of the week",
+    "tips": {
+      "tip1": "Come to each session with one specific thing you want to work on — it keeps the conversation focused.",
+      "tip2": "After every meeting, write a short reflection. Small notes add up to a clear picture of your growth.",
+      "tip3": "Stuck on a goal? Break it into the next single action you can take this week.",
+      "tip4": "Your mentor's time is a gift — follow up on the actions you agreed, and tell them what worked."
+    }
   },
   "admin": {
     "title": "Administration",
@@ -217,5 +263,623 @@
     "expires": "Expires",
     "revoke": "Revoke",
     "noInvites": "No invites yet. Create the first one."
+  },
+  "translate": {
+    "toEN": "Translate to English",
+    "toFR": "Translate to French",
+    "viewOriginal": "View original",
+    "showTranslation": "Show translation",
+    "translating": "Translating…",
+    "unavailable": "Translation isn't available right now."
+  },
+  "drafts": {
+    "saving": "Saving…",
+    "saved": "Draft saved",
+    "error": "Couldn't save your draft.",
+    "resume": "We restored your unsaved draft.",
+    "discard": "Discard draft"
+  },
+  "agreements": {
+    "title": "Agreements",
+    "subtitle": "Review and sign your agreements with your pair — they set the foundation for your mentorship.",
+    "notEligible": "Your agreements unlock once you and your partner have accepted your match.",
+    "signedOn": "Signed",
+    "download": "Download PDF",
+    "preparingPdf": "Your signed PDF is being prepared.",
+    "sign": "Sign agreement",
+    "signing": "Signing…",
+    "typedNameLabel": "Type your full name to sign",
+    "signedConfirmation": "Signed — thank you.",
+    "conflict": "You have already signed this agreement.",
+    "forbidden": "You need an active pairing before you can sign."
+  },
+  "goals": {
+    "title": "Goals",
+    "subtitle": "Set SMART development goals, get them approved by your mentor, and track your progress.",
+    "myGoals": "My goals",
+    "newGoal": "Set a new goal",
+    "notEligible": "Goals unlock once you and your mentor have accepted your match.",
+    "noGoalsMentee": "You haven't set any goals yet. Start with the form above.",
+    "menteeGoals": "My mentees' goals",
+    "noPairings": "You don't have any accepted mentees yet.",
+    "noGoalsMentor": "No goals submitted yet.",
+    "noAccess": "Goals are for mentors and mentees.",
+    "titleField": "Goal title",
+    "competency": "Competency to develop",
+    "whyMatters": "Why it matters",
+    "currentLevel": "Current level",
+    "desiredLevel": "Desired level",
+    "learningActivity": "Learning activity",
+    "successMeasure": "How success is measured",
+    "startDate": "Start date",
+    "endDate": "Target date",
+    "save": "Save changes",
+    "createGoal": "Save goal",
+    "editGoal": "Edit goal",
+    "submitForReview": "Submit for mentor review",
+    "awaitingReview": "Submitted — awaiting your mentor's review.",
+    "updateProgress": "Update progress",
+    "coachTitle": "AI Goal Coach",
+    "coachIntro": "Get a suggested SMART rewrite of your goal. It's only a suggestion — you stay in control of what you save.",
+    "askCoach": "Ask the Goal Coach",
+    "coaching": "Thinking…",
+    "smartScore": "SMART readiness",
+    "coachMissing": "Still missing",
+    "applySuggestion": "Apply suggestion",
+    "coachNoSuggestion": "No rewrite suggestion this time — use the readiness check above.",
+    "coachUnavailable": "The AI coach isn't configured. Use the readiness check above to strengthen your goal.",
+    "reviewComment": "Feedback for your mentee",
+    "reviewCommentHint": "Optional — explain what's strong or what to refine.",
+    "approve": "Approve",
+    "requestChanges": "Request changes",
+    "commentOnly": "Comment only",
+    "mentorFeedback": "Mentor feedback",
+    "noComment": "(no comment)",
+    "evidence": "Evidence",
+    "evidenceFile": "Evidence file",
+    "evidenceHint": "PDF, image, Word, PowerPoint or text — up to 10 MB.",
+    "evidenceNote": "Note (optional)",
+    "uploadEvidence": "Upload evidence",
+    "status": {
+      "DRAFT": "Draft",
+      "SUBMITTED": "Submitted",
+      "APPROVED": "Approved",
+      "REJECTED": "Changes requested",
+      "COMPLETED": "Completed",
+      "ARCHIVED": "Archived"
+    },
+    "stage": {
+      "DRAFTED": "Drafted",
+      "MENTOR_REVIEWED": "Mentor reviewed",
+      "APPROVED": "Approved",
+      "IN_PROGRESS": "In progress",
+      "EVIDENCE_SUBMITTED": "Evidence submitted",
+      "ACHIEVED": "Achieved"
+    },
+    "smart": {
+      "specific": "Specific",
+      "measurable": "Measurable",
+      "achievable": "Achievable",
+      "relevant": "Relevant",
+      "timeBound": "Time-bound"
+    }
+  },
+  "sessions": {
+    "title": "Session logs",
+    "subtitle": "Record what you discussed, capture action items, and reflect — the AI can structure your rough notes for you.",
+    "noPairings": "You don't have any accepted mentees yet.",
+    "logSession": "Log a session",
+    "noLogsYet": "No sessions logged yet.",
+    "mySessions": "My sessions",
+    "notEligible": "Session logs appear once you and your mentor have accepted your match.",
+    "noLogsMentee": "Your mentor hasn't logged a session yet.",
+    "noAccess": "Session logs are for mentors and mentees.",
+    "mentee": "Mentee",
+    "meetingType": "Meeting type",
+    "date": "Date",
+    "time": "Time",
+    "roughNotes": "Rough notes",
+    "roughNotesHint": "Type messy notes — e.g. \"discussed presentation skills, confidence; mentee will prep a short talk before next session\".",
+    "summarize": "Structure with AI",
+    "summarizing": "Working…",
+    "assistantHint": "The AI fills the fields below as an editable suggestion — nothing is saved until you save.",
+    "assistantNoResult": "No structured suggestion this time — fill the fields manually.",
+    "assistantUnavailable": "The AI assistant isn't configured. Fill the fields manually.",
+    "riskFlagged": "The assistant flagged this session as possibly at risk — review before saving.",
+    "suggestedAgenda": "Suggested next agenda",
+    "competencyDiscussed": "Competency discussed",
+    "goalDiscussed": "Goal discussed",
+    "discussionSummary": "Discussion summary",
+    "actionsAgreed": "Actions agreed",
+    "challenges": "Challenges raised",
+    "resourcesNeeded": "Resources needed",
+    "nextActionPlan": "Next action plan",
+    "timeline": "Timeline",
+    "nextMeetingDate": "Next meeting date",
+    "mentorNotes": "Mentor notes (private)",
+    "actionItems": "Action items",
+    "addActionItem": "Add action item",
+    "noActionItemsYet": "No action items yet — add one or let the AI extract them.",
+    "noActionItems": "No action items.",
+    "taskPlaceholder": "What needs doing?",
+    "task": "Task",
+    "owner": "Owner",
+    "dueDate": "Due date",
+    "due": "due",
+    "overdue": "Overdue",
+    "owner_mentee": "Mentee",
+    "owner_mentor": "Mentor",
+    "owner_none": "Unassigned",
+    "saveLog": "Save session log",
+    "offline": "Offline",
+    "savedLocally": "Saved on this device",
+    "syncing": "Saving…",
+    "synced": "Saved",
+    "offlineQueued": "Saved locally — will sync when you're back online.",
+    "aiSummary": "AI summary",
+    "menteeReflection": "Mentee reflection",
+    "yourReflection": "Your reflection",
+    "reflectionHint": "What did you take away? What will you do next?",
+    "saveReflection": "Save reflection",
+    "status": "Status",
+    "type": {
+      "ZOOM": "Zoom",
+      "PHYSICAL": "In person",
+      "PHONE": "Phone",
+      "TEAMS": "Teams",
+      "MEET": "Google Meet"
+    },
+    "itemStatus": {
+      "OPEN": "Not started",
+      "IN_PROGRESS": "In progress",
+      "DONE": "Completed",
+      "BLOCKED": "Blocked"
+    }
+  },
+  "meetings": {
+    "title": "Meetings",
+    "subtitle": "Schedule your sessions and confirm whether they took place. Scheduled meetings sync to Outlook when it's connected.",
+    "noAccess": "Meetings are for mentors and mentees.",
+    "notEligible": "Meeting scheduling unlocks once you and your partner have accepted your match.",
+    "scheduleTitle": "Schedule a meeting",
+    "schedule": "Schedule meeting",
+    "with": "With",
+    "type": "Meeting type",
+    "titleField": "Title",
+    "titlePlaceholder": "e.g. Monthly mentoring session",
+    "startsAt": "Starts",
+    "endsAt": "Ends (optional)",
+    "location": "Location (optional)",
+    "locationPlaceholder": "Room, address, or leave blank for online",
+    "description": "Notes (optional)",
+    "needsCapture": "Needs your confirmation",
+    "prepare": "Prepare",
+    "upcoming": "Upcoming",
+    "noUpcoming": "No upcoming meetings. Schedule one above.",
+    "past": "Past meetings",
+    "joinLink": "Join meeting",
+    "cancel": "Cancel meeting",
+    "scheduled": "Scheduled",
+    "cancelled": "Cancelled",
+    "tookPlace": "Took place",
+    "didNotTakePlace": "Did not take place",
+    "reason": "Reason",
+    "didItHappen": "Did this meeting happen?",
+    "yesHappened": "Yes, it happened",
+    "noDidnt": "No",
+    "chooseReason": "Why not?",
+    "back": "Back",
+    "role": {
+      "mentor": "mentor",
+      "mentee": "mentee"
+    },
+    "meetingType": {
+      "ZOOM": "Zoom",
+      "PHYSICAL": "In person",
+      "PHONE": "Phone",
+      "TEAMS": "Teams",
+      "MEET": "Google Meet"
+    },
+    "reasonOption": {
+      "MENTOR_CANCELLED": "Mentor cancelled",
+      "MENTEE_CANCELLED": "Mentee cancelled",
+      "FORGOT": "We forgot",
+      "RESCHEDULED": "Rescheduled",
+      "OTHER": "Other"
+    }
+  },
+  "journal": {
+    "title": "Journal & private notes",
+    "subtitle": "Your private space to reflect and keep notes. Nothing here is shared unless you choose to share it.",
+    "noAccess": "The journal is for mentors and mentees.",
+    "myJournal": "My reflection journal",
+    "noCohort": "Your journal unlocks once you are part of an active cohort.",
+    "newEntry": "New reflection",
+    "entryTitle": "Title (optional)",
+    "entryTitleHint": "e.g. After my second session",
+    "entryBody": "Your reflection",
+    "entryBodyHint": "Write freely — these prompts are just a guide:",
+    "prompts": {
+      "learned": "What did I learn?",
+      "action": "What action will I take?",
+      "challenge": "What challenge remains?",
+      "feedback": "What feedback did I receive?",
+      "support": "What support do I need?"
+    },
+    "linkSession": "Link to a session (optional)",
+    "noSession": "Not about a specific session",
+    "writtenIn": "Written in",
+    "saveEntry": "Save reflection",
+    "privateNotice": "Entries are private to you. Share one with your mentor only when you choose to.",
+    "noEntries": "No reflections yet. Write your first one above.",
+    "untitled": "Untitled reflection",
+    "privateBadge": "Private",
+    "sharedBadge": "Shared with mentor",
+    "fromSession": "from session",
+    "share": "Share with mentor",
+    "unshare": "Make private again",
+    "confirmDelete": "Delete this entry?",
+    "sharedWithMe": "Reflections shared with me",
+    "noShared": "No mentee has shared a reflection with you yet.",
+    "myNotes": "My private notes",
+    "notesPrivateNotice": "These notes are private to you — never visible to the mentee or to admins.",
+    "noMentees": "You have no accepted pairings yet.",
+    "addNote": "Add a private note",
+    "notePlaceholder": "Observations, strengths, growth areas, follow-ups, next-session ideas…",
+    "noteKind": "Type",
+    "noteKindNone": "None",
+    "noteKinds": {
+      "observation": "Observation",
+      "strength": "Strength",
+      "growth": "Growth area",
+      "followup": "Follow-up",
+      "idea": "Next-session idea"
+    },
+    "saveNote": "Save note",
+    "noNotesYet": "No notes about this mentee yet."
+  },
+  "support": {
+    "title": "Request support privately",
+    "subtitle": "Tell the programme team if something isn't working. Your request is private.",
+    "newRequest": "New request",
+    "privacyNotice": "This is anonymous to other participants, but the programme team (admins) will see that you raised it so they can help. It is never shown to your mentor or mentee.",
+    "reasonLabel": "What do you need help with?",
+    "chooseReason": "Choose a reason…",
+    "reason": {
+      "CANNOT_REACH_PARTNER": "I can't reach my mentor / mentee",
+      "NEED_GOAL_HELP": "I need help setting goals",
+      "UNCOMFORTABLE_WITH_MATCH": "I'm uncomfortable with my match",
+      "NEED_ADMIN_INTERVENTION": "I need an admin to step in",
+      "COMMUNICATION_ISSUE": "We have a communication issue",
+      "LANGUAGE_SUPPORT": "I need language support",
+      "OTHER": "Something else"
+    },
+    "messageLabel": "Tell us more (optional)",
+    "messageHint": "Add any detail that would help us understand.",
+    "submit": "Send request",
+    "submitted": "Your request has been sent to the programme team.",
+    "myRequests": "My requests",
+    "noRequests": "You haven't raised any support requests.",
+    "adminResponse": "Response from the team",
+    "awaitingResponse": "Awaiting a response from the programme team.",
+    "status": {
+      "OPEN": "Open",
+      "IN_PROGRESS": "In progress",
+      "RESOLVED": "Resolved"
+    },
+    "queueTitle": "Support requests",
+    "queueSubtitle": "{open} open. Requesters are visible to the programme team only.",
+    "queueEmpty": "No support requests.",
+    "noMessage": "No additional detail provided.",
+    "handledBy": "Last handled by {name}",
+    "responseLabel": "Response to the requester",
+    "responseHint": "This message is shown back to the person who asked.",
+    "saveResponse": "Save & update"
+  },
+  "pair": {
+    "title": "Your pair",
+    "subtitle": "Everything you and your partner share — agreements, meetings, goals, and action items in one place.",
+    "noAccess": "The pair workspace is for mentors and mentees.",
+    "noPair": "Your pair workspace unlocks once you and your partner have accepted your match.",
+    "pickMentee": "Choose a mentee to open their shared workspace.",
+    "openWorkspace": "Open workspace",
+    "mentorLabel": "Mentor",
+    "menteeLabel": "Mentee",
+    "phone": "Phone",
+    "availability": "Availability",
+    "open": "Open",
+    "agreementsTitle": "Agreements",
+    "agreementType": {
+      "MENTORING": "Mentoring agreement",
+      "CONFIDENTIALITY": "Confidentiality agreement"
+    },
+    "signed": "signed",
+    "notSigned": "pending",
+    "meetingsTitle": "Meetings",
+    "nextMeeting": "Next meeting",
+    "noNextMeeting": "None scheduled — schedule your next session.",
+    "meetingsHeld": "{count} meeting(s)",
+    "sessionsLogged": "{count} session log(s)",
+    "lastSession": "last on",
+    "goalsTitle": "Goals",
+    "noGoals": "No goals submitted yet.",
+    "actionItemsTitle": "Open action items",
+    "noActionItems": "No open action items.",
+    "messagesTitle": "Direct messages",
+    "messagesComingSoon": "Private messaging between you and your partner arrives with the community features."
+  },
+  "tour": {
+    "skip": "Skip",
+    "back": "Back",
+    "next": "Next",
+    "done": "Got it",
+    "stepLabel": "Step {current} of {total}",
+    "mentee": {
+      "steps": [
+        { "title": "Welcome", "body": "This is your home base. The top button tells you what to do next whenever you're unsure." },
+        { "title": "Meet your mentor", "body": "Once matched, your mentor appears here. Open your shared workspace to see agreements, goals, and meetings in one place." },
+        { "title": "Set SMART goals", "body": "Use Goals to draft development goals — the AI Goal Coach can polish them, and your mentor approves them." },
+        { "title": "Meet and reflect", "body": "Schedule sessions, then log a quick reflection afterwards. The Journal keeps your private notes." },
+        { "title": "Need help?", "body": "Use the + button for quick actions, and Request Support privately if anything isn't working." }
+      ]
+    },
+    "mentor": {
+      "steps": [
+        { "title": "Welcome", "body": "This is your home base. The top button surfaces your most important next action." },
+        { "title": "Your mentees", "body": "Each mentee has a shared workspace. Open it for their goals, agreements, sessions, and the first-meeting icebreaker." },
+        { "title": "Review goals", "body": "When a mentee submits a goal, approve it, request changes, or comment from the Goals page." },
+        { "title": "Log sessions", "body": "After each session, log what you discussed — paste rough notes and let the AI structure them and extract action items." },
+        { "title": "Stay on track", "body": "The dashboard flags reviews and logs awaiting you. Use the + button for quick actions." }
+      ]
+    }
+  },
+  "help": {
+    "title": "Help Center",
+    "subtitle": "Short guides to get the most from the programme.",
+    "searchPlaceholder": "Search help articles…",
+    "noResults": "No articles match your search.",
+    "back": "Back to Help Center",
+    "replayTour": "Replay the tour",
+    "tourReset": "Tour will show again",
+    "articles": {
+      "matching": {
+        "title": "How matching works",
+        "summary": "How mentors and mentees are paired.",
+        "body": [
+          "Matching pairs each mentee with a mentor based on language, competencies, career goals, experience, department, and availability.",
+          "Language is a hard rule: English speakers are paired with English speakers and French with French — cross-language pairs are never created.",
+          "The system suggests and explains pairings, but an administrator reviews and approves every match. You'll be notified when yours is ready, and you can accept it from your dashboard."
+        ]
+      },
+      "goals": {
+        "title": "Submitting goals",
+        "summary": "Draft, refine, and get goals approved.",
+        "body": [
+          "Open Goals and create a development goal using the SMART fields: what you want to develop, why it matters, your current and desired level, and how success is measured.",
+          "The AI Goal Coach can suggest a clearer, more measurable rewrite — it's only a suggestion, you stay in control of what you save.",
+          "Submit the goal for your mentor to review. They can approve it, request changes, or comment. Approved goals move through stages from In progress to Achieved, and you can upload evidence along the way."
+        ]
+      },
+      "scheduling": {
+        "title": "Scheduling meetings",
+        "summary": "Plan sessions and confirm they happened.",
+        "body": [
+          "Either you or your partner can schedule a session from Meetings: set a title, type, and time.",
+          "When Outlook is connected, the event is added to your calendar automatically.",
+          "After a meeting passes, you'll be asked a one-tap question: did it happen? Answering keeps everyone's records accurate."
+        ]
+      },
+      "sessions": {
+        "title": "Logging sessions",
+        "summary": "Capture what you discussed and agreed.",
+        "body": [
+          "Mentors log each session from Sessions. You can fill the fields directly, or paste rough notes and let the AI structure them into a clean summary with action items.",
+          "Everything the AI produces is an editable suggestion — nothing is saved until you confirm it.",
+          "Action items track who does what by when. Mentees can add a private reflection to each session from their side."
+        ]
+      },
+      "journal": {
+        "title": "Journal and private notes",
+        "summary": "Your private space to reflect.",
+        "body": [
+          "Your journal is private by default. Use the prompts to reflect after a session: what you learned, what you'll do next, what challenge remains.",
+          "You can choose to share an individual entry with your mentor — and unshare it again at any time.",
+          "Mentors have their own private notes per mentee. These are never visible to the mentee or to administrators."
+        ]
+      },
+      "translation": {
+        "title": "Working in English and French",
+        "summary": "Translate any text, keep the original.",
+        "body": [
+          "You're never forced to write in English. Write in the language you're comfortable with.",
+          "Most text areas have a translate toggle to view the content in English or French; the original is always kept.",
+          "Translations are saved so the same content is never re-translated."
+        ]
+      },
+      "support": {
+        "title": "Requesting support",
+        "summary": "Reach the programme team privately.",
+        "body": [
+          "If something isn't working — you can't reach your partner, you're uncomfortable with the match, or you need help — use Request Support.",
+          "Your request is private: it's anonymous to other participants, but the programme team sees it so they can help. It's never shown to your mentor or mentee.",
+          "An administrator will respond privately, and you'll see their reply on your support page."
+        ]
+      }
+    }
+  },
+  "quickActions": {
+    "title": "Quick actions",
+    "scheduleMeeting": "Schedule meeting",
+    "addSessionLog": "Add session log",
+    "submitGoal": "Submit goal",
+    "addReflection": "Add reflection",
+    "requestSupport": "Request support"
+  },
+  "calendar": {
+    "title": "Calendar",
+    "subtitle": "Your sessions and programme milestones. Scheduled meetings sync to Outlook when it's connected.",
+    "view": { "month": "Month", "week": "Week", "list": "List" },
+    "previous": "Previous",
+    "next": "Next",
+    "today": "Today",
+    "empty": "No events in this period.",
+    "milestoneStart": "Programme start",
+    "milestoneEnd": "Programme end",
+    "months": {
+      "m0": "January", "m1": "February", "m2": "March", "m3": "April", "m4": "May", "m5": "June",
+      "m6": "July", "m7": "August", "m8": "September", "m9": "October", "m10": "November", "m11": "December"
+    },
+    "weekdaysShort": {
+      "d0": "Mon", "d1": "Tue", "d2": "Wed", "d3": "Thu", "d4": "Fri", "d5": "Sat", "d6": "Sun"
+    }
+  },
+  "nextAction": {
+    "prompt": "Not sure where to focus?",
+    "cta": "What should I do next?",
+    "again": "Refresh",
+    "thinking": "Thinking…",
+    "open": "Open",
+    "error": "Couldn't work that out right now. Please try again.",
+    "allCaughtUp": "You're all caught up — nothing needs your attention right now.",
+    "overdueActions": "You have {count} overdue action item(s) to move forward.",
+    "confirmMeeting": "Confirm whether your recent meeting(s) took place — {count} awaiting.",
+    "scheduleMeeting": "Schedule your next mentoring session.",
+    "goalChanges": "Your mentor requested changes on {count} goal(s) — take a look.",
+    "setGoal": "Set your first development goal with your mentor.",
+    "goalReviews": "You have {count} goal(s) waiting for your review.",
+    "openSupport": "There are {count} open support request(s) in the queue.",
+    "pendingMatches": "There are {count} match(es) awaiting your approval."
+  },
+  "icebreaker": {
+    "title": "First-meeting icebreaker",
+    "subtitle": "A personalized guide built from both your profiles to make your first session easy.",
+    "fallbackBadge": "From your profiles",
+    "cachedBadge": "AI generated",
+    "generate": "Generate with AI",
+    "regenerate": "Regenerate",
+    "generating": "Generating…",
+    "aiOff": "AI suggestions are off — showing a guide built from your profiles.",
+    "sharedInterests": "Shared interests",
+    "openingQuestions": "Opening questions",
+    "menteeWants": "What the mentee wants to learn",
+    "mentorOffers": "What the mentor can offer",
+    "agenda": "Suggested first-meeting agenda",
+    "none": "Nothing to suggest yet."
+  },
+  "journey": {
+    "title": "Your mentorship journey",
+    "progress": "{percent}% complete",
+    "steps": {
+      "profile": "Profile",
+      "training": "Training",
+      "matched": "Matched",
+      "confidentiality": "Confidentiality agreement",
+      "goals": "Goals submitted",
+      "sessions": "Monthly sessions",
+      "midterm": "Mid-term review",
+      "final": "Final review",
+      "completion": "Completion certificate"
+    },
+    "states": {
+      "completed": "Done",
+      "needs_action": "Your turn",
+      "overdue": "Overdue",
+      "pending": "Upcoming"
+    }
+  },
+  "prepare": {
+    "title": "Prepare for your session",
+    "backToMeetings": "Back to meetings",
+    "previousSession": "Previous session",
+    "noPreviousSession": "No session logged yet for this pair.",
+    "pendingActions": "Pending action items",
+    "noPendingActions": "No open action items.",
+    "goalsToReview": "Goals to review",
+    "noGoals": "No active goals on record.",
+    "suggestions": "Suggested preparation",
+    "fallbackBadge": "Standard guide",
+    "cachedBadge": "AI generated",
+    "generate": "Generate with AI",
+    "regenerate": "Regenerate",
+    "generating": "Generating…",
+    "aiOff": "AI suggestions are off — showing the standard preparation guide.",
+    "agenda": "Suggested agenda",
+    "questions": "Questions to ask",
+    "challenges": "Challenges to discuss",
+    "resources": "Recommended resources",
+    "none": "Nothing suggested."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "subtitle": "What needs your attention, and how you'd like to hear about it.",
+    "inbox": "Inbox",
+    "unreadCount": "{count} unread",
+    "markAllRead": "Mark all read",
+    "markRead": "Mark read",
+    "open": "Open",
+    "empty": "You're all caught up.",
+    "prefsTitle": "Notification preferences",
+    "prefEmail": "Email me notifications",
+    "prefDigest": "Bundle non-urgent emails into a daily digest",
+    "prefMute": "Mute specific notifications",
+    "prefMuteHint": "Muted notifications won't appear in your inbox or be emailed.",
+    "savePrefs": "Save preferences",
+    "prefsSaved": "Preferences saved.",
+    "digest": {
+      "subject": "Your mentorship digest ({count})",
+      "intro": "Here's what happened in your programme — {count} update(s):"
+    },
+    "types": {
+      "profile_incomplete": {
+        "label": "Profile incomplete",
+        "title": "Complete your profile",
+        "body": "Your profile is missing some details. Completing it helps with matching and reporting."
+      },
+      "match_ready": {
+        "label": "Match ready",
+        "title": "You've been matched",
+        "body": "Open your dashboard to meet your match and get started."
+      },
+      "goal_commented": {
+        "label": "Goal feedback",
+        "title": "Goal feedback from {mentorName}",
+        "body": "{mentorName} reviewed your goal “{goalTitle}”."
+      },
+      "meeting_scheduled": {
+        "label": "Meeting scheduled",
+        "title": "New session scheduled",
+        "body": "{organizerName} scheduled “{title}” for {date}."
+      },
+      "meeting_reminder": {
+        "label": "Meeting reminder",
+        "title": "Upcoming session",
+        "body": "Reminder: “{title}” on {date}."
+      },
+      "session_log_due": {
+        "label": "Session log due",
+        "title": "Session log due",
+        "body": "Add a log for your recent session so progress stays on record."
+      },
+      "review_due": {
+        "label": "Review due",
+        "title": "A review is waiting",
+        "body": "A mentorship review is due. It only takes a few minutes."
+      },
+      "clinic_tomorrow": {
+        "label": "Clinic reminder",
+        "title": "Clinic tomorrow",
+        "body": "“{title}” is happening tomorrow. Don't miss it."
+      },
+      "support_received": {
+        "label": "Support request (admin)",
+        "title": "New support request",
+        "body": "A participant has requested private support. Review it in the queue."
+      },
+      "support_responded": {
+        "label": "Support response",
+        "title": "Support update",
+        "body": "The programme team has responded to your support request."
+      }
+    }
   }
 }
