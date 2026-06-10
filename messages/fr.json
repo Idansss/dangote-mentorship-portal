@@ -54,6 +54,7 @@
     "password": "Mot de passe",
     "submit": "Se connecter",
     "invalid": "E-mail ou mot de passe invalide.",
+    "tooManyAttempts": "Trop de tentatives. Veuillez patienter une minute et réessayer.",
     "inviteTitle": "Accepter votre invitation",
     "inviteSubtitle": "Définissez un mot de passe pour activer votre compte.",
     "inviteInvalid": "Ce lien d’invitation est invalide ou a expiré.",

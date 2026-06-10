@@ -37,3 +37,61 @@ jobs:
 
       - name: Test
         run: npm test
+
+  e2e:
+    name: E2E · happy path
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres?schema=public
+      DIRECT_URL: postgresql://postgres:postgres@localhost:5432/postgres?schema=public
+      AUTH_SECRET: ci-e2e-placeholder-secret-not-used-in-production
+      AUTH_URL: http://localhost:3001
+      AUTH_TRUST_HOST: 'true'
+      SEED_SUPER_ADMIN_EMAIL: admin@dangote.com
+      SEED_DEFAULT_PASSWORD: ChangeMe!2026
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Apply migrations
+        run: npx prisma migrate deploy
+
+      # Uses the package.json `prisma.seed` command (no --env-file), so the
+      # ambient CI env vars above provide DATABASE_URL.
+      - name: Seed demo cohort
+        run: npx prisma db seed
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      # Build once here so the E2E webServer serves a production build via
+      # `next start` (no on-demand compile → no first-request timeout).
+      - name: Build
+        run: npm run build
+
+      - name: Run E2E (happy path)
+        run: npm run test:e2e

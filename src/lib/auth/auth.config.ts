@@ -31,6 +31,12 @@ export const authConfig = {
       issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID
         ? `https://login.microsoftonline.com/${process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID}/v2.0`
         : undefined,
+      // Link an Entra SSO sign-in to an admin-pre-created account that shares the
+      // same email, instead of creating a duplicate User (CLAUDE.md §2: Entra SSO
+      // + admin-created accounts must be the same identity). This is only safe
+      // because Entra is a trusted IdP that verifies email ownership; never enable
+      // it for an unverified provider.
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
   callbacks: {

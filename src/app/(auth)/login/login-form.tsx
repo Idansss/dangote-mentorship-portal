@@ -47,7 +47,7 @@ export function LoginForm({ entraEnabled }: { entraEnabled: boolean }) {
         </div>
         {state.error ? (
           <p role="alert" className="text-sm text-destructive">
-            {t('invalid')}
+            {state.error === 'rate_limited' ? t('tooManyAttempts') : t('invalid')}
           </p>
         ) : null}
         <Button type="submit" className="w-full" disabled={pending}>

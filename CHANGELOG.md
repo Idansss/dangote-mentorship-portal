@@ -15,3 +15,9 @@
 - Login page hides the Microsoft Entra SSO button until real tenant credentials are configured (`isEntraConfigured()`).
 - Playwright E2E (`npm run test:e2e`, port 3001): super-admin login → admin dashboard; unauthenticated redirect to login.
 - Repo initialized as git; Husky pre-commit runs typecheck + lint + unit tests.
+
+### M0 completion
+
+- Entra SSO now links to admin-pre-created accounts of the same email (`allowDangerousEmailAccountLinking`) so SSO + admin-created accounts are one identity, not duplicates.
+- Auth-endpoint rate limiting (§14): fixed-window limiter throttles credential sign-in (5/min per IP+email) and invite acceptance (10/min per IP); swappable store, unit-tested, with EN/FR "too many attempts" messaging.
+- CI now runs the happy-path Playwright E2E against a Postgres service (migrate + seed + build + run). It serves a production build via `next start` instead of `next dev` to avoid first-request compile timeouts; verified locally via the same `CI=1` path (2/2 passing).

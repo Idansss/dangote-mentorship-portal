@@ -14,6 +14,12 @@ export function InviteForm({ action, email }: { action: Action; email: string })
   const tc = useTranslations('common');
   const [state, formAction, pending] = useActionState<AcceptInviteState, FormData>(action, {});
 
+  const errorMessage = {
+    invalid: t('inviteInvalid'),
+    rate_limited: t('tooManyAttempts'),
+    validation: tc('errorBody'),
+  };
+
   return (
     <form action={formAction} className="space-y-4">
       <div className="space-y-2">
@@ -30,7 +36,7 @@ export function InviteForm({ action, email }: { action: Action; email: string })
       </div>
       {state.error ? (
         <p role="alert" className="text-sm text-destructive">
-          {state.error === 'invalid' ? t('inviteInvalid') : tc('errorBody')}
+          {errorMessage[state.error]}
         </p>
       ) : null}
       <Button type="submit" className="w-full" disabled={pending}>

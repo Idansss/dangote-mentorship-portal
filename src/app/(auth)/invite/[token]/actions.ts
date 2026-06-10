@@ -1,5 +1,6 @@
 'use server';
 
+import { headers } from 'next/headers';
 import { z } from 'zod';
 import { AuthError } from 'next-auth';
 import { InviteStatus } from '@prisma/client';
@@ -7,6 +8,7 @@ import { prisma } from '@/lib/db/prisma';
 import { signIn } from '@/lib/auth/auth';
 import { hashPassword } from '@/lib/auth/password';
 import { hashInviteToken } from '@/lib/auth/invite';
+import { clientIpFromHeaders, rateLimit } from '@/lib/auth/rate-limit';
 import { writeAuditLog } from '@/lib/audit/audit';
 
 const acceptSchema = z.object({
@@ -14,7 +16,12 @@ const acceptSchema = z.object({
   password: z.string().min(8).max(200),
 });
 
-export type AcceptInviteState = { error?: 'invalid' | 'validation' };
+export type AcceptInviteState = { error?: 'invalid' | 'validation' | 'rate_limited' };
+
+// Throttle invite acceptance per IP so the public endpoint can't be used to
+// brute-force invite tokens (CLAUDE.md §14).
+const ACCEPT_LIMIT = 10;
+const ACCEPT_WINDOW_MS = 60_000;
 
 // Public invite acceptance (CLAUDE.md §2: invite links). Activates an
 // admin-created account: sets a password, grants the invited role, and links
@@ -24,6 +31,12 @@ export async function acceptInvite(
   _prev: AcceptInviteState,
   formData: FormData,
 ): Promise<AcceptInviteState> {
+  const h = await headers();
+  const ip = clientIpFromHeaders(h.get('x-forwarded-for'), h.get('x-real-ip'));
+  if (!rateLimit(`invite-accept:${ip}`, ACCEPT_LIMIT, ACCEPT_WINDOW_MS).ok) {
+    return { error: 'rate_limited' };
+  }
+
   const parsed = acceptSchema.safeParse({
     name: formData.get('name'),
     password: formData.get('password'),
