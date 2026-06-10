@@ -769,6 +769,7 @@
   "journey": {
     "title": "Votre parcours de mentorat",
     "progress": "{percent} % terminé",
+    "open": "Ouvrir",
     "steps": {
       "profile": "Profil",
       "training": "Formation",

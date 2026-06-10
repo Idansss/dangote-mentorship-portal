@@ -50,6 +50,9 @@ import {
 } from '@/components/ui/table';
 import { Toaster } from '@/components/ui/toaster';
 import { toast } from '@/components/ui/use-toast';
+import { JourneyRailView, type RailNode } from '@/components/journey-rail-view';
+import { BilingualField, BilingualContent } from '@/components/bilingual-field';
+import { AIContainer } from '@/components/ai-container';
 
 // Component-preview gallery for the Design System (§19, step 2). Demonstrates the
 // token layer + themed §4 primitives in one place for review. Not a feature
@@ -81,6 +84,18 @@ const SWATCHES: { name: string; className: string; text?: string }[] = [
   { name: 'surface', className: 'bg-surface border border-border', text: 'text-ink' },
   { name: 'surface-2', className: 'bg-surface-2', text: 'text-ink' },
   { name: 'border', className: 'bg-border', text: 'text-ink' },
+];
+
+const RAIL_NODES: RailNode[] = [
+  { key: 'profile', label: 'Profile', stateLabel: 'Done', state: 'completed', link: '/profile', isCurrent: false },
+  { key: 'training', label: 'Training', stateLabel: 'Done', state: 'completed', link: null, isCurrent: false },
+  { key: 'matched', label: 'Matched', stateLabel: 'Done', state: 'completed', link: null, isCurrent: false },
+  { key: 'confidentiality', label: 'Confidentiality agreement', stateLabel: 'Done', state: 'completed', link: '/agreements', isCurrent: false },
+  { key: 'goals', label: 'Goals submitted', stateLabel: 'Your turn', state: 'needs_action', link: '/goals', isCurrent: true },
+  { key: 'sessions', label: 'Monthly sessions', stateLabel: 'Overdue', state: 'overdue', link: '/sessions', isCurrent: false },
+  { key: 'midterm', label: 'Mid-term review', stateLabel: 'Upcoming', state: 'pending', link: null, isCurrent: false },
+  { key: 'final', label: 'Final review', stateLabel: 'Upcoming', state: 'pending', link: null, isCurrent: false },
+  { key: 'completion', label: 'Completion certificate', stateLabel: 'Upcoming', state: 'pending', link: null, isCurrent: false },
 ];
 
 export default function DesignSystemPreview() {
@@ -372,6 +387,65 @@ export default function DesignSystemPreview() {
             <Languages className="size-4" /> EN · FR — translate on demand, source kept
           </span>
         </div>
+      </Section>
+
+      <Section title="Signature — Journey Rail (§5)">
+        <p className="text-small text-ink-2">
+          The persistent 9-step roadmap. States: done (filled), your turn (green ring + pulse),
+          overdue/needs-action (amber/red ring + dot), upcoming (hollow). The line fills to the
+          current step; nodes deep-link and show a tooltip. Resize to see horizontal ↔ vertical.
+        </p>
+        <JourneyRailView
+          title="Your mentorship journey"
+          progressLabel="44% complete"
+          openLabel="Open"
+          nodes={RAIL_NODES}
+        />
+      </Section>
+
+      <Section title="Signature — Bilingual field (§6)">
+        <div className="grid gap-6 sm:grid-cols-2">
+          <BilingualField
+            id="bf-why"
+            name="why"
+            label="Why this goal matters"
+            lang="EN"
+            placeholder="A sentence or two — in English or French…"
+            helperText="Write in your language"
+          />
+          <div className="space-y-1.5">
+            <p className="text-small font-medium text-ink-2">Saved content (reader&apos;s translate toggle)</p>
+            <div className="rounded-md border border-border bg-surface p-3">
+              <BilingualContent
+                entityType="design-preview"
+                entityId="sample-1"
+                sourceLang="FR"
+                text="Je veux améliorer ma communication avec les parties prenantes."
+              />
+            </div>
+          </div>
+        </div>
+      </Section>
+
+      <Section title="Signature — AI container (§7)">
+        <AIContainer
+          title="Suggested session summary"
+          hint="Editable"
+          actions={
+            <>
+              <Button size="sm">Use suggestion</Button>
+              <Button size="sm" variant="ghost">
+                Edit
+              </Button>
+            </>
+          }
+        >
+          <p>
+            Discussed presentation skills and stakeholder confidence. Action: the mentee prepares a
+            short presentation before the next session. Suggested next agenda: review the draft and
+            practise delivery.
+          </p>
+        </AIContainer>
       </Section>
 
       <Fab aria-label="Quick actions">

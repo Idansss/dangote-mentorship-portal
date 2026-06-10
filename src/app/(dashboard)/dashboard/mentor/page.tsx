@@ -2,7 +2,7 @@ import { requireRole } from '@/lib/auth/rbac';
 import { RoleName } from '@/lib/auth/roles';
 import { DashboardHeader } from '@/components/dashboard/dashboard-header';
 import { MentorSummary } from '@/components/dashboard/mentor-summary';
-import { JourneyTracker } from '@/components/journey-tracker';
+import { JourneyRail } from '@/components/journey-rail';
 import { NextActionButton } from '@/components/next-action-button';
 import { OnboardingTour } from '@/components/onboarding-tour';
 import { getJourney } from '@/features/journey/data';
@@ -22,7 +22,7 @@ export default async function MentorDashboardPage() {
       <NextActionButton />
       <MatchPanel userId={user.id} role="mentor" />
       <MentorSummary data={dashboard} />
-      <JourneyTracker result={journey} />
+      <JourneyRail result={journey} />
     </div>
   );
 }

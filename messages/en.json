@@ -769,6 +769,7 @@
   "journey": {
     "title": "Your mentorship journey",
     "progress": "{percent}% complete",
+    "open": "Open",
     "steps": {
       "profile": "Profile",
       "training": "Training",
