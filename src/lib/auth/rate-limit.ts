@@ -1,14 +1,56 @@
-// Lightweight fixed-window rate limiter for auth endpoints (CLAUDE.md §14:
-// "rate-limit AI and auth endpoints"). The store is in-memory and per-instance,
-// which is adequate for a single-node deploy and the Dangote pilot. The function
-// signature is deliberately storage-agnostic so the Map can be swapped for
-// Redis/Upstash when the app scales horizontally, without touching call sites.
+// Fixed-window rate limiter for auth endpoints (CLAUDE.md §14: "rate-limit AI
+// and auth endpoints"). Storage is behind the RateLimitStore seam so the
+// default in-memory (per-instance) store can be swapped for a shared one when
+// the app scales horizontally — without touching call sites.
+//
+// Swapping to Redis/Upstash: implement RateLimitStore against it (their atomic
+// INCR + EXPIRE map cleanly onto a bucket) and call setRateLimitStore() at boot.
+// A network store is async, so that swap also makes rateLimit() async — at which
+// point the two callers (login + invite/reset actions) add an `await`.
 //
 // This module imports nothing runtime-specific so it stays pure and unit-testable.
 
-type Bucket = { count: number; resetAt: number };
+export interface Bucket {
+  count: number;
+  resetAt: number;
+}
 
-const buckets = new Map<string, Bucket>();
+export interface RateLimitStore {
+  get(key: string): Bucket | undefined;
+  set(key: string, bucket: Bucket): void;
+  delete(key: string): void;
+  clear(): void;
+  prune(now: number): void;
+}
+
+class InMemoryRateLimitStore implements RateLimitStore {
+  private readonly buckets = new Map<string, Bucket>();
+
+  get(key: string): Bucket | undefined {
+    return this.buckets.get(key);
+  }
+  set(key: string, bucket: Bucket): void {
+    this.buckets.set(key, bucket);
+  }
+  delete(key: string): void {
+    this.buckets.delete(key);
+  }
+  clear(): void {
+    this.buckets.clear();
+  }
+  prune(now: number): void {
+    for (const [key, bucket] of this.buckets) {
+      if (bucket.resetAt <= now) this.buckets.delete(key);
+    }
+  }
+}
+
+let store: RateLimitStore = new InMemoryRateLimitStore();
+
+/** Replaces the active store (e.g. a Redis-backed one) at application boot. */
+export function setRateLimitStore(next: RateLimitStore): void {
+  store = next;
+}
 
 export interface RateLimitResult {
   ok: boolean;
@@ -27,10 +69,10 @@ export function rateLimit(
   windowMs: number,
   now: number = Date.now(),
 ): RateLimitResult {
-  const existing = buckets.get(key);
+  const existing = store.get(key);
 
   if (!existing || existing.resetAt <= now) {
-    buckets.set(key, { count: 1, resetAt: now + windowMs });
+    store.set(key, { count: 1, resetAt: now + windowMs });
     return { ok: true, remaining: limit - 1, retryAfterSeconds: Math.ceil(windowMs / 1000) };
   }
 
@@ -40,19 +82,18 @@ export function rateLimit(
   }
 
   existing.count += 1;
+  store.set(key, existing);
   return { ok: true, remaining: limit - existing.count, retryAfterSeconds };
 }
 
-/** Drops expired buckets so the in-memory map can't grow without bound. */
+/** Drops expired buckets so an in-memory store can't grow without bound. */
 export function pruneRateLimitBuckets(now: number = Date.now()): void {
-  for (const [key, bucket] of buckets) {
-    if (bucket.resetAt <= now) buckets.delete(key);
-  }
+  store.prune(now);
 }
 
 /** Test-only: clears all buckets so cases don't bleed into each other. */
 export function resetRateLimitStore(): void {
-  buckets.clear();
+  store.clear();
 }
 
 /**

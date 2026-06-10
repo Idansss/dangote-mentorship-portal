@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useActionState } from 'react';
 import { useTranslations } from 'next-intl';
 import { login, type LoginState } from './actions';
@@ -53,6 +54,12 @@ export function LoginForm({ entraEnabled }: { entraEnabled: boolean }) {
         <Button type="submit" className="w-full" disabled={pending}>
           {t('submit')}
         </Button>
+        <Link
+          href="/forgot-password"
+          className="block text-center text-sm text-muted-foreground underline hover:text-foreground"
+        >
+          {t('forgotLink')}
+        </Link>
       </form>
     </div>
   );

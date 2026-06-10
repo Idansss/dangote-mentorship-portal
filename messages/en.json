@@ -58,7 +58,17 @@
     "inviteTitle": "Accept your invitation",
     "inviteSubtitle": "Set a password to activate your account.",
     "inviteInvalid": "This invitation link is invalid or has expired.",
-    "inviteAccept": "Activate account"
+    "inviteAccept": "Activate account",
+    "forgotLink": "Forgot your password?",
+    "forgotTitle": "Reset your password",
+    "forgotSubtitle": "Enter your email and we'll send you a reset link.",
+    "forgotSubmit": "Send reset link",
+    "forgotSent": "If an account exists for that email, we've sent a link to reset the password. The link expires in 60 minutes.",
+    "resetTitle": "Choose a new password",
+    "resetSubtitle": "Enter a new password for your account.",
+    "resetInvalid": "This reset link is invalid or has expired.",
+    "newPassword": "New password",
+    "resetSubmit": "Update password"
   },
   "dashboard": {
     "welcome": "Welcome",
