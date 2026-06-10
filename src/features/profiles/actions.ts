@@ -1,0 +1,132 @@
+'use server';
+
+import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
+import { prisma } from '@/lib/db/prisma';
+import { requireUser } from '@/lib/auth/rbac';
+import { writeAuditLog } from '@/lib/audit/audit';
+import { mapActionError, ok, fail, type ActionResult } from '@/lib/actions/result';
+
+// Own-profile editing only: identity comes from the session, never the form.
+// Admin-side profile management stays in the import/commit pipeline for M1.
+
+const sharedFields = {
+  phone: z.string().trim().max(40).optional().or(z.literal('')),
+  department: z.string().trim().max(120).optional().or(z.literal('')),
+  jobTitle: z.string().trim().max(120).optional().or(z.literal('')),
+  location: z.string().trim().max(120).optional().or(z.literal('')),
+  personality: z.string().trim().max(120).optional().or(z.literal('')),
+  interests: z.string().trim().max(1000).optional().or(z.literal('')),
+};
+
+const mentorSchema = z.object({
+  ...sharedFields,
+  yearsExperience: z.coerce.number().int().min(0).max(60).optional(),
+  whyMentor: z.string().trim().max(2000).optional().or(z.literal('')),
+  whatCanLearn: z.string().trim().max(2000).optional().or(z.literal('')),
+  availability: z.string().trim().max(500).optional().or(z.literal('')),
+});
+
+const menteeSchema = z.object({
+  ...sharedFields,
+  currentGrade: z.string().trim().max(120).optional().or(z.literal('')),
+  whyMentor: z.string().trim().max(2000).optional().or(z.literal('')),
+  careerGoals: z.string().trim().max(2000).optional().or(z.literal('')),
+});
+
+function emptyToNull(value: string | undefined): string | null {
+  return value ? value : null;
+}
+
+// Void wrappers for plain RSC <form action> usage (which requires
+// void-returning actions). The typed variants stay the canonical API.
+export async function updateOwnMentorProfileForm(formData: FormData): Promise<void> {
+  await updateOwnMentorProfile(formData);
+}
+
+export async function updateOwnMenteeProfileForm(formData: FormData): Promise<void> {
+  await updateOwnMenteeProfile(formData);
+}
+
+export async function updateOwnMentorProfile(
+  formData: FormData,
+): Promise<ActionResult<{ id: string }>> {
+  try {
+    const user = await requireUser();
+    const profile = await prisma.mentorProfile.findUnique({ where: { userId: user.id } });
+    if (!profile || profile.deletedAt) {
+      return fail({ code: 'NOT_FOUND', message: 'You do not have a mentor profile.' });
+    }
+
+    const data = mentorSchema.parse(Object.fromEntries(formData));
+    await prisma.mentorProfile.update({
+      where: { id: profile.id },
+      data: {
+        phone: emptyToNull(data.phone),
+        department: emptyToNull(data.department),
+        jobTitle: emptyToNull(data.jobTitle),
+        location: emptyToNull(data.location),
+        personality: emptyToNull(data.personality),
+        interests: emptyToNull(data.interests),
+        yearsExperience: data.yearsExperience ?? profile.yearsExperience,
+        whyMentor: emptyToNull(data.whyMentor),
+        whatCanLearn: emptyToNull(data.whatCanLearn),
+        availability: emptyToNull(data.availability),
+      },
+    });
+
+    await writeAuditLog({
+      actorId: user.id,
+      cohortId: profile.cohortId,
+      action: 'profile.mentor_updated',
+      entityType: 'MentorProfile',
+      entityId: profile.id,
+    });
+
+    revalidatePath('/profile');
+    return ok({ id: profile.id });
+  } catch (error) {
+    return mapActionError(error);
+  }
+}
+
+export async function updateOwnMenteeProfile(
+  formData: FormData,
+): Promise<ActionResult<{ id: string }>> {
+  try {
+    const user = await requireUser();
+    const profile = await prisma.menteeProfile.findUnique({ where: { userId: user.id } });
+    if (!profile || profile.deletedAt) {
+      return fail({ code: 'NOT_FOUND', message: 'You do not have a mentee profile.' });
+    }
+
+    const data = menteeSchema.parse(Object.fromEntries(formData));
+    await prisma.menteeProfile.update({
+      where: { id: profile.id },
+      data: {
+        phone: emptyToNull(data.phone),
+        department: emptyToNull(data.department),
+        jobTitle: emptyToNull(data.jobTitle),
+        location: emptyToNull(data.location),
+        personality: emptyToNull(data.personality),
+        interests: emptyToNull(data.interests),
+        currentGrade: emptyToNull(data.currentGrade),
+        whyMentor: emptyToNull(data.whyMentor),
+        careerGoals: emptyToNull(data.careerGoals),
+      },
+    });
+
+    await writeAuditLog({
+      actorId: user.id,
+      cohortId: profile.cohortId,
+      action: 'profile.mentee_updated',
+      entityType: 'MenteeProfile',
+      entityId: profile.id,
+    });
+
+    revalidatePath('/profile');
+    return ok({ id: profile.id });
+  } catch (error) {
+    return mapActionError(error);
+  }
+}

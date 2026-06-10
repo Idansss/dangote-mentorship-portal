@@ -1,0 +1,1365 @@
+// Dangote Mentorship Portal — data model (CLAUDE.md §5).
+// Conventions (CLAUDE.md §5):
+//   - every model has id / created_at / updated_at / deleted_at (soft-delete)
+//   - every cohort-scoped model carries cohort_id
+//   - bilingual content stores original + translated text separately
+// This file implements the FULL schema for M0. Feature CODE for later
+// milestones is NOT built here — only the tables those features will use.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// Enums
+// ──────────────────────────────────────────────────────────────────────────
+
+enum RoleName {
+  SUPER_ADMIN
+  PROGRAMME_ADMIN
+  MENTOR
+  MENTEE
+  TRAINER
+  REVIEWER
+}
+
+enum Language {
+  EN
+  FR
+}
+
+enum ProgrammeStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum CohortStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+enum TrainingStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum MatchingStatus {
+  UNMATCHED
+  SUGGESTED
+  MATCHED
+}
+
+enum CompetencyType {
+  GENERAL
+  TECHNICAL
+}
+
+enum ImportSourceType {
+  EXCEL
+  CSV
+  GOOGLE_SHEET
+  GOOGLE_FORM
+}
+
+enum ImportStatus {
+  PENDING
+  VALIDATING
+  VALIDATED
+  COMMITTED
+  FAILED
+}
+
+enum ImportRowStatus {
+  PENDING
+  VALID
+  FLAGGED
+  FIXED
+  ACCEPTED
+  REJECTED
+}
+
+enum MatchStatus {
+  SUGGESTED
+  ADMIN_APPROVED
+  ACCEPTED
+  REJECTED
+  OVERRIDDEN
+}
+
+enum AttendanceStatus {
+  REGISTERED
+  ATTENDED
+  ABSENT
+  EXCUSED
+}
+
+enum AgreementType {
+  MENTORING
+  CONFIDENTIALITY
+}
+
+enum GoalStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  REJECTED
+  COMPLETED
+  ARCHIVED
+}
+
+enum MeetingType {
+  ZOOM
+  PHYSICAL
+  PHONE
+  TEAMS
+  MEET
+}
+
+enum MeetingStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+}
+
+enum ActionItemStatus {
+  OPEN
+  IN_PROGRESS
+  DONE
+}
+
+enum ReviewType {
+  MIDTERM
+  FINAL
+}
+
+enum ReviewStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  SUBMITTED
+}
+
+enum ClinicStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+}
+
+enum NewsletterStatus {
+  DRAFT
+  SCHEDULED
+  SENT
+}
+
+enum ConversationType {
+  DIRECT
+  GROUP
+}
+
+enum ForumReportStatus {
+  OPEN
+  RESOLVED
+  DISMISSED
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  REVOKED
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// Core / identity
+// ──────────────────────────────────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  // Email/password fallback (CLAUDE.md §2). Null when the user is SSO-only.
+  passwordHash  String?   @map("password_hash")
+  // Persisted UI language preference (CLAUDE.md §14).
+  locale        Language  @default(EN)
+  timezone      String    @default("Africa/Lagos")
+  isActive      Boolean   @default(true) @map("is_active")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  accounts  Account[]
+  sessions  Session[]
+  userRoles UserRole[]
+
+  mentorProfile MentorProfile?
+  menteeProfile MenteeProfile?
+
+  auditLogs     AuditLog[]
+  notifications Notification[]
+
+  uploadedImports Import[]
+  mentorMatches   Match[]    @relation("MatchMentor")
+  menteeMatches   Match[]    @relation("MatchMentee")
+  approvedMatches Match[]    @relation("MatchApprovedBy")
+
+  trainingAttendance  TrainingAttendance[]
+  trainingAssessments TrainingAssessment[]
+
+  agreements      Agreement[]
+  goals           Goal[]        @relation("GoalMentee")
+  approvedGoals   Goal[]        @relation("GoalApprovedBy")
+  goalReviews     GoalReview[]
+  organizedMeetings Meeting[]   @relation("MeetingOrganizer")
+
+  mentorSessionLogs SessionLog[] @relation("SessionLogMentor")
+  menteeSessionLogs SessionLog[] @relation("SessionLogMentee")
+
+  assignedActionItems ActionItem[] @relation("ActionItemAssignee")
+  createdActionItems  ActionItem[] @relation("ActionItemCreatedBy")
+
+  formResponses FormResponse[]
+
+  hostedClinics   Clinic[]        @relation("ClinicHost")
+  clinicRsvps     ClinicRsvp[]
+  clinicQuestions ClinicQuestion[]
+
+  createdNewsletters   Newsletter[]
+  newsletterRecipients NewsletterRecipient[]
+
+  forumThreads       ForumThread[]
+  forumPosts         ForumPost[]
+  forumReactions     ForumReaction[]
+  forumReports       ForumReport[]  @relation("ForumReportReporter")
+  resolvedReports    ForumReport[]  @relation("ForumReportResolvedBy")
+
+  conversationParticipants ConversationParticipant[]
+  messages                 Message[]
+  messageReads             MessageRead[]
+
+  sentInvites   Invite[] @relation("InviteCreatedBy")
+  acceptedInvites Invite[] @relation("InviteAcceptedBy")
+
+  @@index([email])
+  @@map("users")
+}
+
+model Role {
+  id          String     @id @default(cuid())
+  name        RoleName   @unique
+  description String?
+  userRoles   UserRole[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("roles")
+}
+
+model UserRole {
+  id     String @id @default(cuid())
+  userId String @map("user_id")
+  roleId String @map("role_id")
+  // A role grant can be scoped to a single cohort (e.g. Mentor in Cohort 2026)
+  // or global (cohortId null), e.g. Super Admin.
+  cohortId String? @map("cohort_id")
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role   Role    @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  cohort Cohort? @relation(fields: [cohortId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@unique([userId, roleId, cohortId])
+  @@index([userId])
+  @@index([cohortId])
+  @@map("user_roles")
+}
+
+model Programme {
+  id          String          @id @default(cuid())
+  name        String
+  description String?
+  status      ProgrammeStatus @default(DRAFT)
+  cohorts     Cohort[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("programmes")
+}
+
+model Cohort {
+  id          String       @id @default(cuid())
+  programmeId String       @map("programme_id")
+  name        String
+  description String?
+  status      CohortStatus @default(DRAFT)
+  startDate   DateTime?    @map("start_date")
+  endDate     DateTime?    @map("end_date")
+  // Languages offered in this cohort (CLAUDE.md §1: EN + FR).
+  languages   Language[]   @default([EN, FR])
+  // Per-cohort data-retention window in days (CLAUDE.md §14).
+  retentionDays Int?       @map("retention_days")
+
+  programme Programme @relation(fields: [programmeId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  userRoles         UserRole[]
+  mentorProfiles    MentorProfile[]
+  menteeProfiles    MenteeProfile[]
+  competencies      Competency[]
+  imports           Import[]
+  matchingCriteria  MatchingCriteria[]
+  matches           Match[]
+  trainingBatches   TrainingBatch[]
+  agreements        Agreement[]
+  goals             Goal[]
+  meetings          Meeting[]
+  sessionLogs       SessionLog[]
+  actionItems       ActionItem[]
+  midtermReviews    MidtermReview[]
+  finalReviews      FinalReview[]
+  formDefinitions   FormDefinition[]
+  clinics           Clinic[]
+  newsletters       Newsletter[]
+  resources         Resource[]
+  forumCategories   ForumCategory[]
+  conversations     Conversation[]
+  invites           Invite[]
+  featureFlags      FeatureFlag[]
+  notifications     Notification[]
+  auditLogs         AuditLog[]
+  translations      Translation[]
+
+  @@map("cohorts")
+}
+
+model FeatureFlag {
+  id          String  @id @default(cuid())
+  key         String
+  description String?
+  enabled     Boolean @default(false)
+  // Null = global flag; otherwise scoped to a cohort (CLAUDE.md §3).
+  cohortId    String? @map("cohort_id")
+
+  cohort Cohort? @relation(fields: [cohortId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@unique([key, cohortId])
+  @@map("feature_flags")
+}
+
+model AuditLog {
+  id        String  @id @default(cuid())
+  actorId   String? @map("actor_id")
+  cohortId  String? @map("cohort_id")
+  action    String
+  entityType String @map("entity_type")
+  entityId  String? @map("entity_id")
+  // Structured before/after or context. Never store PII-heavy message content.
+  metadata  Json?
+  ipAddress String? @map("ip_address")
+
+  actor  User?   @relation(fields: [actorId], references: [id])
+  cohort Cohort? @relation(fields: [cohortId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([actorId])
+  @@index([cohortId])
+  @@index([entityType, entityId])
+  @@map("audit_logs")
+}
+
+model Notification {
+  id       String  @id @default(cuid())
+  userId   String  @map("user_id")
+  cohortId String? @map("cohort_id")
+  type     String
+  title    String
+  body     String?
+  link     String?
+  readAt   DateTime? @map("read_at")
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cohort Cohort? @relation(fields: [cohortId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([userId])
+  @@map("notifications")
+}
+
+// Invite links for admin-created accounts (CLAUDE.md §2).
+model Invite {
+  id          String       @id @default(cuid())
+  cohortId    String?      @map("cohort_id")
+  email       String
+  roleName    RoleName     @map("role_name")
+  tokenHash   String       @unique @map("token_hash")
+  status      InviteStatus @default(PENDING)
+  expiresAt   DateTime     @map("expires_at")
+  invitedById String       @map("invited_by_id")
+  acceptedByUserId String?  @map("accepted_by_user_id")
+  acceptedAt  DateTime?    @map("accepted_at")
+
+  cohort       Cohort? @relation(fields: [cohortId], references: [id])
+  invitedBy    User    @relation("InviteCreatedBy", fields: [invitedById], references: [id])
+  acceptedBy   User?   @relation("InviteAcceptedBy", fields: [acceptedByUserId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([email])
+  @@map("invites")
+}
+
+// ── Auth.js (NextAuth) adapter tables ──────────────────────────────────────
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// Profiles  (CLAUDE.md §6)
+// ──────────────────────────────────────────────────────────────────────────
+
+model MentorProfile {
+  id       String @id @default(cuid())
+  userId   String @unique @map("user_id")
+  cohortId String @map("cohort_id")
+
+  fullName        String   @map("full_name")
+  email           String
+  phone           String?
+  department      String?
+  jobTitle        String?  @map("job_title")
+  location        String?
+  preferredLanguage Language @default(EN) @map("preferred_language")
+  yearsExperience Int?     @map("years_experience")
+  currentRole     String?  @map("current_role")
+  previousRoles   String?  @map("previous_roles")
+  whyMentor       String?  @map("why_mentor")
+  personality     String?
+  whatCanLearn    String?  @map("what_can_learn")
+  interests       String?
+  availability    String?
+  maxMentees      Int      @default(2) @map("max_mentees")
+  trainingStatus  TrainingStatus @default(NOT_STARTED) @map("training_status")
+  matchingStatus  MatchingStatus @default(UNMATCHED) @map("matching_status")
+
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cohort      Cohort  @relation(fields: [cohortId], references: [id])
+  competencies ProfileCompetency[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([cohortId])
+  @@map("mentor_profiles")
+}
+
+model MenteeProfile {
+  id       String @id @default(cuid())
+  userId   String @unique @map("user_id")
+  cohortId String @map("cohort_id")
+
+  fullName        String   @map("full_name")
+  email           String
+  phone           String?
+  department      String?
+  jobTitle        String?  @map("job_title")
+  location        String?
+  preferredLanguage Language @default(EN) @map("preferred_language")
+  currentGrade    String?  @map("current_grade")
+  previousPositions String? @map("previous_positions")
+  whyMentor       String?  @map("why_mentor")
+  careerGoals     String?  @map("career_goals")
+  personality     String?
+  interests       String?
+  trainingStatus  TrainingStatus @default(NOT_STARTED) @map("training_status")
+  matchingStatus  MatchingStatus @default(UNMATCHED) @map("matching_status")
+
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cohort      Cohort  @relation(fields: [cohortId], references: [id])
+  competencies ProfileCompetency[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([cohortId])
+  @@map("mentee_profiles")
+}
+
+model Competency {
+  id       String         @id @default(cuid())
+  cohortId String         @map("cohort_id")
+  name     String
+  type     CompetencyType
+  category String?
+
+  cohort  Cohort  @relation(fields: [cohortId], references: [id])
+  profiles ProfileCompetency[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@unique([cohortId, name, type])
+  @@map("competencies")
+}
+
+model ProfileCompetency {
+  id           String  @id @default(cuid())
+  competencyId String  @map("competency_id")
+  mentorProfileId String? @map("mentor_profile_id")
+  menteeProfileId String? @map("mentee_profile_id")
+  // For mentees: marks a competency they want to strengthen (CLAUDE.md §6).
+  isStrength   Boolean @default(false) @map("is_strength")
+  isToStrengthen Boolean @default(false) @map("is_to_strengthen")
+  proficiency  Int?
+
+  competency    Competency     @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+  mentorProfile MentorProfile? @relation(fields: [mentorProfileId], references: [id], onDelete: Cascade)
+  menteeProfile MenteeProfile? @relation(fields: [menteeProfileId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([competencyId])
+  @@map("profile_competencies")
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// Intake & matching  (CLAUDE.md §8, §11)
+// ──────────────────────────────────────────────────────────────────────────
+
+model Import {
+  id           String           @id @default(cuid())
+  cohortId     String           @map("cohort_id")
+  uploadedById String           @map("uploaded_by_id")
+  fileName     String           @map("file_name")
+  sourceType   ImportSourceType @map("source_type")
+  status       ImportStatus     @default(PENDING)
+  // Whether this sheet is mentors or mentees.
+  targetRole   RoleName         @map("target_role")
+  rowCount     Int              @default(0) @map("row_count")
+  errorCount   Int              @default(0) @map("error_count")
+
+  cohort     Cohort      @relation(fields: [cohortId], references: [id])
+  uploadedBy User        @relation(fields: [uploadedById], references: [id])
+  rows       ImportRow[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([cohortId])
+  @@map("imports")
+}
+
+model ImportRow {
+  id        String          @id @default(cuid())
+  importId  String          @map("import_id")
+  rowNumber Int             @map("row_number")
+  // Raw parsed row, untrusted (CLAUDE.md §14).
+  raw       Json
+  status    ImportRowStatus @default(PENDING)
+  // AI/validator findings, e.g. [{ field, code, message, severity }].
+  validation Json?
+
+  import Import @relation(fields: [importId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([importId])
+  @@map("import_rows")
+}
+
+model MatchingCriteria {
+  id       String @id @default(cuid())
+  cohortId String @map("cohort_id")
+  // Layer-2 weights (CLAUDE.md §8). Defaults applied in the engine.
+  weights  Json
+  // Cohort-configurable hard rules (e.g. enforce-same-department=false).
+  hardRules Json
+  isActive Boolean @default(true) @map("is_active")
+
+  cohort Cohort @relation(fields: [cohortId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([cohortId])
+  @@map("matching_criteria")
+}
+
+model Match {
+  id        String      @id @default(cuid())
+  cohortId  String      @map("cohort_id")
+  mentorId  String      @map("mentor_id")
+  menteeId  String      @map("mentee_id")
+  score     Float
+  status    MatchStatus @default(SUGGESTED)
+  aiRationale String?   @map("ai_rationale")
+  flags     Json?
+  approvedById String?  @map("approved_by_id")
+  acceptedAt DateTime?  @map("accepted_at")
+
+  cohort     Cohort @relation(fields: [cohortId], references: [id])
+  mentor     User   @relation("MatchMentor", fields: [mentorId], references: [id])
+  mentee     User   @relation("MatchMentee", fields: [menteeId], references: [id])
+  approvedBy User?  @relation("MatchApprovedBy", fields: [approvedById], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@unique([cohortId, mentorId, menteeId])
+  @@index([cohortId])
+  @@map("matches")
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// Training
+// ──────────────────────────────────────────────────────────────────────────
+
+model TrainingBatch {
+  id       String @id @default(cuid())
+  cohortId String @map("cohort_id")
+  name     String
+  startDate DateTime? @map("start_date")
+  endDate   DateTime? @map("end_date")
+
+  cohort      Cohort               @relation(fields: [cohortId], references: [id])
+  attendance  TrainingAttendance[]
+  materials   TrainingMaterial[]
+  assessments TrainingAssessment[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([cohortId])
+  @@map("training_batches")
+}
+
+model TrainingAttendance {
+  id      String           @id @default(cuid())
+  batchId String           @map("batch_id")
+  userId  String           @map("user_id")
+  status  AttendanceStatus @default(REGISTERED)
+  attendedAt DateTime?     @map("attended_at")
+
+  batch TrainingBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  user  User          @relation(fields: [userId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@unique([batchId, userId])
+  @@map("training_attendance")
+}
+
+model TrainingMaterial {
+  id      String @id @default(cuid())
+  batchId String @map("batch_id")
+  title   String
+  url     String?
+  lang    Language @default(EN)
+
+  batch TrainingBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("training_materials")
+}
+
+model TrainingAssessment {
+  id      String @id @default(cuid())
+  batchId String @map("batch_id")
+  userId  String @map("user_id")
+  score   Float?
+  passed  Boolean?
+  responses Json?
+
+  batch TrainingBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  user  User          @relation(fields: [userId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("training_assessments")
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// Mentorship loop  (CLAUDE.md §6.9, §7)
+// ──────────────────────────────────────────────────────────────────────────
+
+model Agreement {
+  id       String        @id @default(cuid())
+  cohortId String        @map("cohort_id")
+  type     AgreementType
+  signedById String      @map("signed_by_id")
+  signedAt DateTime?     @map("signed_at")
+  pdfUrl   String?       @map("pdf_url")
+  terms    Json?         @map("terms_json")
+
+  cohort   Cohort @relation(fields: [cohortId], references: [id])
+  signedBy User   @relation(fields: [signedById], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([cohortId])
+  @@map("agreements")
+}
+
+model Goal {
+  id       String     @id @default(cuid())
+  cohortId String     @map("cohort_id")
+  menteeId String     @map("mentee_id")
+  title    String
+  competency String?
+  whyMatters String?  @map("why_matters")
+  currentLevel String? @map("current_level")
+  desiredLevel String? @map("desired_level")
+  learningActivity String? @map("learning_activity")
+  startDate DateTime? @map("start_date")
+  endDate   DateTime? @map("end_date")
+  successMeasure String? @map("success_measure")
+  evidence  String?
+  mentorComments String? @map("mentor_comments")
+  status    GoalStatus @default(DRAFT)
+  approvedById String? @map("approved_by_id")
+  approvedAt DateTime? @map("approved_at")
+  adminVisible Boolean @default(true) @map("admin_visible")
+
+  cohort     Cohort @relation(fields: [cohortId], references: [id])
+  mentee     User   @relation("GoalMentee", fields: [menteeId], references: [id])
+  approvedBy User?  @relation("GoalApprovedBy", fields: [approvedById], references: [id])
+  reviews    GoalReview[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([cohortId])
+  @@index([menteeId])
+  @@map("goals")
+}
+
+model GoalReview {
+  id        String @id @default(cuid())
+  goalId    String @map("goal_id")
+  reviewerId String @map("reviewer_id")
+  comment   String?
+  rating    Int?
+
+  goal     Goal @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  reviewer User @relation(fields: [reviewerId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("goal_reviews")
+}
+
+model Meeting {
+  id          String        @id @default(cuid())
+  cohortId    String        @map("cohort_id")
+  organizerId String        @map("organizer_id")
+  title       String
+  type        MeetingType
+  provider    String?
+  recurrence  String?
+  joinUrl     String?       @map("join_url")
+  startsAt    DateTime?     @map("starts_at")
+  endsAt      DateTime?     @map("ends_at")
+  status      MeetingStatus @default(SCHEDULED)
+
+  cohort      Cohort       @relation(fields: [cohortId], references: [id])
+  organizer   User         @relation("MeetingOrganizer", fields: [organizerId], references: [id])
+  sessionLogs SessionLog[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([cohortId])
+  @@map("meetings")
+}
+
+model SessionLog {
+  id        String @id @default(cuid())
+  cohortId  String @map("cohort_id")
+  meetingId String? @map("meeting_id")
+  mentorId  String @map("mentor_id")
+  menteeId  String @map("mentee_id")
+  date      DateTime?
+  time      String?
+  meetingType MeetingType? @map("meeting_type")
+  competencyDiscussed String? @map("competency_discussed")
+  goalDiscussed String? @map("goal_discussed")
+  discussionSummary String? @map("discussion_summary")
+  actionsAgreed String? @map("actions_agreed")
+  challenges String?
+  resourcesNeeded String? @map("resources_needed")
+  nextActionPlan String? @map("next_action_plan")
+  timeline   String?
+  nextMeetingDate DateTime? @map("next_meeting_date")
+  mentorNotes String? @map("mentor_notes")
+  menteeReflection String? @map("mentee_reflection")
+  aiSummary  String? @map("ai_summary")
+
+  cohort  Cohort   @relation(fields: [cohortId], references: [id])
+  meeting Meeting? @relation(fields: [meetingId], references: [id])
+  mentor  User     @relation("SessionLogMentor", fields: [mentorId], references: [id])
+  mentee  User     @relation("SessionLogMentee", fields: [menteeId], references: [id])
+  actionItems ActionItem[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([cohortId])
+  @@map("session_logs")
+}
+
+model ActionItem {
+  id         String           @id @default(cuid())
+  cohortId   String           @map("cohort_id")
+  sessionLogId String?        @map("session_log_id")
+  goalId     String?          @map("goal_id")
+  assigneeId String?          @map("assignee_id")
+  createdById String          @map("created_by_id")
+  title      String
+  dueDate    DateTime?        @map("due_date")
+  status     ActionItemStatus @default(OPEN)
+
+  cohort     Cohort      @relation(fields: [cohortId], references: [id])
+  sessionLog SessionLog? @relation(fields: [sessionLogId], references: [id])
+  assignee   User?       @relation("ActionItemAssignee", fields: [assigneeId], references: [id])
+  createdBy  User        @relation("ActionItemCreatedBy", fields: [createdById], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([cohortId])
+  @@map("action_items")
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// Reviews  (editable form definitions — CLAUDE.md §5 Reviews)
+// ──────────────────────────────────────────────────────────────────────────
+
+model FormDefinition {
+  id       String     @id @default(cuid())
+  cohortId String     @map("cohort_id")
+  type     ReviewType
+  // Role this form targets (mentor/mentee/reviewer question sets).
+  roleName RoleName?  @map("role_name")
+  title    String
+  schema   Json
+  isActive Boolean    @default(true) @map("is_active")
+
+  cohort    Cohort         @relation(fields: [cohortId], references: [id])
+  responses FormResponse[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([cohortId])
+  @@map("form_definitions")
+}
+
+model FormResponse {
+  id           String       @id @default(cuid())
+  formId       String       @map("form_id")
+  respondentId String       @map("respondent_id")
+  answers      Json
+  status       ReviewStatus @default(IN_PROGRESS)
+  submittedAt  DateTime?    @map("submitted_at")
+  midtermReviewId String?   @map("midterm_review_id")
+  finalReviewId   String?   @map("final_review_id")
+
+  form          FormDefinition @relation(fields: [formId], references: [id], onDelete: Cascade)
+  respondent    User           @relation(fields: [respondentId], references: [id])
+  midtermReview MidtermReview? @relation(fields: [midtermReviewId], references: [id])
+  finalReview   FinalReview?   @relation(fields: [finalReviewId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("form_responses")
+}
+
+model MidtermReview {
+  id       String       @id @default(cuid())
+  cohortId String       @map("cohort_id")
+  status   ReviewStatus @default(NOT_STARTED)
+  aiSummary String?     @map("ai_summary")
+
+  cohort    Cohort         @relation(fields: [cohortId], references: [id])
+  responses FormResponse[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([cohortId])
+  @@map("midterm_reviews")
+}
+
+model FinalReview {
+  id       String       @id @default(cuid())
+  cohortId String       @map("cohort_id")
+  status   ReviewStatus @default(NOT_STARTED)
+  aiSummary String?     @map("ai_summary")
+
+  cohort    Cohort         @relation(fields: [cohortId], references: [id])
+  responses FormResponse[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([cohortId])
+  @@map("final_reviews")
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// Engagement: clinics, newsletters, resources  (CLAUDE.md §10)
+// ──────────────────────────────────────────────────────────────────────────
+
+model Clinic {
+  id       String       @id @default(cuid())
+  cohortId String       @map("cohort_id")
+  hostId   String?      @map("host_id")
+  title    String
+  topic    String?
+  scheduledAt DateTime? @map("scheduled_at")
+  joinUrl  String?      @map("join_url")
+  status   ClinicStatus @default(SCHEDULED)
+
+  cohort    Cohort           @relation(fields: [cohortId], references: [id])
+  host      User?            @relation("ClinicHost", fields: [hostId], references: [id])
+  rsvps     ClinicRsvp[]
+  questions ClinicQuestion[]
+  summaries ClinicSummary[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([cohortId])
+  @@map("clinics")
+}
+
+model ClinicRsvp {
+  id       String @id @default(cuid())
+  clinicId String @map("clinic_id")
+  userId   String @map("user_id")
+  attending Boolean @default(true)
+
+  clinic Clinic @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@unique([clinicId, userId])
+  @@map("clinic_rsvps")
+}
+
+model ClinicQuestion {
+  id          String  @id @default(cuid())
+  clinicId    String  @map("clinic_id")
+  authorId    String? @map("author_id")
+  body        String
+  isAnonymous Boolean @default(false) @map("is_anonymous")
+
+  clinic Clinic @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  author User?  @relation(fields: [authorId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("clinic_questions")
+}
+
+model ClinicSummary {
+  id          String @id @default(cuid())
+  clinicId    String @map("clinic_id")
+  summary     String
+  actionPoints Json?  @map("action_points")
+  lang        Language @default(EN)
+
+  clinic Clinic @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("clinic_summaries")
+}
+
+model Newsletter {
+  id          String           @id @default(cuid())
+  cohortId    String           @map("cohort_id")
+  createdById String           @map("created_by_id")
+  title       String
+  bodyEn      String?          @map("body_en")
+  bodyFr      String?          @map("body_fr")
+  status      NewsletterStatus @default(DRAFT)
+  scheduledAt DateTime?        @map("scheduled_at")
+  sentAt      DateTime?        @map("sent_at")
+
+  cohort     Cohort                @relation(fields: [cohortId], references: [id])
+  createdBy  User                  @relation(fields: [createdById], references: [id])
+  recipients NewsletterRecipient[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([cohortId])
+  @@map("newsletters")
+}
+
+model NewsletterRecipient {
+  id           String @id @default(cuid())
+  newsletterId String @map("newsletter_id")
+  userId       String @map("user_id")
+  sentAt       DateTime? @map("sent_at")
+  openedAt     DateTime? @map("opened_at")
+
+  newsletter Newsletter @relation(fields: [newsletterId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@unique([newsletterId, userId])
+  @@map("newsletter_recipients")
+}
+
+model Resource {
+  id       String @id @default(cuid())
+  cohortId String @map("cohort_id")
+  title    String
+  url      String?
+  lang     Language @default(EN)
+  category String?
+
+  cohort Cohort @relation(fields: [cohortId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([cohortId])
+  @@map("resources")
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// Forum  (CLAUDE.md §10)
+// ──────────────────────────────────────────────────────────────────────────
+
+model ForumCategory {
+  id       String @id @default(cuid())
+  cohortId String @map("cohort_id")
+  name     String
+  description String?
+  sortOrder Int   @default(0) @map("sort_order")
+
+  cohort  Cohort        @relation(fields: [cohortId], references: [id])
+  threads ForumThread[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([cohortId])
+  @@map("forum_categories")
+}
+
+model ForumThread {
+  id         String  @id @default(cuid())
+  categoryId String  @map("category_id")
+  authorId   String  @map("author_id")
+  title      String
+  isAnonymous Boolean @default(false) @map("is_anonymous")
+  isPinned   Boolean @default(false) @map("is_pinned")
+  isLocked   Boolean @default(false) @map("is_locked")
+
+  category ForumCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  author   User          @relation(fields: [authorId], references: [id])
+  posts    ForumPost[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([categoryId])
+  @@map("forum_threads")
+}
+
+model ForumPost {
+  id        String  @id @default(cuid())
+  threadId  String  @map("thread_id")
+  authorId  String  @map("author_id")
+  bodyOriginal String @map("body_original")
+  bodyLang  Language @map("body_lang")
+  bodyTranslated String? @map("body_translated")
+  bodyTranslatedLang Language? @map("body_translated_lang")
+  isAnonymous Boolean @default(false) @map("is_anonymous")
+
+  thread    ForumThread     @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  author    User            @relation(fields: [authorId], references: [id])
+  reactions ForumReaction[]
+  reports   ForumReport[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([threadId])
+  @@map("forum_posts")
+}
+
+model ForumReaction {
+  id     String @id @default(cuid())
+  postId String @map("post_id")
+  userId String @map("user_id")
+  emoji  String
+
+  post ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User      @relation(fields: [userId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@unique([postId, userId, emoji])
+  @@map("forum_reactions")
+}
+
+model ForumReport {
+  id         String            @id @default(cuid())
+  postId     String            @map("post_id")
+  reporterId String            @map("reporter_id")
+  reason     String
+  status     ForumReportStatus @default(OPEN)
+  resolvedById String?         @map("resolved_by_id")
+  resolvedAt DateTime?         @map("resolved_at")
+
+  post       ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  reporter   User      @relation("ForumReportReporter", fields: [reporterId], references: [id])
+  resolvedBy User?     @relation("ForumReportResolvedBy", fields: [resolvedById], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("forum_reports")
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// Messaging  (CLAUDE.md §10 — confidential; admins see metadata only)
+// ──────────────────────────────────────────────────────────────────────────
+
+model Conversation {
+  id       String           @id @default(cuid())
+  cohortId String           @map("cohort_id")
+  type     ConversationType @default(DIRECT)
+  title    String?
+
+  cohort       Cohort                    @relation(fields: [cohortId], references: [id])
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([cohortId])
+  @@map("conversations")
+}
+
+model ConversationParticipant {
+  id             String @id @default(cuid())
+  conversationId String @map("conversation_id")
+  userId         String @map("user_id")
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@unique([conversationId, userId])
+  @@map("conversation_participants")
+}
+
+model Message {
+  id             String @id @default(cuid())
+  conversationId String @map("conversation_id")
+  senderId       String @map("sender_id")
+  bodyOriginal   String @map("body_original")
+  bodyLang       Language @map("body_lang")
+  bodyTranslated String? @map("body_translated")
+  bodyTranslatedLang Language? @map("body_translated_lang")
+  attachmentId   String? @map("attachment_id")
+
+  conversation Conversation       @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User               @relation(fields: [senderId], references: [id])
+  attachment   MessageAttachment? @relation(fields: [attachmentId], references: [id])
+  reads        MessageRead[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([conversationId])
+  @@map("messages")
+}
+
+model MessageRead {
+  id        String   @id @default(cuid())
+  messageId String   @map("message_id")
+  userId    String   @map("user_id")
+  readAt    DateTime @default(now()) @map("read_at")
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@unique([messageId, userId])
+  @@map("message_reads")
+}
+
+model MessageAttachment {
+  id       String @id @default(cuid())
+  fileName String @map("file_name")
+  url      String
+  mimeType String? @map("mime_type")
+  size     Int?
+  messages Message[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("message_attachments")
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// Translation cache  (CLAUDE.md §5, §9.7)
+// ──────────────────────────────────────────────────────────────────────────
+
+model Translation {
+  id         String   @id @default(cuid())
+  cohortId   String?  @map("cohort_id")
+  entityType String   @map("entity_type")
+  entityId   String   @map("entity_id")
+  sourceLang Language @map("source_lang")
+  targetLang Language @map("target_lang")
+  sourceText String   @map("source_text")
+  translatedText String @map("translated_text")
+  model      String?
+
+  cohort Cohort? @relation(fields: [cohortId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@unique([entityType, entityId, sourceLang, targetLang])
+  @@map("translations")
+}
