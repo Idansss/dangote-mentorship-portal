@@ -10,7 +10,7 @@ export async function DashboardHeader({
   userName,
   roles,
 }: {
-  titleKey: 'mentor' | 'mentee';
+  titleKey: 'mentor' | 'mentee' | 'reviewer' | 'trainer';
   userName?: string | null;
   roles: RoleName[];
 }) {

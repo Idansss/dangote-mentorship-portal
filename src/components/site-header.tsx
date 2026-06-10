@@ -63,6 +63,12 @@ export async function SiteHeader() {
                 <Link href="/help">{t('nav.help')}</Link>
               </Button>
               <Button asChild size="sm" variant="ghost">
+                <Link href="/mid-term-review">{t('nav.midTermReview')}</Link>
+              </Button>
+              <Button asChild size="sm" variant="ghost">
+                <Link href="/final-review">{t('nav.finalReview')}</Link>
+              </Button>
+              <Button asChild size="sm" variant="ghost">
                 <Link href="/notifications" className="flex items-center gap-1">
                   {t('nav.notifications')}
                   {unread > 0 ? (

@@ -1,6 +1,7 @@
 import 'server-only';
-import { AgreementType, GoalStatus, MatchStatus, TrainingStatus } from '@prisma/client';
+import { AgreementType, GoalStatus, MatchStatus, ReviewType, TrainingStatus } from '@prisma/client';
 import { prisma } from '@/lib/db/prisma';
+import { hasSubmittedReview } from '@/features/reviews/data';
 import { computeJourney, type JourneyFacts, type JourneyResult, type JourneyRole } from './journey';
 
 // Gathers the real records that feed the Journey Tracker (experience-layer.md
@@ -53,7 +54,7 @@ async function menteeFacts(userId: string, now: Date): Promise<JourneyFacts> {
     prisma.match.findFirst({
       where: { menteeId: userId, status: MatchStatus.ACCEPTED, deletedAt: null },
       orderBy: { acceptedAt: 'desc' },
-      select: { acceptedAt: true },
+      select: { acceptedAt: true, cohortId: true },
     }),
     prisma.goal.findMany({
       where: { menteeId: userId, deletedAt: null },
@@ -67,6 +68,15 @@ async function menteeFacts(userId: string, now: Date): Promise<JourneyFacts> {
     confidentialitySigned(userId),
   ]);
 
+  // Review steps are driven by real submissions once a pairing (and thus a
+  // cohort) exists; unmatched users simply haven't reached this step.
+  const [midtermDone, finalDone] = match
+    ? await Promise.all([
+        hasSubmittedReview(userId, match.cohortId, ReviewType.MIDTERM),
+        hasSubmittedReview(userId, match.cohortId, ReviewType.FINAL),
+      ])
+    : [false, false];
+
   return {
     role: 'mentee',
     profileComplete: menteeProfileComplete(profile),
@@ -79,8 +89,8 @@ async function menteeFacts(userId: string, now: Date): Promise<JourneyFacts> {
     goalsApproved: goals.some((g) => APPROVED_OR_BEYOND.includes(g.status)),
     sessionCount: sessionAgg._count._all,
     lastSessionAt: sessionAgg._max.date ?? null,
-    midtermDone: false,
-    finalDone: false,
+    midtermDone,
+    finalDone,
     now,
   };
 }
@@ -89,9 +99,10 @@ async function mentorFacts(userId: string, now: Date): Promise<JourneyFacts> {
   const matches = await prisma.match.findMany({
     where: { mentorId: userId, status: MatchStatus.ACCEPTED, deletedAt: null },
     orderBy: { acceptedAt: 'desc' },
-    select: { menteeId: true, acceptedAt: true },
+    select: { menteeId: true, acceptedAt: true, cohortId: true },
   });
   const menteeIds = matches.map((m) => m.menteeId);
+  const cohortId = matches[0]?.cohortId ?? null;
 
   const [profile, goals, sessionAgg, signed] = await Promise.all([
     prisma.mentorProfile.findFirst({
@@ -112,6 +123,13 @@ async function mentorFacts(userId: string, now: Date): Promise<JourneyFacts> {
     confidentialitySigned(userId),
   ]);
 
+  const [midtermDone, finalDone] = cohortId
+    ? await Promise.all([
+        hasSubmittedReview(userId, cohortId, ReviewType.MIDTERM),
+        hasSubmittedReview(userId, cohortId, ReviewType.FINAL),
+      ])
+    : [false, false];
+
   return {
     role: 'mentor',
     profileComplete: mentorProfileComplete(profile),
@@ -124,8 +142,8 @@ async function mentorFacts(userId: string, now: Date): Promise<JourneyFacts> {
     goalsApproved: goals.some((g) => APPROVED_OR_BEYOND.includes(g.status)),
     sessionCount: sessionAgg._count._all,
     lastSessionAt: sessionAgg._max.date ?? null,
-    midtermDone: false,
-    finalDone: false,
+    midtermDone,
+    finalDone,
     now,
   };
 }

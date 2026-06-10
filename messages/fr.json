@@ -17,6 +17,8 @@
     "signIn": "Se connecter",
     "signOut": "Se déconnecter",
     "noData": "Rien pour le moment.",
+    "yes": "Oui",
+    "no": "Non",
     "errorTitle": "Une erreur est survenue",
     "errorBody": "Veuillez réessayer. Si le problème persiste, contactez un administrateur."
   },
@@ -35,14 +37,104 @@
     "support": "Soutien",
     "pair": "Mon binôme",
     "help": "Aide",
+    "midTermReview": "Revue de mi-parcours",
+    "finalReview": "Revue finale",
     "notifications": "Notifications",
     "login": "Connexion"
   },
+  "shell": {
+    "search": "Rechercher…",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "collapse": "Réduire",
+    "expand": "Agrandir",
+    "more": "Plus",
+    "navMain": "Principal",
+    "navProgramme": "Programme",
+    "navReviews": "Évaluations",
+    "navHelp": "Aide",
+    "navManage": "Gérer",
+    "navPeople": "Personnes"
+  },
   "home": {
+    "eyebrow": "Programme de mentorat Dangote 2026",
     "title": "Un système de mentorat intelligent et bilingue",
     "subtitle": "D’une gestion manuelle et documentaire à un programme mesurable et assisté par l’IA pour le groupe Dangote.",
     "cta": "Connectez-vous pour continuer",
-    "aboutCta": "Découvrir le programme"
+    "aboutCta": "Découvrir le programme",
+    "badgeBilingual": "Bilingue EN · FR",
+    "badgeJourney": "Parcours guidé de 9 mois",
+    "badgeAI": "Assisté par l’IA, validé par l’humain",
+    "stats": {
+      "mentors": "Mentors",
+      "mentorsValue": "120+",
+      "mentees": "Mentorés",
+      "menteesValue": "300+",
+      "months": "Mois",
+      "monthsValue": "9",
+      "languages": "Langues",
+      "languagesValue": "EN · FR"
+    },
+    "journey": {
+      "eyebrow": "Le parcours",
+      "title": "Un seul parcours guidé, neuf mois, chaque étape visible",
+      "subtitle": "Chaque mentor et mentoré suit le même rail — du profil au certificat — afin que personne ne se demande quelle est la prochaine étape.",
+      "progressLabel": "Un mentoré, à mi-parcours",
+      "open": "Ouvrir",
+      "nodes": {
+        "profile": "Profil",
+        "training": "Formation",
+        "matched": "Jumelé",
+        "agreement": "Accord",
+        "goals": "Objectifs",
+        "sessions": "Séances",
+        "midterm": "Évaluation mi-parcours",
+        "final": "Évaluation finale",
+        "certificate": "Certificat"
+      },
+      "states": {
+        "done": "Terminé",
+        "yourTurn": "À vous",
+        "upcoming": "À venir"
+      }
+    },
+    "features": {
+      "eyebrow": "Ce que contient le portail",
+      "title": "Conçu pour le travail, pas pour la démo",
+      "matching": {
+        "title": "Jumelage assisté par l’IA",
+        "body": "Un jumelage sûr sur le plan linguistique, évalué selon les compétences, les objectifs et l’expérience — l’administrateur décide toujours."
+      },
+      "bilingual": {
+        "title": "Bilingue partout",
+        "body": "Écrivez en anglais ou en français. Traduisez à la demande tout objectif, note ou message, l’original étant toujours conservé."
+      },
+      "goals": {
+        "title": "Coach d’objectifs SMART",
+        "body": "Transformez une intention vague en un objectif mesurable que votre mentor approuve en une seule étape."
+      },
+      "sessions": {
+        "title": "Journal des séances",
+        "body": "Consignez une séance en trois champs depuis votre téléphone ; l’IA rédige le résumé et l’ordre du jour suivant."
+      },
+      "engagement": {
+        "title": "Cliniques et communauté",
+        "body": "Cliniques mensuelles, forum bilingue et messagerie privée gardent toute la cohorte connectée."
+      },
+      "risk": {
+        "title": "Moniteur de risque",
+        "body": "Signale discrètement les binômes devenus silencieux ou les objectifs au point mort — à partir des métadonnées, jamais du contenu des messages."
+      }
+    },
+    "closing": {
+      "title": "Prêt à poursuivre votre parcours ?",
+      "subtitle": "Connectez-vous avec votre compte Dangote pour reprendre exactement là où vous en étiez.",
+      "cta": "Se connecter"
+    },
+    "footer": {
+      "tagline": "Le système d’exploitation du programme de mentorat bilingue de Dangote.",
+      "privacy": "Confidentiel par conception — les messages directs restent privés entre les participants."
+    }
   },
   "about": {
     "title": "À propos du programme",
@@ -128,6 +220,8 @@
   },
   "admin": {
     "title": "Administration",
+    "overviewSubtitle": "L’état du programme en un coup d’œil — binômes, jumelage, objectifs et soutien.",
+    "setup": "Configuration du programme",
     "programmes": "Programmes",
     "cohorts": "Cohortes",
     "newProgramme": "Nouveau programme",
@@ -278,6 +372,83 @@
     "error": "Impossible d’enregistrer votre brouillon.",
     "resume": "Nous avons restauré votre brouillon non enregistré.",
     "discard": "Supprimer le brouillon"
+  },
+  "trainer": {
+    "batches": "Groupes de formation",
+    "participants": "Participants",
+    "attendanceRate": "Présence",
+    "attended": "Présents",
+    "passed": "Réussi",
+    "materialsCount": "{count, plural, =0 {Aucun support} one {# support} other {# supports}}",
+    "noBatchesTitle": "Aucun groupe de formation pour l’instant",
+    "noBatchesBody": "Dès que des groupes sont configurés pour votre cohorte, leur présence et leur progression apparaissent ici.",
+    "noCohortTitle": "Aucune cohorte active",
+    "noCohortBody": "Les analyses de formation apparaissent ici dès qu’une cohorte est active."
+  },
+  "risk": {
+    "title": "Binômes nécessitant une attention",
+    "atRiskCount": "{count, plural, one {# à risque} other {# à risque}}",
+    "watchCount": "{count, plural, one {# à surveiller} other {# à surveiller}}",
+    "allHealthy": "Tous les binômes jumelés semblent en bonne santé.",
+    "flag": {
+      "no_sessions": "Aucune séance depuis {days} jours",
+      "stale_sessions": "Aucune séance depuis {days} jours",
+      "no_goals": "Aucun objectif soumis",
+      "goals_awaiting_approval": "{count, plural, one {# objectif en attente d’approbation} other {# objectifs en attente d’approbation}}",
+      "midterm_incomplete": "Revue de mi-parcours incomplète",
+      "final_incomplete": "Revue finale incomplète"
+    }
+  },
+  "reviews": {
+    "midtermTitle": "Revue de mi-parcours",
+    "midtermSubtitle": "Un point rapide sur le déroulement de votre mentorat à mi-chemin. Vos réponses aident votre équipe de programme à vous accompagner.",
+    "finalTitle": "Revue finale",
+    "finalSubtitle": "Une réflexion sur votre mentorat à la clôture du programme — ce qui a changé, ce que vous avez accompli et la suite. Vos réponses nourrissent le rapport du programme.",
+    "submit": "Soumettre la revue",
+    "required": "Obligatoire",
+    "submittedOn": "Soumise le {date}. Vous pouvez modifier vos réponses et soumettre à nouveau.",
+    "notEligibleTitle": "Aucune revue à remplir pour l’instant",
+    "notEligibleBody": "Les revues concernent les mentors et mentorés jumelés. Une fois jumelé, votre formulaire apparaîtra ici.",
+    "notPublishedTitle": "Votre revue n’est pas encore ouverte",
+    "notPublishedBody": "Votre équipe de programme n’a pas encore publié cette revue pour votre cohorte. Revenez bientôt.",
+    "yes": "Oui",
+    "no": "Non",
+    "eligible": "Participants éligibles",
+    "eligibleHint": "Mentors et mentorés jumelés",
+    "midtermCompletion": "Achèvement mi-parcours",
+    "finalCompletion": "Achèvement final",
+    "ofN": "sur",
+    "perPairTitle": "Achèvement par binôme",
+    "noPairs": "Aucun binôme jumelé dans cette cohorte pour l’instant.",
+    "pairColumn": "Mentor · Mentoré",
+    "midtermShort": "Mi-parcours",
+    "finalShort": "Finale",
+    "mentorShort": "Mentor",
+    "menteeShort": "Mentoré",
+    "participationTitle": "Participation linguistique",
+    "participantsEn": "Participants (anglais)",
+    "participantsFr": "Participants (français)",
+    "byDepartment": "Par département",
+    "rollupNotPublished": "Publiez ce formulaire de revue pour commencer à recueillir des réponses.",
+    "noResponsesTitle": "Aucune réponse pour l’instant",
+    "noResponsesBody": "Les agrégats apparaissent ici dès que les participants commencent à soumettre.",
+    "textResponses": "{count, plural, =0 {Aucune réponse écrite} one {# réponse écrite} other {# réponses écrites}}",
+    "answeredCount": "{count, plural, =0 {Aucune réponse} one {# réponse} other {# réponses}}",
+    "noCohortTitle": "Aucune cohorte active",
+    "noCohortBody": "Dès qu’une cohorte est active, les analyses de revue à l’échelle du programme apparaissent ici.",
+    "assistantTitle": "Assistant de rapport de programme",
+    "assistantGenerate": "Générer le rapport",
+    "assistantGenerating": "Génération…",
+    "assistantIntro": "Rédigez un rapport de revue à partir des réponses réelles de cette cohorte. Vous le relisez et le modifiez avant tout enregistrement.",
+    "assistantUnavailable": "L’IA n’est pas configurée ; la rédaction du rapport est indisponible. Vous pouvez tout de même rédiger un résumé manuellement.",
+    "assistantNoDraft": "L’assistant n’a pas pu rédiger de rapport à partir des données actuelles. Réessayez quand davantage de réponses seront disponibles.",
+    "assistantDraft": "Projet de rapport",
+    "editableHint": "Modifiable",
+    "atRisk": "À risque",
+    "recommendations": "Recommandations",
+    "saveSummary": "Enregistrer le résumé",
+    "summarySaved": "Résumé enregistré.",
+    "savedSummary": "Résumé enregistré"
   },
   "agreements": {
     "title": "Accords",
@@ -882,5 +1053,56 @@
         "body": "L'équipe du programme a répondu à votre demande de soutien."
       }
     }
+  },
+  "forms": {
+    "title": "Générateur de formulaires",
+    "subtitle": "Formulaires d'évaluation pour {cohort}",
+    "newForm": "Nouveau formulaire",
+    "editForm": "Modifier le formulaire",
+    "createForm": "Créer le formulaire",
+    "builderHelp": "Créez les questionnaires d'évaluation à mi-parcours et finale. Les administrateurs peuvent les modifier à tout moment, sans changement de code.",
+    "emptyTitle": "Aucun formulaire d'évaluation",
+    "emptyHelp": "Créez un formulaire d'évaluation à mi-parcours ou finale pour commencer à recueillir des réponses.",
+    "noActiveCohort": "Aucune cohorte active",
+    "noActiveCohortHelp": "Activez une cohorte avant de créer ses formulaires d'évaluation.",
+    "reviewType": "Type d'évaluation",
+    "midterm": "Mi-parcours",
+    "final": "Finale",
+    "formTitle": "Titre du formulaire",
+    "targetRole": "Qui le remplit",
+    "allRoles": "Tous les rôles",
+    "roleMentor": "Mentors",
+    "roleMentee": "Mentorés",
+    "roleReviewer": "Évaluateurs",
+    "cohort": "Cohorte",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "activate": "Activer",
+    "deactivate": "Désactiver",
+    "confirmArchive": "Archiver ce formulaire ? Les réponses existantes sont conservées.",
+    "questions": "Questions",
+    "questionN": "Question {n}",
+    "addQuestion": "Ajouter une question",
+    "removeQuestion": "Supprimer la question",
+    "noQuestions": "Aucune question. Ajoutez la première.",
+    "moveUp": "Monter",
+    "moveDown": "Descendre",
+    "labelEn": "Question (anglais)",
+    "labelFr": "Question (français)",
+    "answerType": "Type de réponse",
+    "required": "Obligatoire",
+    "ratingMax": "Note maximale",
+    "options": "Choix",
+    "addOption": "Ajouter un choix",
+    "optionValue": "Valeur",
+    "optionLabelEn": "Choix (EN)",
+    "optionLabelFr": "Choix (FR)",
+    "typeShortText": "Texte court",
+    "typeLongText": "Texte long",
+    "typeRating": "Note",
+    "typeSelect": "Choix multiple",
+    "typeBoolean": "Oui / Non",
+    "questionCount": "{count} questions",
+    "responseCount": "{count} réponses"
   }
 }

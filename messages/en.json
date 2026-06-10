@@ -17,6 +17,8 @@
     "signIn": "Sign in",
     "signOut": "Sign out",
     "noData": "Nothing here yet.",
+    "yes": "Yes",
+    "no": "No",
     "errorTitle": "Something went wrong",
     "errorBody": "Please try again. If the problem persists, contact an administrator."
   },
@@ -35,14 +37,104 @@
     "support": "Support",
     "pair": "My pair",
     "help": "Help",
+    "midTermReview": "Mid-term review",
+    "finalReview": "Final review",
     "notifications": "Notifications",
     "login": "Login"
   },
+  "shell": {
+    "search": "Search…",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "collapse": "Collapse",
+    "expand": "Expand",
+    "more": "More",
+    "navMain": "Main",
+    "navProgramme": "Programme",
+    "navReviews": "Reviews",
+    "navHelp": "Help",
+    "navManage": "Manage",
+    "navPeople": "People"
+  },
   "home": {
+    "eyebrow": "Dangote Mentorship Programme 2026",
     "title": "An intelligent, bilingual mentorship operating system",
     "subtitle": "From manual, document-based mentorship to a measurable, AI-assisted programme for Dangote Group.",
     "cta": "Sign in to continue",
-    "aboutCta": "Learn about the programme"
+    "aboutCta": "Learn about the programme",
+    "badgeBilingual": "EN · FR bilingual",
+    "badgeJourney": "9-month guided journey",
+    "badgeAI": "AI-assisted, human-approved",
+    "stats": {
+      "mentors": "Mentors",
+      "mentorsValue": "120+",
+      "mentees": "Mentees",
+      "menteesValue": "300+",
+      "months": "Months",
+      "monthsValue": "9",
+      "languages": "Languages",
+      "languagesValue": "EN · FR"
+    },
+    "journey": {
+      "eyebrow": "The journey",
+      "title": "One guided path, nine months, every step visible",
+      "subtitle": "Every mentor and mentee follows the same rail — from profile to certificate — so no one is left wondering what comes next.",
+      "progressLabel": "A mentee, mid-programme",
+      "open": "Open",
+      "nodes": {
+        "profile": "Profile",
+        "training": "Training",
+        "matched": "Matched",
+        "agreement": "Agreement",
+        "goals": "Goals",
+        "sessions": "Sessions",
+        "midterm": "Mid-term review",
+        "final": "Final review",
+        "certificate": "Certificate"
+      },
+      "states": {
+        "done": "Done",
+        "yourTurn": "Your turn",
+        "upcoming": "Upcoming"
+      }
+    },
+    "features": {
+      "eyebrow": "What's inside",
+      "title": "Built for the work, not the demo",
+      "matching": {
+        "title": "AI-assisted matching",
+        "body": "Language-safe pairing scored on competencies, goals and experience — the admin always makes the final call."
+      },
+      "bilingual": {
+        "title": "Bilingual everywhere",
+        "body": "Write in English or French. Translate any goal, note or message on demand, with the original always kept."
+      },
+      "goals": {
+        "title": "SMART goal coach",
+        "body": "Turn a vague aim into a measurable goal that your mentor approves in a single step."
+      },
+      "sessions": {
+        "title": "Session logging",
+        "body": "Capture a session in three fields on your phone; AI drafts the summary and the next agenda."
+      },
+      "engagement": {
+        "title": "Clinics & community",
+        "body": "Monthly clinics, a bilingual forum and private messaging keep the whole cohort connected."
+      },
+      "risk": {
+        "title": "Risk monitor",
+        "body": "Quietly flags pairs that have gone quiet or goals that have stalled — from metadata, never message content."
+      }
+    },
+    "closing": {
+      "title": "Ready to continue your journey?",
+      "subtitle": "Sign in with your Dangote account to pick up exactly where you left off.",
+      "cta": "Sign in"
+    },
+    "footer": {
+      "tagline": "The operating system for Dangote's bilingual mentorship programme.",
+      "privacy": "Confidential by design — direct messages stay private to participants."
+    }
   },
   "about": {
     "title": "About the programme",
@@ -128,6 +220,8 @@
   },
   "admin": {
     "title": "Administration",
+    "overviewSubtitle": "Programme health at a glance — pairs, matching, goals and support.",
+    "setup": "Programme setup",
     "programmes": "Programmes",
     "cohorts": "Cohorts",
     "newProgramme": "New programme",
@@ -278,6 +372,83 @@
     "error": "Couldn't save your draft.",
     "resume": "We restored your unsaved draft.",
     "discard": "Discard draft"
+  },
+  "trainer": {
+    "batches": "Training batches",
+    "participants": "Participants",
+    "attendanceRate": "Attendance",
+    "attended": "Attended",
+    "passed": "Passed",
+    "materialsCount": "{count, plural, =0 {No materials} one {# material} other {# materials}}",
+    "noBatchesTitle": "No training batches yet",
+    "noBatchesBody": "Once batches are set up for your cohort, their attendance and progress appear here.",
+    "noCohortTitle": "No active cohort",
+    "noCohortBody": "Training insights appear here once a cohort is active."
+  },
+  "risk": {
+    "title": "Pairs needing attention",
+    "atRiskCount": "{count, plural, one {# at risk} other {# at risk}}",
+    "watchCount": "{count, plural, one {# to watch} other {# to watch}}",
+    "allHealthy": "All matched pairs look healthy.",
+    "flag": {
+      "no_sessions": "No session in {days} days",
+      "stale_sessions": "No session in {days} days",
+      "no_goals": "No goals submitted",
+      "goals_awaiting_approval": "{count, plural, one {# goal awaiting approval} other {# goals awaiting approval}}",
+      "midterm_incomplete": "Mid-term review incomplete",
+      "final_incomplete": "Final review incomplete"
+    }
+  },
+  "reviews": {
+    "midtermTitle": "Mid-term review",
+    "midtermSubtitle": "A quick check-in on how your mentorship is going at the halfway point. Your answers help your programme team support you.",
+    "finalTitle": "Final review",
+    "finalSubtitle": "A reflection on your mentorship as the programme closes — what changed, what you achieved, and what comes next. Your answers shape the programme report.",
+    "submit": "Submit review",
+    "required": "Required",
+    "submittedOn": "Submitted on {date}. You can update your answers and submit again.",
+    "notEligibleTitle": "No review to fill yet",
+    "notEligibleBody": "Reviews are for matched mentors and mentees. Once you're paired, your form will appear here.",
+    "notPublishedTitle": "Your review isn't open yet",
+    "notPublishedBody": "Your programme team hasn't published this review for your cohort. Check back soon.",
+    "yes": "Yes",
+    "no": "No",
+    "eligible": "Eligible participants",
+    "eligibleHint": "Matched mentors and mentees",
+    "midtermCompletion": "Mid-term completion",
+    "finalCompletion": "Final completion",
+    "ofN": "of",
+    "perPairTitle": "Completion by pair",
+    "noPairs": "No matched pairs in this cohort yet.",
+    "pairColumn": "Mentor · Mentee",
+    "midtermShort": "Mid-term",
+    "finalShort": "Final",
+    "mentorShort": "Mentor",
+    "menteeShort": "Mentee",
+    "participationTitle": "Language participation",
+    "participantsEn": "Participants (English)",
+    "participantsFr": "Participants (French)",
+    "byDepartment": "By department",
+    "rollupNotPublished": "Publish this review form to start collecting responses.",
+    "noResponsesTitle": "No responses yet",
+    "noResponsesBody": "Aggregates appear here once participants start submitting.",
+    "textResponses": "{count, plural, =0 {No written responses} one {# written response} other {# written responses}}",
+    "answeredCount": "{count, plural, =0 {No answers} one {# answer} other {# answers}}",
+    "noCohortTitle": "No active cohort",
+    "noCohortBody": "Once a cohort is active, programme-wide review insights appear here.",
+    "assistantTitle": "Programme report assistant",
+    "assistantGenerate": "Generate report",
+    "assistantGenerating": "Generating…",
+    "assistantIntro": "Draft a review report from this cohort's real responses. You review and edit before anything is saved.",
+    "assistantUnavailable": "AI is not configured, so report drafting is unavailable. You can still write a summary manually.",
+    "assistantNoDraft": "The assistant couldn't draft a report from the current data. Try again once more responses are in.",
+    "assistantDraft": "Draft report",
+    "editableHint": "Editable",
+    "atRisk": "At risk",
+    "recommendations": "Recommendations",
+    "saveSummary": "Save summary",
+    "summarySaved": "Summary saved.",
+    "savedSummary": "Saved summary"
   },
   "agreements": {
     "title": "Agreements",
@@ -882,5 +1053,56 @@
         "body": "The programme team has responded to your support request."
       }
     }
+  },
+  "forms": {
+    "title": "Forms builder",
+    "subtitle": "Review forms for {cohort}",
+    "newForm": "New form",
+    "editForm": "Edit form",
+    "createForm": "Create form",
+    "builderHelp": "Build the mid-term and final review questionnaires. Admins can edit these any time without a code change.",
+    "emptyTitle": "No review forms yet",
+    "emptyHelp": "Create a mid-term or final review form to start collecting responses.",
+    "noActiveCohort": "No active cohort",
+    "noActiveCohortHelp": "Activate a cohort before building its review forms.",
+    "reviewType": "Review type",
+    "midterm": "Mid-term",
+    "final": "Final",
+    "formTitle": "Form title",
+    "targetRole": "Who fills this in",
+    "allRoles": "All roles",
+    "roleMentor": "Mentors",
+    "roleMentee": "Mentees",
+    "roleReviewer": "Reviewers",
+    "cohort": "Cohort",
+    "active": "Active",
+    "inactive": "Inactive",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "confirmArchive": "Archive this form? Existing responses are kept.",
+    "questions": "Questions",
+    "questionN": "Question {n}",
+    "addQuestion": "Add question",
+    "removeQuestion": "Remove question",
+    "noQuestions": "No questions yet. Add the first one.",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "labelEn": "Question (English)",
+    "labelFr": "Question (French)",
+    "answerType": "Answer type",
+    "required": "Required",
+    "ratingMax": "Max rating",
+    "options": "Choices",
+    "addOption": "Add choice",
+    "optionValue": "Value",
+    "optionLabelEn": "Choice (EN)",
+    "optionLabelFr": "Choice (FR)",
+    "typeShortText": "Short text",
+    "typeLongText": "Long text",
+    "typeRating": "Rating",
+    "typeSelect": "Multiple choice",
+    "typeBoolean": "Yes / No",
+    "questionCount": "{count} questions",
+    "responseCount": "{count} responses"
   }
 }

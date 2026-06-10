@@ -1,0 +1,270 @@
+'use client';
+
+import { useActionState, useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import type { ReviewType } from '@prisma/client';
+import type { FormField } from '@/features/forms/schema';
+import { reviewDraftKey } from '@/features/reviews/schema';
+import { submitReviewResponseForm, type ReviewFormState } from '@/features/reviews/actions';
+import { useFormDraft } from '@/components/use-form-draft';
+import { BilingualField } from '@/components/bilingual-field';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { cn } from '@/lib/utils';
+
+type Lang = 'EN' | 'FR';
+type Values = Record<string, string>;
+
+// Review fill form (CLAUDE.md §5, M3). Renders whatever question set the admin
+// published (Forms Builder), autosaves a draft so work is never lost
+// (experience-layer.md §1.11), and submits answers as a single validated blob.
+// Used by both the mid-term and final review screens. AI is not involved here —
+// this is human-authored data.
+export function ReviewForm({
+  formId,
+  type,
+  fields,
+  lang,
+  cohortId,
+  initial,
+}: {
+  formId: string;
+  type: ReviewType;
+  fields: FormField[];
+  lang: Lang;
+  cohortId: string;
+  initial?: Values;
+}) {
+  const t = useTranslations('reviews');
+  const tc = useTranslations('common');
+  const td = useTranslations('drafts');
+  const router = useRouter();
+
+  const [values, setValues] = useState<Values>(() => seed(fields, initial));
+  const [state, action, pending] = useActionState<ReviewFormState, FormData>(
+    submitReviewResponseForm,
+    null,
+  );
+
+  const formKey = reviewDraftKey(type, formId);
+  const { status: draftStatus, clear } = useFormDraft({ formKey, values, cohortId });
+
+  useEffect(() => {
+    if (state?.ok) {
+      void clear();
+      router.refresh();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
+
+  const serialized = useMemo(() => JSON.stringify(values), [values]);
+  const fieldErrors = !state?.ok && state?.error.code === 'VALIDATION' ? state.error.fieldErrors : undefined;
+
+  function set(id: string, value: string) {
+    setValues((v) => ({ ...v, [id]: value }));
+  }
+
+  return (
+    <form action={action} className="space-y-6">
+      <input type="hidden" name="formId" value={formId} />
+      <input type="hidden" name="type" value={type} />
+      <input type="hidden" name="answers" value={serialized} />
+
+      {draftStatus === 'saved' ? (
+        <p className="text-small text-ink-3" role="status">
+          {td('saved')}
+        </p>
+      ) : null}
+
+      {fields.map((field) => {
+        const label = lang === 'FR' ? field.labelFr : field.labelEn;
+        const error = fieldErrors?.[field.id]?.[0];
+        return (
+          <FieldRenderer
+            key={field.id}
+            field={field}
+            label={label}
+            lang={lang}
+            value={values[field.id] ?? ''}
+            onChange={(v) => set(field.id, v)}
+            error={error}
+            yesWord={tc('yes')}
+            noWord={tc('no')}
+          />
+        );
+      })}
+
+      {state && !state.ok && state.error.code !== 'VALIDATION' ? (
+        <p className="text-small text-risk" role="alert">
+          {state.error.message}
+        </p>
+      ) : null}
+
+      <Button type="submit" disabled={pending}>
+        {pending ? tc('loading') : t('submit')}
+      </Button>
+    </form>
+  );
+}
+
+function FieldRenderer({
+  field,
+  label,
+  lang,
+  value,
+  onChange,
+  error,
+  yesWord,
+  noWord,
+}: {
+  field: FormField;
+  label: string;
+  lang: Lang;
+  value: string;
+  onChange: (value: string) => void;
+  error?: string;
+  yesWord: string;
+  noWord: string;
+}) {
+  const errorNode = error ? (
+    <p className="text-small text-risk" role="alert">
+      {error}
+    </p>
+  ) : null;
+
+  if (field.type === 'short_text' || field.type === 'long_text') {
+    return (
+      <div className="space-y-1.5">
+        <BilingualField
+          id={`f-${field.id}`}
+          name={`f-${field.id}`}
+          label={label}
+          lang={lang}
+          as={field.type === 'short_text' ? 'input' : 'textarea'}
+          value={value}
+          onChange={onChange}
+          required={field.required}
+          rows={field.type === 'long_text' ? 4 : undefined}
+        />
+        {errorNode}
+      </div>
+    );
+  }
+
+  if (field.type === 'rating') {
+    const max = field.max ?? 5;
+    const scale = Array.from({ length: max }, (_, i) => i + 1);
+    return (
+      <fieldset className="space-y-1.5">
+        <legend className="text-h3 text-ink">
+          {label}
+          {field.required ? <span className="ml-0.5 text-risk">*</span> : null}
+        </legend>
+        <div role="radiogroup" aria-label={label} className="flex flex-wrap gap-2">
+          {scale.map((n) => {
+            const selected = value === String(n);
+            return (
+              <button
+                key={n}
+                type="button"
+                role="radio"
+                aria-checked={selected}
+                aria-label={`${n} / ${max}`}
+                onClick={() => onChange(String(n))}
+                className={cn(
+                  'flex size-11 items-center justify-center rounded-md border text-body font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-green/30 focus:ring-offset-2 focus:ring-offset-bg',
+                  selected
+                    ? 'border-green bg-green text-white'
+                    : 'border-border bg-bg text-ink hover:border-green',
+                )}
+              >
+                {n}
+              </button>
+            );
+          })}
+        </div>
+        {errorNode}
+      </fieldset>
+    );
+  }
+
+  if (field.type === 'boolean') {
+    const choices: { v: string; label: string }[] = [
+      { v: 'true', label: yesWord },
+      { v: 'false', label: noWord },
+    ];
+    return (
+      <fieldset className="space-y-1.5">
+        <legend className="text-h3 text-ink">
+          {label}
+          {field.required ? <span className="ml-0.5 text-risk">*</span> : null}
+        </legend>
+        <div role="radiogroup" aria-label={label} className="flex gap-2">
+          {choices.map((c) => {
+            const selected = value === c.v;
+            return (
+              <button
+                key={c.v}
+                type="button"
+                role="radio"
+                aria-checked={selected}
+                onClick={() => onChange(c.v)}
+                className={cn(
+                  'flex h-11 min-w-[5rem] items-center justify-center rounded-md border px-4 text-body transition-colors focus:outline-none focus:ring-2 focus:ring-green/30 focus:ring-offset-2 focus:ring-offset-bg',
+                  selected
+                    ? 'border-green bg-green text-white'
+                    : 'border-border bg-bg text-ink hover:border-green',
+                )}
+              >
+                {c.label}
+              </button>
+            );
+          })}
+        </div>
+        {errorNode}
+      </fieldset>
+    );
+  }
+
+  // single_select
+  const options = field.options ?? [];
+  return (
+    <div className="space-y-1.5">
+      <Label htmlFor={`f-${field.id}`}>
+        {label}
+        {field.required ? <span className="ml-0.5 text-risk">*</span> : null}
+      </Label>
+      <Select value={value || undefined} onValueChange={onChange}>
+        <SelectTrigger id={`f-${field.id}`} aria-label={label}>
+          <SelectValue placeholder="—" />
+        </SelectTrigger>
+        <SelectContent>
+          {options.map((o) => (
+            <SelectItem key={o.value} value={o.value}>
+              {lang === 'FR' ? o.labelFr : o.labelEn}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      {errorNode}
+    </div>
+  );
+}
+
+/** Seed the form state: stored draft if present, else blank per field. */
+function seed(fields: FormField[], initial?: Values): Values {
+  const out: Values = {};
+  for (const f of fields) {
+    const v = initial?.[f.id];
+    out[f.id] = v != null ? String(v) : '';
+  }
+  return out;
+}

@@ -25,6 +25,9 @@ interface BilingualFieldProps {
   lang: Lang;
   as?: 'textarea' | 'input';
   defaultValue?: string;
+  /** Controlled value. Pass with `onChange` for forms that autosave a draft. */
+  value?: string;
+  onChange?: (value: string) => void;
   placeholder?: string;
   required?: boolean;
   helperText?: string;
@@ -39,12 +42,20 @@ export function BilingualField({
   lang,
   as = 'textarea',
   defaultValue,
+  value,
+  onChange,
   placeholder,
   required,
   helperText,
   rows,
   className,
 }: BilingualFieldProps) {
+  // Controlled when an onChange handler is supplied (autosaving forms); else the
+  // field stays uncontrolled with a defaultValue (server-action forms).
+  const controlled = onChange
+    ? { value: value ?? '', onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(e.target.value) }
+    : { defaultValue };
+
   return (
     <div className={cn('space-y-1.5', className)}>
       <Label htmlFor={id}>
@@ -52,9 +63,9 @@ export function BilingualField({
         {required && <span className="ml-0.5 text-risk">*</span>}
       </Label>
       {as === 'input' ? (
-        <Input id={id} name={name} defaultValue={defaultValue} placeholder={placeholder} required={required} />
+        <Input id={id} name={name} placeholder={placeholder} required={required} {...controlled} />
       ) : (
-        <Textarea id={id} name={name} defaultValue={defaultValue} placeholder={placeholder} required={required} rows={rows} />
+        <Textarea id={id} name={name} placeholder={placeholder} required={required} rows={rows} {...controlled} />
       )}
       <div className="flex items-center justify-between gap-2 text-micro">
         <span className="inline-flex items-center gap-1.5 text-ink-3">

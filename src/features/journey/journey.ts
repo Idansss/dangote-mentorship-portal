@@ -141,8 +141,8 @@ const LINKS: Record<JourneyStepKey, string | null> = {
   confidentiality: '/agreements',
   goals: '/goals',
   sessions: '/sessions',
-  midterm: null,
-  final: null,
+  midterm: '/mid-term-review',
+  final: '/final-review',
   completion: null,
 };
 

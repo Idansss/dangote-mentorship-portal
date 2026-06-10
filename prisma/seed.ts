@@ -26,6 +26,7 @@ import {
   MeetingStatus,
   PrismaClient,
   ProgrammeStatus,
+  ReviewType,
   RoleName,
   SupportRequestReason,
   SupportRequestStatus,
@@ -625,6 +626,130 @@ async function main() {
         ],
       });
     }
+  }
+
+  // --- A published mid-term review form so the fill flow is demoable -------
+  // Editable form_definition (no code change to alter the questions). Bilingual
+  // (EN/FR) per CLAUDE.md §6; role-agnostic so both mentor and mentee fill it.
+  const existingMidtermForm = await prisma.formDefinition.findFirst({
+    where: { cohortId: cohort.id, type: ReviewType.MIDTERM, deletedAt: null },
+  });
+  if (!existingMidtermForm) {
+    await prisma.formDefinition.create({
+      data: {
+        cohortId: cohort.id,
+        type: ReviewType.MIDTERM,
+        roleName: null,
+        title: 'Mid-term mentorship review',
+        isActive: true,
+        schema: {
+          fields: [
+            {
+              id: 'met_regularly',
+              labelEn: 'Have you and your partner been meeting regularly?',
+              labelFr: 'Vous et votre binôme vous êtes-vous rencontrés régulièrement ?',
+              type: 'boolean',
+              required: true,
+            },
+            {
+              id: 'progress_rating',
+              labelEn: 'How would you rate progress toward the goals so far?',
+              labelFr: 'Comment évaluez-vous les progrès vers les objectifs jusqu’ici ?',
+              type: 'rating',
+              required: true,
+              max: 5,
+            },
+            {
+              id: 'usefulness',
+              labelEn: 'How useful has the mentorship been?',
+              labelFr: 'Dans quelle mesure le mentorat a-t-il été utile ?',
+              type: 'single_select',
+              required: true,
+              options: [
+                { value: 'very', labelEn: 'Very useful', labelFr: 'Très utile' },
+                { value: 'somewhat', labelEn: 'Somewhat useful', labelFr: 'Assez utile' },
+                { value: 'not', labelEn: 'Not useful yet', labelFr: 'Pas encore utile' },
+              ],
+            },
+            {
+              id: 'highlights',
+              labelEn: 'What has gone well so far?',
+              labelFr: 'Qu’est-ce qui s’est bien passé jusqu’ici ?',
+              type: 'long_text',
+              required: false,
+            },
+            {
+              id: 'support_needed',
+              labelEn: 'What support do you need for the second half?',
+              labelFr: 'De quel soutien avez-vous besoin pour la seconde moitié ?',
+              type: 'long_text',
+              required: false,
+            },
+          ],
+        },
+      },
+    });
+  }
+
+  // --- A published final review form so the fill flow is demoable ----------
+  const existingFinalForm = await prisma.formDefinition.findFirst({
+    where: { cohortId: cohort.id, type: ReviewType.FINAL, deletedAt: null },
+  });
+  if (!existingFinalForm) {
+    await prisma.formDefinition.create({
+      data: {
+        cohortId: cohort.id,
+        type: ReviewType.FINAL,
+        roleName: null,
+        title: 'Final mentorship review',
+        isActive: true,
+        schema: {
+          fields: [
+            {
+              id: 'goals_achieved',
+              labelEn: 'Were your mentorship goals achieved?',
+              labelFr: 'Vos objectifs de mentorat ont-ils été atteints ?',
+              type: 'single_select',
+              required: true,
+              options: [
+                { value: 'fully', labelEn: 'Fully', labelFr: 'Entièrement' },
+                { value: 'partly', labelEn: 'Partly', labelFr: 'En partie' },
+                { value: 'not', labelEn: 'Not really', labelFr: 'Pas vraiment' },
+              ],
+            },
+            {
+              id: 'overall_rating',
+              labelEn: 'Overall, how would you rate the mentorship experience?',
+              labelFr: 'Dans l’ensemble, comment évaluez-vous l’expérience de mentorat ?',
+              type: 'rating',
+              required: true,
+              max: 5,
+            },
+            {
+              id: 'biggest_change',
+              labelEn: 'What is the biggest change you saw over the programme?',
+              labelFr: 'Quel est le plus grand changement observé pendant le programme ?',
+              type: 'long_text',
+              required: true,
+            },
+            {
+              id: 'would_recommend',
+              labelEn: 'Would you recommend the programme to a colleague?',
+              labelFr: 'Recommanderiez-vous le programme à un collègue ?',
+              type: 'boolean',
+              required: true,
+            },
+            {
+              id: 'suggestions',
+              labelEn: 'What would you improve for the next cohort?',
+              labelFr: 'Qu’amélioreriez-vous pour la prochaine cohorte ?',
+              type: 'long_text',
+              required: false,
+            },
+          ],
+        },
+      },
+    });
   }
 
   // --- A messy mentor import for the M1 validator to catch -----------------
