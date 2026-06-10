@@ -11,7 +11,10 @@ import MicrosoftEntraID from 'next-auth/providers/microsoft-entra-id';
 // Prisma client into the edge bundle; the canonical list lives in roles.ts.
 const ADMIN_ROLE_NAMES = new Set(['SUPER_ADMIN', 'PROGRAMME_ADMIN']);
 
-const PUBLIC_PREFIXES = ['/about', '/faq', '/programme', '/mentor-guide', '/mentee-guide'];
+// `/design` is the Design System component preview (§19) — a dev/demo gallery,
+// no real data. Public so it can be reviewed without a session; gate or remove
+// before production.
+const PUBLIC_PREFIXES = ['/about', '/faq', '/programme', '/mentor-guide', '/mentee-guide', '/design'];
 
 function isPublicPath(pathname: string): boolean {
   if (pathname === '/' || pathname === '/login') return true;

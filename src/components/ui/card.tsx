@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
+// Card (§19 §3/§4): surface background, 12px radius, the single soft elevation.
+// Card title = H2 (Inter 20/28 600); description = Small in secondary ink.
 const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('rounded-lg border bg-card text-card-foreground shadow-sm', className)}
+      className={cn('rounded-lg border border-border bg-card text-foreground shadow-elevation', className)}
       {...props}
     />
   ),
@@ -21,18 +23,14 @@ CardHeader.displayName = 'CardHeader';
 
 const CardTitle = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn('text-xl font-semibold leading-none tracking-tight', className)}
-      {...props}
-    />
+    <div ref={ref} className={cn('text-h2 text-foreground', className)} {...props} />
   ),
 );
 CardTitle.displayName = 'CardTitle';
 
 const CardDescription = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('text-sm text-muted-foreground', className)} {...props} />
+    <div ref={ref} className={cn('text-small text-ink-2', className)} {...props} />
   ),
 );
 CardDescription.displayName = 'CardDescription';
