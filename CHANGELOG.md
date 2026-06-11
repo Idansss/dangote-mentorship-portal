@@ -193,3 +193,7 @@ The first slice of the screen sweep, on the spec's hero screens (the rest follow
 ## AI — OpenAI fallback provider
 
 - **OpenAI fallback for the AI adapter (CLAUDE.md §2 provider-agnostic).** Added `lib/ai/openai.ts` (Chat Completions) and a `withFallback` composer in `lib/ai/index.ts`: Anthropic stays primary, and any call that *throws* (bad key, unavailable model, regional block) is automatically retried on OpenAI. Atlas and every assistant keep working when one provider is down. Extracted the shared translate/summarize/score prompting into `lib/ai/assistant.ts` so both providers behave identically. Configured via the new `OPENAI_API_KEY` / `OPENAI_MODEL` env vars (default `gpt-4o-mini`); with only one key set that provider is used directly, with neither AI degrades gracefully as before.
+
+## Profile detail — overflow fixes
+
+- **Stat tiles and contact fields no longer overflow/overlap.** `StatTile` now breaks long single-word values (status enums like `UNMATCHED`/`COMPLETED` were spilling past the card edge) and accepts a `valueClassName`; the mentor/mentee status tiles use the smaller `text-h1` size so the word fits one line. Contact `Field`s gained `min-w-0` + `break-words` so a long email wraps instead of running into the phone column.

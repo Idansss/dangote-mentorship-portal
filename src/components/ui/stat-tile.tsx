@@ -18,6 +18,9 @@ export interface StatTileProps extends React.HTMLAttributes<HTMLDivElement> {
   hint?: string;
   icon?: React.ReactNode;
   tone?: keyof typeof toneClass;
+  /** Override the value type size — use a smaller size for word/status values
+   *  (e.g. "UNMATCHED") so they fit on one line instead of the big number size. */
+  valueClassName?: string;
 }
 
 // The icon chip tints to match the tile's status tone (soft fill + brand-ink
@@ -30,7 +33,16 @@ const chipClass = {
   info: 'bg-info/10 text-info',
 } as const;
 
-function StatTile({ label, value, hint, icon, tone = 'default', className, ...props }: StatTileProps) {
+function StatTile({
+  label,
+  value,
+  hint,
+  icon,
+  tone = 'default',
+  className,
+  valueClassName,
+  ...props
+}: StatTileProps) {
   return (
     <div
       className={cn(
@@ -52,7 +64,17 @@ function StatTile({ label, value, hint, icon, tone = 'default', className, ...pr
           </span>
         )}
       </div>
-      <div className={cn('mt-3 text-display tabular-nums', toneClass[tone])}>{value}</div>
+      {/* break-words + leading-tight keep long single-word values (e.g. status
+          enums like "UNMATCHED") inside the tile instead of spilling out. */}
+      <div
+        className={cn(
+          'mt-3 break-words leading-tight tabular-nums',
+          valueClassName ?? 'text-display',
+          toneClass[tone],
+        )}
+      >
+        {value}
+      </div>
       {hint && <div className="mt-1 text-small text-ink-2">{hint}</div>}
     </div>
   );

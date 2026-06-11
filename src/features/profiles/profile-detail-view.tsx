@@ -30,9 +30,11 @@ function goalTone(s: GoalStatus): BadgeProps['variant'] {
 function Field({ label, value }: { label: string; value: React.ReactNode }) {
   const empty = value === null || value === undefined || value === '';
   return (
-    <div className="space-y-0.5">
+    // min-w-0 lets the cell shrink in its grid track; break-words wraps long
+    // unbroken values (e.g. an email) instead of spilling into the next column.
+    <div className="min-w-0 space-y-0.5">
       <dt className="text-micro uppercase text-ink-3">{label}</dt>
-      <dd className="text-body text-ink whitespace-pre-line">{empty ? '—' : value}</dd>
+      <dd className="whitespace-pre-line break-words text-body text-ink">{empty ? '—' : value}</dd>
     </div>
   );
 }
@@ -132,8 +134,8 @@ export async function MentorDetailView({ mentor }: { mentor: MentorDetail }) {
       <ProfileHeader name={mentor.fullName} roleLabel={p('mentorRole')} subtitle={subtitle} cohortName={mentor.cohortName} />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatTile label={p('training')} value={mentor.trainingStatus} tone={mentor.trainingStatus === 'COMPLETED' ? 'ok' : 'default'} />
-        <StatTile label={p('matchingCol')} value={mentor.matchingStatus} tone={mentor.matchingStatus === 'MATCHED' ? 'ok' : 'default'} />
+        <StatTile label={p('training')} value={mentor.trainingStatus} valueClassName="text-h1" tone={mentor.trainingStatus === 'COMPLETED' ? 'ok' : 'default'} />
+        <StatTile label={p('matchingCol')} value={mentor.matchingStatus} valueClassName="text-h1" tone={mentor.matchingStatus === 'MATCHED' ? 'ok' : 'default'} />
         <StatTile label={t('mentees')} value={`${mentor.mentees.length} / ${mentor.maxMentees}`} tone="ok" />
         <StatTile label={t('sessionsLogged')} value={mentor.sessionCount} tone="default" />
       </div>
@@ -250,8 +252,8 @@ export async function MenteeDetailView({ mentee }: { mentee: MenteeDetail }) {
       <ProfileHeader name={mentee.fullName} roleLabel={p('menteeRole')} subtitle={subtitle} cohortName={mentee.cohortName} />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatTile label={p('training')} value={mentee.trainingStatus} tone={mentee.trainingStatus === 'COMPLETED' ? 'ok' : 'default'} />
-        <StatTile label={p('matchingCol')} value={mentee.matchingStatus} tone={mentee.matchingStatus === 'MATCHED' ? 'ok' : 'default'} />
+        <StatTile label={p('training')} value={mentee.trainingStatus} valueClassName="text-h1" tone={mentee.trainingStatus === 'COMPLETED' ? 'ok' : 'default'} />
+        <StatTile label={p('matchingCol')} value={mentee.matchingStatus} valueClassName="text-h1" tone={mentee.matchingStatus === 'MATCHED' ? 'ok' : 'default'} />
         <StatTile label={t('goalsApproved')} value={`${approvedGoals} / ${mentee.goals.length}`} tone="ok" />
         <StatTile label={t('sessionsLogged')} value={mentee.sessionCount} tone="default" />
       </div>
