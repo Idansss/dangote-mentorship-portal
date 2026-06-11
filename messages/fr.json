@@ -371,7 +371,22 @@
     "noCommittedHint": "Approuvez les suggestions ci-dessus et les binômes apparaîtront ici avec leur engagement dans le temps.",
     "statusAccepted": "Accepté",
     "statusApproved": "Approuvé",
-    "statusOverridden": "Remplacé"
+    "statusOverridden": "Remplacé",
+    "approving": "Approbation…",
+    "approveDoneTitle": "Paire approuvée",
+    "approveDone": "{mentor} encadre désormais {mentee}. Les deux ont été notifiés.",
+    "approveErrorTitle": "Échec de l’approbation",
+    "assigning": "Assignation…",
+    "overrideDoneTitle": "Mentor assigné",
+    "overrideDone": "{mentor} assigné à {mentee}. Les deux ont été notifiés.",
+    "overrideErrorTitle": "Échec de l’assignation",
+    "accepting": "Acceptation…",
+    "declining": "Refus…",
+    "respondAcceptedTitle": "Jumelage accepté",
+    "respondAcceptedDone": "Vous êtes maintenant jumelé avec {name}.",
+    "respondDeclinedTitle": "Jumelage refusé",
+    "respondDeclinedDone": "Vous avez refusé le jumelage avec {name}.",
+    "respondErrorTitle": "Échec de la mise à jour"
   },
   "profile": {
     "title": "Mon profil",

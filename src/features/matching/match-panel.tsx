@@ -1,9 +1,8 @@
 import { getTranslations } from 'next-intl/server';
 import { MatchStatus } from '@prisma/client';
 import { prisma } from '@/lib/db/prisma';
-import { respondToMatchForm } from './actions';
+import { RespondMatchButtons } from './match-actions';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 // Match panel on the mentor/mentee dashboards: shows pairs awaiting the
@@ -49,22 +48,21 @@ export async function MatchPanel({ userId, role }: { userId: string; role: 'ment
               {m.aiRationale ? (
                 <p className="text-sm text-muted-foreground">{m.aiRationale}</p>
               ) : null}
-              <div className="flex gap-2">
-                <form action={respondToMatchForm}>
-                  <input type="hidden" name="matchId" value={m.id} />
-                  <input type="hidden" name="decision" value="accept" />
-                  <Button type="submit" size="sm">
-                    {t('acceptMatch')}
-                  </Button>
-                </form>
-                <form action={respondToMatchForm}>
-                  <input type="hidden" name="matchId" value={m.id} />
-                  <input type="hidden" name="decision" value="reject" />
-                  <Button type="submit" size="sm" variant="ghost">
-                    {t('rejectMatch')}
-                  </Button>
-                </form>
-              </div>
+              <RespondMatchButtons
+                matchId={m.id}
+                otherName={other.name ?? ''}
+                labels={{
+                  accept: t('acceptMatch'),
+                  accepting: t('accepting'),
+                  decline: t('rejectMatch'),
+                  declining: t('declining'),
+                  acceptedTitle: t('respondAcceptedTitle'),
+                  acceptedDone: t('respondAcceptedDone'),
+                  declinedTitle: t('respondDeclinedTitle'),
+                  declinedDone: t('respondDeclinedDone'),
+                  errorTitle: t('respondErrorTitle'),
+                }}
+              />
             </div>
           );
         })}

@@ -185,3 +185,7 @@ The first slice of the screen sweep, on the spec's hero screens (the rest follow
 ## Realtime messaging
 
 - **Supabase Realtime live delivery for DMs (CLAUDE.md §10).** Both participants join a per-conversation Broadcast channel (`conversation:<id>`); a successful send broadcasts a **content-free nudge** so the peer re-fetches messages through the authorized server route and marks them read. Message content never travels over the (public) channel — confidentiality stays server-gated — and it needs no RLS or table replication. Degrades silently when Supabase is unconfigured (send + manual refresh still work). Uses the browser anon/publishable client laid down in lib/supabase. Typing/presence deferred.
+
+## Matching — button feedback
+
+- **Approve / Override / Accept / Decline buttons now give feedback (CLAUDE.md §17 error+loading states).** Replaced the bare server-action `<form>` posts (which submitted silently — no pending state, and a failed action like an already-approved match or a blocked cross-language override produced no visible change, so the buttons looked broken) with client wrappers (`match-actions.tsx`) that mirror `RunMatchingButton`: pending labels, success/error toasts, and a refresh. Removed the now-unused void form wrappers; EN/FR strings added.

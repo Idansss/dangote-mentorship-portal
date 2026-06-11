@@ -138,24 +138,6 @@ export async function runMatching(
   }
 }
 
-// Void wrappers for plain RSC <form action> usage (which requires
-// void-returning actions). The typed variants stay the canonical API.
-export async function runMatchingForm(formData: FormData): Promise<void> {
-  await runMatching(formData);
-}
-
-export async function approveMatchForm(formData: FormData): Promise<void> {
-  await approveMatch(formData);
-}
-
-export async function overrideMatchForm(formData: FormData): Promise<void> {
-  await overrideMatch(formData);
-}
-
-export async function respondToMatchForm(formData: FormData): Promise<void> {
-  await respondToMatch(formData);
-}
-
 const matchIdSchema = z.object({ matchId: z.string().cuid() });
 
 /** Admin approves a suggested match; sibling suggestions for the mentee are retired. */

@@ -371,7 +371,22 @@
     "noCommittedHint": "Approve suggestions above and the pairs appear here with their engagement over time.",
     "statusAccepted": "Accepted",
     "statusApproved": "Approved",
-    "statusOverridden": "Overridden"
+    "statusOverridden": "Overridden",
+    "approving": "Approving…",
+    "approveDoneTitle": "Pair approved",
+    "approveDone": "{mentor} is now mentoring {mentee}. Both have been notified.",
+    "approveErrorTitle": "Couldn’t approve pair",
+    "assigning": "Assigning…",
+    "overrideDoneTitle": "Mentor assigned",
+    "overrideDone": "{mentor} assigned to {mentee}. Both have been notified.",
+    "overrideErrorTitle": "Couldn’t assign mentor",
+    "accepting": "Accepting…",
+    "declining": "Declining…",
+    "respondAcceptedTitle": "Match accepted",
+    "respondAcceptedDone": "You’re now paired with {name}.",
+    "respondDeclinedTitle": "Match declined",
+    "respondDeclinedDone": "You declined the match with {name}.",
+    "respondErrorTitle": "Couldn’t update match"
   },
   "profile": {
     "title": "My profile",

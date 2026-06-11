@@ -3,19 +3,11 @@ import { getTranslations } from 'next-intl/server';
 import { CohortStatus, MatchStatus } from '@prisma/client';
 import { prisma } from '@/lib/db/prisma';
 import { getCurrentUser } from '@/lib/auth/rbac';
-import { approveMatchForm, overrideMatchForm } from '@/features/matching/actions';
+import { ApproveMatchButton, OverrideMatchForm } from '@/features/matching/match-actions';
 import { RunMatchingButton } from '@/features/matching/run-matching-button';
 import { getPairsTimeline } from '@/features/matching/timeline';
 import { PairsTimelineView } from '@/features/matching/pairs-timeline';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default async function MatchingPage() {
@@ -140,36 +132,41 @@ export default async function MatchingPage() {
                           </p>
                         ) : null}
                       </div>
-                      <form action={approveMatchForm}>
-                        <input type="hidden" name="matchId" value={s.id} />
-                        <Button type="submit" size="sm">
-                          {t('approve')}
-                        </Button>
-                      </form>
+                      <ApproveMatchButton
+                        matchId={s.id}
+                        mentorName={s.mentor.name ?? ''}
+                        menteeName={first.mentee.name ?? ''}
+                        labels={{
+                          approve: t('approve'),
+                          approving: t('approving'),
+                          doneTitle: t('approveDoneTitle'),
+                          done: t('approveDone'),
+                          errorTitle: t('approveErrorTitle'),
+                        }}
+                      />
                     </div>
                   ))}
 
                   <details className="rounded-lg border border-border p-3">
                     <summary className="cursor-pointer text-small font-medium text-ink">{t('override')}</summary>
-                    <form action={overrideMatchForm} className="mt-3 flex flex-wrap items-end gap-3">
-                      <input type="hidden" name="cohortId" value={cohort.id} />
-                      <input type="hidden" name="menteeId" value={menteeId} />
-                      <Select name="mentorId" required defaultValue={mentorOptions[0]?.userId}>
-                        <SelectTrigger aria-label={t('mentor')} className="w-auto min-w-[16rem]">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {mentorOptions.map((m) => (
-                            <SelectItem key={m.userId} value={m.userId}>
-                              {m.fullName} ({m.preferredLanguage})
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <Button type="submit" size="sm" variant="outline">
-                        {t('overrideSubmit')}
-                      </Button>
-                    </form>
+                    <OverrideMatchForm
+                      cohortId={cohort.id}
+                      menteeId={menteeId}
+                      menteeName={first.mentee.name ?? ''}
+                      mentorOptions={mentorOptions.map((m) => ({
+                        userId: m.userId,
+                        fullName: m.fullName,
+                        preferredLanguage: m.preferredLanguage,
+                      }))}
+                      labels={{
+                        mentor: t('mentor'),
+                        overrideSubmit: t('overrideSubmit'),
+                        assigning: t('assigning'),
+                        doneTitle: t('overrideDoneTitle'),
+                        done: t('overrideDone'),
+                        errorTitle: t('overrideErrorTitle'),
+                      }}
+                    />
                   </details>
                 </CardContent>
               </Card>
