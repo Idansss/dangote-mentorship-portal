@@ -3,10 +3,15 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 import { ArrowLeft, Send } from 'lucide-react';
+import { getSupabaseBrowser } from '@/lib/supabase/client';
 import { sendMessage } from './actions';
 import { cn } from '@/lib/utils';
 import type { ThreadMessage } from './data';
+
+const CHANNEL_PREFIX = 'conversation:';
+const NEW_MESSAGE_EVENT = 'message';
 
 export interface ThreadLabels {
   placeholder: string;
@@ -34,11 +39,33 @@ export function MessageThread({
   const [input, setInput] = React.useState('');
   const [pending, setPending] = React.useState(false);
   const listRef = React.useRef<HTMLDivElement>(null);
+  const channelRef = React.useRef<RealtimeChannel | null>(null);
 
   // Reconcile when the server sends fresh props (after refresh / navigation).
   React.useEffect(() => {
     setMessages(initialMessages);
   }, [initialMessages]);
+
+  // Supabase Realtime (CLAUDE.md §10). Both participants join a per-conversation
+  // Broadcast channel. The payload is a content-free nudge — on receipt we
+  // refresh and re-fetch messages through the authorized server route, so
+  // message content never travels over the (public) channel. Degrades silently
+  // when Supabase isn't configured.
+  React.useEffect(() => {
+    const supabase = getSupabaseBrowser();
+    if (!supabase) return;
+    const channel = supabase.channel(`${CHANNEL_PREFIX}${conversationId}`, {
+      config: { broadcast: { self: false } },
+    });
+    channel
+      .on('broadcast', { event: NEW_MESSAGE_EVENT }, () => router.refresh())
+      .subscribe();
+    channelRef.current = channel;
+    return () => {
+      void supabase.removeChannel(channel);
+      channelRef.current = null;
+    };
+  }, [conversationId, router]);
 
   React.useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight });
@@ -65,6 +92,12 @@ export function MessageThread({
         setMessages((m) => m.filter((x) => x.id !== optimistic.id));
         setInput(body);
       } else {
+        // Nudge the peer to re-fetch (content stays server-gated), then refresh.
+        void channelRef.current?.send({
+          type: 'broadcast',
+          event: NEW_MESSAGE_EVENT,
+          payload: {},
+        });
         router.refresh();
       }
     } finally {
