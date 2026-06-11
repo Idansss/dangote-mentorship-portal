@@ -17,7 +17,7 @@ const ADMIN_ROLE_NAMES = new Set(['SUPER_ADMIN', 'PROGRAMME_ADMIN']);
 const PUBLIC_PREFIXES = ['/about', '/faq', '/programme', '/mentor-guide', '/mentee-guide', '/design'];
 
 function isPublicPath(pathname: string): boolean {
-  if (pathname === '/' || pathname === '/login') return true;
+  if (pathname === '/' || pathname === '/login' || pathname === '/signup') return true;
   if (pathname.startsWith('/invite')) return true; // invite acceptance is public
   // Password recovery is public (the token is the credential).
   if (pathname === '/forgot-password' || pathname.startsWith('/reset-password')) return true;

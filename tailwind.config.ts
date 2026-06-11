@@ -28,6 +28,7 @@ const config: Config = {
         ink: { DEFAULT: withAlpha('--ink'), 2: withAlpha('--ink-2'), 3: withAlpha('--ink-3') },
         green: {
           DEFAULT: withAlpha('--green'),
+          light: withAlpha('--green-light'),
           strong: withAlpha('--green-strong'),
           soft: withAlpha('--green-soft'),
         },
@@ -58,29 +59,35 @@ const config: Config = {
         card: { DEFAULT: withAlpha('--card'), foreground: withAlpha('--card-foreground') },
       },
       fontFamily: {
-        // Fraunces = display/headings; Inter = body/UI (§2). Self-hosted via
-        // next/font (variables set in app/layout.tsx).
-        display: ['var(--font-fraunces)', 'Georgia', 'serif'],
+        // One grotesque for everything (Atlas-style): Inter for both headings
+        // (heavy weights) and body/UI. Self-hosted via next/font (app/layout.tsx).
+        display: ['var(--font-inter)', 'system-ui', 'sans-serif'],
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
       },
       fontSize: {
-        // Type scale (§2) — [size, lineHeight].
-        display: ['2.25rem', { lineHeight: '2.75rem', fontWeight: '500' }], // 36/44
-        h1: ['1.75rem', { lineHeight: '2.25rem', fontWeight: '500' }], // 28/36
-        h2: ['1.25rem', { lineHeight: '1.75rem', fontWeight: '600' }], // 20/28
+        // Type scale (§2) — [size, lineHeight]. Headings run heavy (Atlas-style):
+        // big titles extrabold, sub-heads bold.
+        display: ['2.25rem', { lineHeight: '2.75rem', fontWeight: '800' }], // 36/44
+        h1: ['1.75rem', { lineHeight: '2.25rem', fontWeight: '700' }], // 28/36
+        h2: ['1.25rem', { lineHeight: '1.75rem', fontWeight: '700' }], // 20/28
         h3: ['1rem', { lineHeight: '1.5rem', fontWeight: '600' }], // 16/24
         body: ['0.9375rem', { lineHeight: '1.5rem' }], // 15/24
         small: ['0.8125rem', { lineHeight: '1.25rem' }], // 13/20
         micro: ['0.6875rem', { lineHeight: '1rem', letterSpacing: '0.04em', fontWeight: '600' }], // 11/16
       },
       borderRadius: {
-        lg: 'var(--radius)', // 12px cards
-        md: 'calc(var(--radius) - 4px)', // 8px controls
-        sm: 'calc(var(--radius) - 6px)', // 6px
+        lg: 'var(--radius)', // 16px cards
+        md: 'calc(var(--radius) - 6px)', // 10px controls
+        sm: 'calc(var(--radius) - 8px)', // 8px
       },
       boxShadow: {
-        // One soft elevation only (§3) — no heavy drop shadows.
-        elevation: '0 1px 2px rgba(20,32,26,.04), 0 4px 16px rgba(20,32,26,.06)',
+        // Soft layered elevation (§3) — gives white cards a gentle "float" over
+        // the light canvas. `elevation-lg` is the raised/hover state; `glow` is
+        // the colored green ambient shadow under primary buttons and the active
+        // nav pill (the PulseHR-style depth).
+        elevation: '0 1px 2px rgba(16,42,26,.04), 0 8px 24px -6px rgba(16,42,26,.08)',
+        'elevation-lg': '0 2px 4px rgba(16,42,26,.05), 0 18px 40px -10px rgba(16,42,26,.13)',
+        glow: '0 6px 16px -4px rgba(40,133,68,.45)',
       },
       keyframes: {
         'rail-fill': { from: { width: '0%' }, to: { width: 'var(--rail-fill, 0%)' } },

@@ -9,6 +9,13 @@ import {
 } from '@/features/support/actions';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 
 const REASONS = [
@@ -57,22 +64,18 @@ export function SupportForm() {
 
       <div className="space-y-1">
         <Label htmlFor={reasonId}>{t('reasonLabel')}</Label>
-        <select
-          id={reasonId}
-          name="reason"
-          required
-          defaultValue=""
-          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-        >
-          <option value="" disabled>
-            {t('chooseReason')}
-          </option>
-          {REASONS.map((r) => (
-            <option key={r} value={r}>
-              {t(`reason.${r}`)}
-            </option>
-          ))}
-        </select>
+        <Select name="reason" required>
+          <SelectTrigger id={reasonId}>
+            <SelectValue placeholder={t('chooseReason')} />
+          </SelectTrigger>
+          <SelectContent>
+            {REASONS.map((r) => (
+              <SelectItem key={r} value={r}>
+                {t(`reason.${r}`)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="space-y-1">

@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import { Check, Minus } from 'lucide-react';
+import { Check, Minus, Users, ClipboardCheck, Flag } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { StatTile } from '@/components/ui/stat-tile';
 import { Progress } from '@/components/ui/progress';
@@ -27,7 +27,12 @@ export async function ReviewRollupView({
     <div className="space-y-8">
       {/* Completion tiles */}
       <div className="grid gap-4 sm:grid-cols-3">
-        <StatTile label={t('eligible')} value={rollup.eligibleParticipants} hint={t('eligibleHint')} />
+        <StatTile
+          label={t('eligible')}
+          value={rollup.eligibleParticipants}
+          hint={t('eligibleHint')}
+          icon={<Users className="size-5" />}
+        />
         <CompletionTile label={t('midtermCompletion')} summary={rollup.midterm} ofWord={t('ofN')} />
         <CompletionTile label={t('finalCompletion')} summary={rollup.final} ofWord={t('ofN')} />
       </div>
@@ -61,8 +66,8 @@ export async function ReviewRollupView({
       <section className="space-y-3">
         <h2 className="font-display text-h1 text-ink">{t('participationTitle')}</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          <StatTile label="EN" value={rollup.language.en} hint={t('participantsEn')} />
-          <StatTile label="FR" value={rollup.language.fr} hint={t('participantsFr')} />
+          <StatTile label="EN" value={rollup.language.en} hint={t('participantsEn')} icon={<Flag className="size-5" />} />
+          <StatTile label="FR" value={rollup.language.fr} hint={t('participantsFr')} icon={<Flag className="size-5" />} />
         </div>
         {rollup.departments.length > 0 ? (
           <Card>
@@ -108,6 +113,7 @@ function CompletionTile({
       value={summary.published ? `${summary.percent}%` : '—'}
       hint={summary.published ? `${summary.submitted} ${ofWord} ${summary.eligible}` : undefined}
       tone={tone}
+      icon={<ClipboardCheck className="size-5" />}
     />
   );
 }

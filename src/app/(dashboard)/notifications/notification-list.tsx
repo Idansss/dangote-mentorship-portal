@@ -4,6 +4,7 @@ import { useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { Check } from 'lucide-react';
 import {
   markNotificationRead,
   markAllNotificationsRead,
@@ -44,10 +45,14 @@ export function NotificationList({ items, unread }: { items: Item[]; unread: num
   }
 
   return (
-    <section className="space-y-3">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">
-          {t('inbox')} {unread > 0 ? <Badge variant="secondary">{t('unreadCount', { count: unread })}</Badge> : null}
+    <section className="overflow-hidden rounded-2xl border border-border bg-surface shadow-elevation">
+      {/* Header */}
+      <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4">
+        <h2 className="flex items-center gap-2 font-display text-h3 font-semibold text-ink">
+          {t('inbox')}
+          {unread > 0 ? (
+            <Badge variant="secondary">{t('unreadCount', { count: unread })}</Badge>
+          ) : null}
         </h2>
         {unread > 0 ? (
           <Button type="button" size="sm" variant="outline" onClick={markAll} disabled={pending}>
@@ -57,27 +62,39 @@ export function NotificationList({ items, unread }: { items: Item[]; unread: num
       </div>
 
       {items.length === 0 ? (
-        <p className="text-muted-foreground">{t('empty')}</p>
+        /* Empty state — Atlas "all caught up" card */
+        <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
+          <span className="flex size-14 items-center justify-center rounded-2xl bg-green-soft text-green-strong">
+            <Check className="size-7" strokeWidth={2.5} />
+          </span>
+          <p className="mt-5 font-display text-h2 text-ink">{t('empty')}</p>
+          <p className="mt-1 text-body text-ink-3">{t('emptyHint')}</p>
+        </div>
       ) : (
-        <ul className="space-y-2">
+        <ul className="divide-y divide-border">
           {items.map((n) => (
             <li
               key={n.id}
               className={cn(
-                'rounded border p-3 text-sm',
-                n.read ? 'bg-background' : 'border-primary/40 bg-primary/5',
+                'px-5 py-4 text-small transition-colors',
+                n.read ? 'bg-surface' : 'bg-green-soft/40',
               )}
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 space-y-1">
-                  <p className="font-medium">{n.title}</p>
-                  {n.body ? <p className="text-muted-foreground">{n.body}</p> : null}
-                  <p className="text-xs text-muted-foreground">{n.createdAt.slice(0, 10)}</p>
+                  <p className="flex items-center gap-2 font-medium text-ink">
+                    {!n.read ? (
+                      <span aria-hidden className="size-2 shrink-0 rounded-full bg-green" />
+                    ) : null}
+                    {n.title}
+                  </p>
+                  {n.body ? <p className="text-ink-2">{n.body}</p> : null}
+                  <p className="text-micro text-ink-3">{n.createdAt.slice(0, 10)}</p>
                   {n.link ? (
                     <Link
                       href={n.link}
                       onClick={() => !n.read && markRead(n.id)}
-                      className="text-xs font-medium text-primary hover:underline"
+                      className="text-small font-medium text-green-strong hover:underline"
                     >
                       {t('open')}
                     </Link>

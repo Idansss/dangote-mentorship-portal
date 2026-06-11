@@ -40,7 +40,8 @@
     "midTermReview": "Revue de mi-parcours",
     "finalReview": "Revue finale",
     "notifications": "Notifications",
-    "login": "Connexion"
+    "login": "Connexion",
+    "signup": "S’inscrire"
   },
   "shell": {
     "search": "Rechercher…",
@@ -59,9 +60,22 @@
   "home": {
     "eyebrow": "Programme de mentorat Dangote 2026",
     "title": "Un système de mentorat intelligent et bilingue",
+    "heroTitleLead": "Un mentorat bilingue qui",
+    "heroTitleAccent": "fait avancer les talents",
     "subtitle": "D’une gestion manuelle et documentaire à un programme mesurable et assisté par l’IA pour le groupe Dangote.",
     "cta": "Connectez-vous pour continuer",
     "aboutCta": "Découvrir le programme",
+    "preview": {
+      "eyebrow": "Assistant de jumelage IA",
+      "subtitle": "Aperçu consultatif · validé par l’admin",
+      "status": "En direct",
+      "asksLabel": "Le mentoré demande",
+      "question": "Qui devrait me mentorer pour évoluer vers un poste de direction des opérations ?",
+      "point1": "Langue respectée : jumelage EN↔EN au sein de la même cohorte.",
+      "point2": "Évalué sur les compétences, les objectifs de carrière et 15 ans d’expérience en opérations.",
+      "point3": "Prochaine étape : un administrateur examine et valide le jumelage.",
+      "cta": "Voir le jumelage dans le portail"
+    },
     "badgeBilingual": "Bilingue EN · FR",
     "badgeJourney": "Parcours guidé de 9 mois",
     "badgeAI": "Assisté par l’IA, validé par l’humain",
@@ -127,9 +141,11 @@
       }
     },
     "closing": {
+      "eyebrow": "Commencer",
       "title": "Prêt à poursuivre votre parcours ?",
       "subtitle": "Connectez-vous avec votre compte Dangote pour reprendre exactement là où vous en étiez.",
-      "cta": "Se connecter"
+      "cta": "Se connecter",
+      "micro": "Bilingue · Sécurisé par conception · Assisté par l’IA, validé par l’humain"
     },
     "footer": {
       "tagline": "Le système d’exploitation du programme de mentorat bilingue de Dangote.",
@@ -137,15 +153,26 @@
     }
   },
   "about": {
+    "eyebrow": "Le programme",
     "title": "À propos du programme",
-    "body": "Un programme de mentorat bilingue de 9 mois qui fait passer Dangote d’une gestion manuelle du mentorat à un système intelligent et mesurable : pré-formation et jumelage, formation, définition des objectifs, séances de mentorat, évaluations, cliniques, rapports et clôture."
+    "body": "Un programme de mentorat bilingue de 9 mois qui fait passer Dangote d’une gestion manuelle du mentorat à un système intelligent et mesurable : pré-formation et jumelage, formation, définition des objectifs, séances de mentorat, évaluations, cliniques, rapports et clôture.",
+    "pillarsTitle": "Ce qui fait la différence",
+    "ctaTitle": "Prêt à commencer ?",
+    "ctaBody": "Connectez-vous à votre compte ou demandez l’accès pour rejoindre le programme.",
+    "signin": "Se connecter",
+    "requestAccess": "Demander l’accès"
   },
   "faq": {
+    "eyebrow": "Aide",
     "title": "Questions fréquentes",
+    "subtitle": "Les réponses aux questions les plus courantes. Vous ne trouvez pas la vôtre ? Votre administrateur de programme est à un message près.",
     "q1": "Le programme est-il disponible en français ?",
     "a1": "Oui. Toute l’interface et vos conversations sont disponibles en anglais et en français, et vous n’êtes jamais obligé d’écrire en anglais.",
     "q2": "Qui puis-je contacter pour obtenir de l’aide ?",
-    "a2": "Contactez votre administrateur de programme depuis le portail."
+    "a2": "Contactez votre administrateur de programme depuis le portail.",
+    "helpTitle": "Besoin d’aide supplémentaire ?",
+    "helpBody": "Connectez-vous et contactez votre administrateur de programme depuis le portail.",
+    "helpCta": "Se connecter"
   },
   "auth": {
     "loginTitle": "Connexion",
@@ -170,7 +197,24 @@
     "resetSubtitle": "Saisissez un nouveau mot de passe pour votre compte.",
     "resetInvalid": "Ce lien de réinitialisation est invalide ou a expiré.",
     "newPassword": "Nouveau mot de passe",
-    "resetSubmit": "Mettre à jour le mot de passe"
+    "resetSubmit": "Mettre à jour le mot de passe",
+    "brandTitle": "Votre parcours de mentorat bilingue, réuni en un seul endroit.",
+    "brandSubtitle": "Connectez-vous pour reprendre vos objectifs, vos séances et vos conversations là où vous les avez laissés.",
+    "noAccount": "Besoin d’un compte ?",
+    "signupLink": "Demander l’accès"
+  },
+  "signup": {
+    "title": "Rejoindre le programme",
+    "subtitle": "Les comptes sont créés par votre administrateur de programme. Activez le vôtre avec un lien d’invitation, ou demandez l’accès ci-dessous.",
+    "inviteTitle": "Vous avez un code d’invitation ?",
+    "inviteHint": "Collez le code de votre e-mail d’invitation pour configurer votre compte.",
+    "invitePlaceholder": "Code d’invitation",
+    "inviteCta": "Continuer",
+    "requestTitle": "Pas encore d’invitation ?",
+    "requestHint": "Le programme est confidentiel et organisé par cohortes ; l’accès est accordé par un administrateur. Demandez au vôtre de vous envoyer un lien d’invitation.",
+    "requestCta": "Demander l’accès",
+    "haveAccount": "Vous avez déjà un compte ?",
+    "signinLink": "Se connecter"
   },
   "dashboard": {
     "welcome": "Bienvenue",
@@ -305,7 +349,21 @@
     "acceptMatch": "Accepter",
     "rejectMatch": "Décliner",
     "matchedWith": "Jumelé avec",
-    "noMatchYet": "Pas encore de jumelage. Votre administrateur vous associera bientôt."
+    "noMatchYet": "Pas encore de jumelage. Votre administrateur vous associera bientôt.",
+    "timelineTitle": "Chronologie d'engagement des binômes",
+    "timelineHint": "Activité des sessions de chaque binôme confirmé au fil des mois du programme. Métadonnées uniquement — aucun contenu de session.",
+    "engagementLegend": "Engagement",
+    "legendLess": "Moins",
+    "legendMore": "Plus",
+    "sessionsShort": "Sessions",
+    "sessionsInMonth": "{count, plural, =0 {Aucune session en {month}} one {# session en {month}} other {# sessions en {month}}}",
+    "lastActive": "Dernière session",
+    "noSessionsYet": "Aucune session pour l'instant",
+    "noCommitted": "Aucun binôme approuvé pour l'instant",
+    "noCommittedHint": "Approuvez les suggestions ci-dessus et les binômes apparaîtront ici avec leur engagement dans le temps.",
+    "statusAccepted": "Accepté",
+    "statusApproved": "Approuvé",
+    "statusOverridden": "Remplacé"
   },
   "profile": {
     "title": "Mon profil",
@@ -787,20 +845,50 @@
     "stepLabel": "Étape {current} sur {total}",
     "mentee": {
       "steps": [
-        { "title": "Bienvenue", "body": "Voici votre point d'ancrage. Le bouton en haut vous indique quoi faire ensuite en cas de doute." },
-        { "title": "Votre mentor", "body": "Une fois jumelé, votre mentor apparaît ici. Ouvrez votre espace partagé pour voir accords, objectifs et rencontres au même endroit." },
-        { "title": "Définir des objectifs SMART", "body": "Utilisez Objectifs pour rédiger vos objectifs — le coach IA peut les peaufiner, et votre mentor les approuve." },
-        { "title": "Se rencontrer et réfléchir", "body": "Planifiez des séances, puis notez une courte réflexion ensuite. Le Journal garde vos notes privées." },
-        { "title": "Besoin d'aide ?", "body": "Utilisez le bouton + pour les actions rapides, et Demander du soutien en privé si quelque chose ne va pas." }
+        {
+          "title": "Bienvenue",
+          "body": "Voici votre point d'ancrage. Le bouton en haut vous indique quoi faire ensuite en cas de doute."
+        },
+        {
+          "title": "Votre mentor",
+          "body": "Une fois jumelé, votre mentor apparaît ici. Ouvrez votre espace partagé pour voir accords, objectifs et rencontres au même endroit."
+        },
+        {
+          "title": "Définir des objectifs SMART",
+          "body": "Utilisez Objectifs pour rédiger vos objectifs — le coach IA peut les peaufiner, et votre mentor les approuve."
+        },
+        {
+          "title": "Se rencontrer et réfléchir",
+          "body": "Planifiez des séances, puis notez une courte réflexion ensuite. Le Journal garde vos notes privées."
+        },
+        {
+          "title": "Besoin d'aide ?",
+          "body": "Utilisez le bouton + pour les actions rapides, et Demander du soutien en privé si quelque chose ne va pas."
+        }
       ]
     },
     "mentor": {
       "steps": [
-        { "title": "Bienvenue", "body": "Voici votre point d'ancrage. Le bouton en haut fait ressortir votre prochaine action la plus importante." },
-        { "title": "Vos mentorés", "body": "Chaque mentoré a un espace partagé. Ouvrez-le pour ses objectifs, accords, séances et le brise-glace de première rencontre." },
-        { "title": "Évaluer les objectifs", "body": "Quand un mentoré soumet un objectif, approuvez-le, demandez des modifications ou commentez depuis la page Objectifs." },
-        { "title": "Consigner les séances", "body": "Après chaque séance, notez ce que vous avez abordé — collez des notes brutes et laissez l'IA les structurer et en extraire les actions." },
-        { "title": "Garder le cap", "body": "Le tableau de bord signale les évaluations et comptes rendus en attente. Utilisez le bouton + pour les actions rapides." }
+        {
+          "title": "Bienvenue",
+          "body": "Voici votre point d'ancrage. Le bouton en haut fait ressortir votre prochaine action la plus importante."
+        },
+        {
+          "title": "Vos mentorés",
+          "body": "Chaque mentoré a un espace partagé. Ouvrez-le pour ses objectifs, accords, séances et le brise-glace de première rencontre."
+        },
+        {
+          "title": "Évaluer les objectifs",
+          "body": "Quand un mentoré soumet un objectif, approuvez-le, demandez des modifications ou commentez depuis la page Objectifs."
+        },
+        {
+          "title": "Consigner les séances",
+          "body": "Après chaque séance, notez ce que vous avez abordé — collez des notes brutes et laissez l'IA les structurer et en extraire les actions."
+        },
+        {
+          "title": "Garder le cap",
+          "body": "Le tableau de bord signale les évaluations et comptes rendus en attente. Utilisez le bouton + pour les actions rapides."
+        }
       ]
     }
   },
@@ -889,7 +977,11 @@
   "calendar": {
     "title": "Calendrier",
     "subtitle": "Vos séances et les jalons du programme. Les rencontres planifiées se synchronisent avec Outlook lorsqu'il est connecté.",
-    "view": { "month": "Mois", "week": "Semaine", "list": "Liste" },
+    "view": {
+      "month": "Mois",
+      "week": "Semaine",
+      "list": "Liste"
+    },
     "previous": "Précédent",
     "next": "Suivant",
     "today": "Aujourd'hui",
@@ -897,11 +989,27 @@
     "milestoneStart": "Début du programme",
     "milestoneEnd": "Fin du programme",
     "months": {
-      "m0": "Janvier", "m1": "Février", "m2": "Mars", "m3": "Avril", "m4": "Mai", "m5": "Juin",
-      "m6": "Juillet", "m7": "Août", "m8": "Septembre", "m9": "Octobre", "m10": "Novembre", "m11": "Décembre"
+      "m0": "Janvier",
+      "m1": "Février",
+      "m2": "Mars",
+      "m3": "Avril",
+      "m4": "Mai",
+      "m5": "Juin",
+      "m6": "Juillet",
+      "m7": "Août",
+      "m8": "Septembre",
+      "m9": "Octobre",
+      "m10": "Novembre",
+      "m11": "Décembre"
     },
     "weekdaysShort": {
-      "d0": "Lun", "d1": "Mar", "d2": "Mer", "d3": "Jeu", "d4": "Ven", "d5": "Sam", "d6": "Dim"
+      "d0": "Lun",
+      "d1": "Mar",
+      "d2": "Mer",
+      "d3": "Jeu",
+      "d4": "Ven",
+      "d5": "Sam",
+      "d6": "Dim"
     }
   },
   "nextAction": {
@@ -1052,7 +1160,8 @@
         "title": "Mise à jour de soutien",
         "body": "L'équipe du programme a répondu à votre demande de soutien."
       }
-    }
+    },
+    "emptyHint": "Aucun élément en attente pour le moment."
   },
   "forms": {
     "title": "Générateur de formulaires",
@@ -1104,5 +1213,57 @@
     "typeBoolean": "Oui / Non",
     "questionCount": "{count} questions",
     "responseCount": "{count} réponses"
+  },
+  "adminLists": {
+    "goalsTitle": "Objectifs",
+    "goalsSubtitle": "Tous les objectifs soumis dans le programme, les plus récents d’abord.",
+    "meetingsTitle": "Réunions à venir",
+    "meetingsSubtitle": "Les séances planifiées à venir, les plus proches d’abord.",
+    "trainingTitle": "Achèvement de la formation",
+    "trainingSubtitle": "Qui a terminé la formation d’intégration dans la cohorte.",
+    "navGoals": "Objectifs",
+    "navMeetings": "Réunions",
+    "navTraining": "Formation",
+    "colMentee": "Mentoré",
+    "colGoal": "Objectif",
+    "colCompetency": "Compétence",
+    "colStatus": "Statut",
+    "colCohort": "Cohorte",
+    "colCreated": "Soumis",
+    "colTitle": "Titre",
+    "colType": "Type",
+    "colWhen": "Quand",
+    "colMentor": "Mentor",
+    "colParticipant": "Participant",
+    "colRole": "Rôle",
+    "noGoals": "Aucun objectif soumis pour le moment.",
+    "noMeetings": "Aucune réunion à venir planifiée.",
+    "noTraining": "Aucun participant pour le moment.",
+    "mentorsTrained": "Mentors formés",
+    "menteesTrained": "Mentorés formés",
+    "notScheduled": "Non planifié"
+  },
+  "insights": {
+    "title": "Analyses",
+    "subtitle": "Statistiques du programme pour la cohorte active.",
+    "navLabel": "Analyses",
+    "languageTitle": "Répartition linguistique",
+    "languageSubtitle": "EN vs FR parmi tous les participants.",
+    "matchingTitle": "Statut de jumelage",
+    "matchingSubtitle": "Jumelés vs non jumelés, par rôle.",
+    "trainingTitle": "Achèvement de la formation",
+    "trainingSubtitle": "Formation d’intégration terminée vs en attente.",
+    "goalsTitle": "Pipeline des objectifs",
+    "goalsSubtitle": "Objectifs par étape dans le programme.",
+    "mentors": "Mentors",
+    "mentees": "Mentorés",
+    "matched": "Jumelés",
+    "unmatched": "Non jumelés",
+    "completed": "Terminée",
+    "pending": "En attente",
+    "submitted": "Soumis",
+    "approved": "Approuvés",
+    "goalCompleted": "Terminés",
+    "empty": "Aucune donnée pour le moment."
   }
 }

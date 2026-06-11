@@ -95,7 +95,7 @@ export function ReviewAssistantPanel({
               />
               {result.report.atRisk.length > 0 ? (
                 <div>
-                  <p className="text-micro uppercase text-info/70">{t('atRisk')}</p>
+                  <p className="text-micro uppercase text-green/70">{t('atRisk')}</p>
                   <ul className="list-disc pl-5 text-small text-ink">
                     {result.report.atRisk.map((r, i) => (
                       <li key={i}>{r}</li>
@@ -105,7 +105,7 @@ export function ReviewAssistantPanel({
               ) : null}
               {result.report.recommendations.length > 0 ? (
                 <div>
-                  <p className="text-micro uppercase text-info/70">{t('recommendations')}</p>
+                  <p className="text-micro uppercase text-green/70">{t('recommendations')}</p>
                   <ul className="list-disc pl-5 text-small text-ink">
                     {result.report.recommendations.map((r, i) => (
                       <li key={i}>{r}</li>

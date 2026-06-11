@@ -3,10 +3,11 @@ import { Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 // AI output container (§19 §7) — one consistent visual language for AI as a
-// native citizen: an --info blue spark, a light blue-tinted container, and an
+// native citizen: a green spark, a soft green-tinted container, and an
 // always-editable result the human confirms. Use this to wrap every AI surface
 // (session summary, meeting prep, goal coach) so a suggestion always reads as a
-// draft, visually distinct from committed data.
+// draft. (Tinted green to match the site scheme — was --info blue through Step
+// 9; the green-soft fill still sets it apart from plain committed cards.)
 interface AIContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Header label; defaults to a generic "AI suggestion". */
   title?: string;
@@ -26,15 +27,15 @@ export function AIContainer({
 }: AIContainerProps) {
   return (
     <div
-      className={cn('rounded-md border border-info/20 bg-info/[0.06] p-4', className)}
+      className={cn('rounded-md border border-green/20 bg-green-soft p-4', className)}
       {...props}
     >
       <div className="mb-2 flex items-center gap-2">
-        <span className="inline-flex size-6 items-center justify-center rounded-full bg-info/10 text-info">
+        <span className="inline-flex size-6 items-center justify-center rounded-full bg-green/10 text-green">
           <Sparkles className="size-3.5" aria-hidden />
         </span>
-        <span className="text-h3 text-info">{title}</span>
-        {hint && <span className="ml-auto text-micro uppercase text-info/70">{hint}</span>}
+        <span className="text-h3 text-green">{title}</span>
+        {hint && <span className="ml-auto text-micro uppercase text-green/70">{hint}</span>}
       </div>
       <div className="text-body text-ink">{children}</div>
       {actions && <div className="mt-3 flex flex-wrap items-center gap-2">{actions}</div>}
@@ -45,7 +46,7 @@ export function AIContainer({
 // Inline AI marker for compact spots (e.g. a row hint). Same visual language.
 export function AISpark({ className }: { className?: string }) {
   return (
-    <span className={cn('inline-flex items-center gap-1 text-info', className)}>
+    <span className={cn('inline-flex items-center gap-1 text-green', className)}>
       <Sparkles className="size-3.5" aria-hidden />
     </span>
   );

@@ -8,6 +8,13 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 function statusVariant(status: ImportRowStatus): 'default' | 'secondary' | 'destructive' | 'outline' {
@@ -133,16 +140,15 @@ export default async function ImportReviewPage({ params }: { params: Promise<{ i
                       </div>
                       <div className="space-y-1">
                         <Label htmlFor={`lang-${row.id}`}>{t('languageField')}</Label>
-                        <select
-                          id={`lang-${row.id}`}
-                          name="language"
-                          defaultValue={clean.language}
-                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                        >
-                          <option value="">—</option>
-                          <option value="EN">EN</option>
-                          <option value="FR">FR</option>
-                        </select>
+                        <Select name="language" defaultValue={clean.language || undefined}>
+                          <SelectTrigger id={`lang-${row.id}`}>
+                            <SelectValue placeholder="—" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="EN">EN</SelectItem>
+                            <SelectItem value="FR">FR</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                       <div className="space-y-1">
                         <Label htmlFor={`dept-${row.id}`}>{t('department')}</Label>

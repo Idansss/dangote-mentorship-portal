@@ -61,22 +61,26 @@ export async function AdminSummary({ data }: { data: AdminDashboard }) {
         icon={<LifeBuoy className="size-5" />}
       />
       <Tile
+        href="/admin/goals"
         label={t('goalsSubmitted')}
         value={data.goalsSubmitted}
         icon={<Target className="size-5" />}
       />
       <Tile
+        href="/admin/goals"
         label={t('goalsApproved')}
         value={data.goalsApproved}
         tone="ok"
         icon={<CheckCircle2 className="size-5" />}
       />
       <Tile
+        href="/admin/meetings"
         label={t('upcomingMeetings')}
         value={data.upcomingMeetings}
         icon={<Video className="size-5" />}
       />
       <Tile
+        href="/admin/training"
         label={t('trainingCompleted')}
         value={trained}
         icon={<Award className="size-5" />}

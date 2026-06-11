@@ -1,10 +1,11 @@
 import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { RoleName } from '@prisma/client';
-import { getCurrentUser } from '@/lib/auth/rbac';
-import { defaultDashboardPath } from '@/lib/auth/roles';
+import { getCurrentUser, hasAnyRole } from '@/lib/auth/rbac';
+import { ADMIN_ROLES } from '@/lib/auth/roles';
 import { getUnreadCount } from '@/lib/notifications/data';
-import { AppShell, type AppShellLabels, type NavSection } from '@/components/shell/app-shell';
+import { AppShell, type AppShellLabels } from '@/components/shell/app-shell';
+import { buildAdminNavSections, buildParticipantNavSections } from '@/lib/nav/sections';
 import { QuickActions, type QuickActionItem } from '@/components/quick-actions';
 
 // Quick Actions (§1.9) shown across the authenticated participant area. Items are
@@ -59,46 +60,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
     getUnreadCount(user.id),
   ]);
 
-  const isPair = user.roles.includes(RoleName.MENTOR) || user.roles.includes(RoleName.MENTEE);
-
-  const sections: NavSection[] = [
-    {
-      label: tShell('navMain'),
-      items: [
-        { href: defaultDashboardPath(user.roles), label: tNav('dashboard'), icon: 'dashboard', primary: true, exact: true },
-        ...(isPair
-          ? ([
-              { href: '/pair', label: tNav('pair'), icon: 'pair', primary: true },
-              { href: '/goals', label: tNav('goals'), icon: 'goals', primary: true },
-              { href: '/sessions', label: tNav('sessions'), icon: 'sessions', primary: true },
-              { href: '/meetings', label: tNav('meetings'), icon: 'meetings' },
-              { href: '/calendar', label: tNav('calendar'), icon: 'calendar' },
-              { href: '/journal', label: tNav('journal'), icon: 'journal' },
-              { href: '/agreements', label: tNav('agreements'), icon: 'agreements' },
-            ] as const)
-          : []),
-      ],
-    },
-    ...(isPair
-      ? [
-          {
-            label: tShell('navReviews'),
-            items: [
-              { href: '/mid-term-review', label: tNav('midTermReview'), icon: 'midterm' as const },
-              { href: '/final-review', label: tNav('finalReview'), icon: 'final' as const },
-            ],
-          },
-        ]
-      : []),
-    {
-      label: tShell('navHelp'),
-      items: [
-        { href: '/notifications', label: tNav('notifications'), icon: 'notifications', badge: unread || undefined },
-        { href: '/support', label: tNav('support'), icon: 'support' },
-        { href: '/help', label: tNav('help'), icon: 'help' },
-      ],
-    },
-  ];
+  // Admins reach the shared Notifications / Support / Help / Profile pages (which
+  // live in this group) too — give them their admin nav so they don't lose it on
+  // the way in. Participants get the mentor/mentee nav.
+  const sections = hasAnyRole(user, ADMIN_ROLES)
+    ? await buildAdminNavSections(unread)
+    : await buildParticipantNavSections(user.roles, unread);
 
   const labels: AppShellLabels = {
     brand: tCommon('appName'),

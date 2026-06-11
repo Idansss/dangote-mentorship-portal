@@ -5,6 +5,13 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ActionItemStatus } from '@prisma/client';
 import { updateActionItemStatus } from '@/features/sessions/actions';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 const STATUSES = Object.values(ActionItemStatus);
 
@@ -38,18 +45,17 @@ export function ActionItemStatusControl({
   }
 
   return (
-    <select
-      value={status}
-      disabled={pending}
-      onChange={(e) => onChange(e.target.value)}
-      aria-label={t('status')}
-      className="h-8 rounded-md border border-input bg-background px-2 text-xs"
-    >
-      {STATUSES.map((s) => (
-        <option key={s} value={s}>
-          {t(`itemStatus.${s}`)}
-        </option>
-      ))}
-    </select>
+    <Select value={status} disabled={pending} onValueChange={onChange}>
+      <SelectTrigger aria-label={t('status')} className="h-8 w-auto text-small">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        {STATUSES.map((s) => (
+          <SelectItem key={s} value={s}>
+            {t(`itemStatus.${s}`)}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }

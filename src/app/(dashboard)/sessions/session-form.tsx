@@ -11,13 +11,18 @@ import { AIContainer } from '@/components/ai-container';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 
-// Native <select> themed to match the design-system Select trigger (§19 §4):
-// 44px touch target, tokens, green focus ring. (Kept native here because these
-// are controlled value/onChange selects inside the offline form.)
-const SELECT_CLASS =
-  'flex h-11 w-full rounded-md border border-input bg-bg px-3 py-2 text-body text-ink focus:outline-none focus:ring-2 focus:ring-green/30 focus:ring-offset-2 focus:ring-offset-bg';
+// Radix Select has no empty-value item; "no meeting type" rides a sentinel while
+// the form state keeps '' so the submitted FormData stays unchanged.
+const NO_TYPE = '__none__';
 
 type Assignee = 'mentee' | 'mentor' | 'none';
 interface ItemRow {
@@ -170,34 +175,37 @@ export function SessionForm({ mentees }: { mentees: { id: string; name: string |
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1">
           <Label htmlFor="sf-mentee">{t('mentee')}</Label>
-          <select
-            id="sf-mentee"
-            value={v.menteeId}
-            onChange={(e) => update({ menteeId: e.target.value })}
-            className={SELECT_CLASS}
-          >
-            {mentees.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.name}
-              </option>
-            ))}
-          </select>
+          <Select value={v.menteeId} onValueChange={(val) => update({ menteeId: val })}>
+            <SelectTrigger id="sf-mentee">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {mentees.map((m) => (
+                <SelectItem key={m.id} value={m.id}>
+                  {m.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <div className="space-y-1">
           <Label htmlFor="sf-type">{t('meetingType')}</Label>
-          <select
-            id="sf-type"
-            value={v.meetingType}
-            onChange={(e) => update({ meetingType: e.target.value })}
-            className={SELECT_CLASS}
+          <Select
+            value={v.meetingType || NO_TYPE}
+            onValueChange={(val) => update({ meetingType: val === NO_TYPE ? '' : val })}
           >
-            <option value="">—</option>
-            {MEETING_TYPES.map((mt) => (
-              <option key={mt} value={mt}>
-                {t(`type.${mt}`)}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger id="sf-type">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={NO_TYPE}>—</SelectItem>
+              {MEETING_TYPES.map((mt) => (
+                <SelectItem key={mt} value={mt}>
+                  {t(`type.${mt}`)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <FieldInput id="sf-date" label={t('date')} type="date" value={v.date} onChange={(val) => update({ date: val })} />
         <FieldInput id="sf-time" label={t('time')} value={v.time} onChange={(val) => update({ time: val })} />
@@ -281,16 +289,19 @@ export function SessionForm({ mentees }: { mentees: { id: string; name: string |
                   placeholder={t('taskPlaceholder')}
                   aria-label={t('task')}
                 />
-                <select
+                <Select
                   value={item.assignee}
-                  onChange={(e) => setItem(i, { assignee: e.target.value as Assignee })}
-                  aria-label={t('owner')}
-                  className="h-11 rounded-md border border-input bg-bg px-2 text-body text-ink"
+                  onValueChange={(val) => setItem(i, { assignee: val as Assignee })}
                 >
-                  <option value="mentee">{t('owner_mentee')}</option>
-                  <option value="mentor">{t('owner_mentor')}</option>
-                  <option value="none">{t('owner_none')}</option>
-                </select>
+                  <SelectTrigger aria-label={t('owner')} className="w-auto">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="mentee">{t('owner_mentee')}</SelectItem>
+                    <SelectItem value="mentor">{t('owner_mentor')}</SelectItem>
+                    <SelectItem value="none">{t('owner_none')}</SelectItem>
+                  </SelectContent>
+                </Select>
                 <Input
                   type="date"
                   value={item.due}

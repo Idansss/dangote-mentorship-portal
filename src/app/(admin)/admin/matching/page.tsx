@@ -1,14 +1,25 @@
 import { getTranslations } from 'next-intl/server';
 import { CohortStatus, MatchStatus } from '@prisma/client';
 import { prisma } from '@/lib/db/prisma';
+import { getCurrentUser } from '@/lib/auth/rbac';
 import { approveMatchForm, overrideMatchForm, runMatchingForm } from '@/features/matching/actions';
+import { getPairsTimeline } from '@/features/matching/timeline';
+import { PairsTimelineView } from '@/features/matching/pairs-timeline';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 export default async function MatchingPage() {
   const t = await getTranslations('matching');
+  const current = await getCurrentUser();
+  const lang = current?.locale === 'FR' ? 'FR' : 'EN';
 
   // M1 works against the active cohort; multi-cohort selection arrives with
   // the cohort switcher in a later milestone.
@@ -20,7 +31,7 @@ export default async function MatchingPage() {
     return <p className="text-muted-foreground">{t('noSuggestions')}</p>;
   }
 
-  const [suggestions, committed, mentorOptions] = await Promise.all([
+  const [suggestions, timeline, mentorOptions] = await Promise.all([
     prisma.match.findMany({
       where: { cohortId: cohort.id, status: MatchStatus.SUGGESTED, deletedAt: null },
       orderBy: { score: 'desc' },
@@ -29,18 +40,7 @@ export default async function MatchingPage() {
         mentee: { select: { id: true, name: true } },
       },
     }),
-    prisma.match.findMany({
-      where: {
-        cohortId: cohort.id,
-        status: { in: [MatchStatus.ADMIN_APPROVED, MatchStatus.OVERRIDDEN, MatchStatus.ACCEPTED] },
-        deletedAt: null,
-      },
-      orderBy: { updatedAt: 'desc' },
-      include: {
-        mentor: { select: { name: true } },
-        mentee: { select: { name: true } },
-      },
-    }),
+    getPairsTimeline(cohort.id),
     prisma.mentorProfile.findMany({
       where: { cohortId: cohort.id, deletedAt: null },
       select: { userId: true, fullName: true, preferredLanguage: true },
@@ -58,19 +58,21 @@ export default async function MatchingPage() {
 
   return (
     <section className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold">{t('title')}</h1>
-          <p className="text-muted-foreground">{cohort.name}</p>
+      <header className="flex flex-wrap items-start justify-between gap-3">
+        <div className="space-y-1">
+          <h1 className="font-display text-h1 font-medium text-ink">{t('title')}</h1>
+          <p className="text-body text-ink-2">{cohort.name}</p>
         </div>
         <form action={runMatchingForm}>
           <input type="hidden" name="cohortId" value={cohort.id} />
           <Button type="submit">{t('run')}</Button>
         </form>
-      </div>
+      </header>
 
-      <p className="text-sm text-muted-foreground">{t('runHint')}</p>
-      <p className="text-sm font-medium text-primary">{t('languageRule')}</p>
+      <p className="text-small text-ink-2">{t('runHint')}</p>
+      <p className="rounded-md bg-green-soft/60 px-3 py-2 text-small font-medium text-green-strong">
+        {t('languageRule')}
+      </p>
 
       {byMentee.size === 0 ? (
         <p className="text-muted-foreground">{t('noSuggestions')}</p>
@@ -82,25 +84,28 @@ export default async function MatchingPage() {
             return (
               <Card key={menteeId}>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-base">
+                  <CardTitle className="text-h3">
                     {t('suggestionsFor')} {first.mentee.name}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {list.map((s) => (
-                    <div key={s.id} className="flex flex-wrap items-start justify-between gap-3 rounded border p-3">
+                    <div
+                      key={s.id}
+                      className="flex flex-wrap items-start justify-between gap-3 rounded-lg border border-border bg-surface p-3"
+                    >
                       <div className="min-w-0 flex-1 space-y-1">
-                        <p className="font-medium">
-                          {s.mentor.name}{' '}
-                          <Badge variant="secondary">
+                        <p className="flex items-center gap-2 font-medium text-ink">
+                          {s.mentor.name}
+                          <Badge variant="ok">
                             {t('score')}: {Math.round(s.score)}
                           </Badge>
                         </p>
-                        <p className="text-sm text-muted-foreground">{s.aiRationale}</p>
+                        <p className="text-small text-ink-2">{s.aiRationale}</p>
                         {Array.isArray(s.flags) && s.flags.length > 0 ? (
                           <p className="flex flex-wrap gap-1">
                             {(s.flags as string[]).map((f) => (
-                              <Badge key={f} variant="outline" className="text-xs">
+                              <Badge key={f} variant="warn">
                                 {f}
                               </Badge>
                             ))}
@@ -116,23 +121,23 @@ export default async function MatchingPage() {
                     </div>
                   ))}
 
-                  <details className="rounded border p-3">
-                    <summary className="cursor-pointer text-sm font-medium">{t('override')}</summary>
+                  <details className="rounded-lg border border-border p-3">
+                    <summary className="cursor-pointer text-small font-medium text-ink">{t('override')}</summary>
                     <form action={overrideMatchForm} className="mt-3 flex flex-wrap items-end gap-3">
                       <input type="hidden" name="cohortId" value={cohort.id} />
                       <input type="hidden" name="menteeId" value={menteeId} />
-                      <select
-                        name="mentorId"
-                        required
-                        aria-label={t('mentor')}
-                        className="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm"
-                      >
-                        {mentorOptions.map((m) => (
-                          <option key={m.userId} value={m.userId}>
-                            {m.fullName} ({m.preferredLanguage})
-                          </option>
-                        ))}
-                      </select>
+                      <Select name="mentorId" required defaultValue={mentorOptions[0]?.userId}>
+                        <SelectTrigger aria-label={t('mentor')} className="w-auto min-w-[16rem]">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {mentorOptions.map((m) => (
+                            <SelectItem key={m.userId} value={m.userId}>
+                              {m.fullName} ({m.preferredLanguage})
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                       <Button type="submit" size="sm" variant="outline">
                         {t('overrideSubmit')}
                       </Button>
@@ -145,35 +150,10 @@ export default async function MatchingPage() {
         </div>
       )}
 
-      <h2 className="text-xl font-semibold">{t('committedTitle')}</h2>
-      {committed.length === 0 ? (
-        <p className="text-muted-foreground">{t('noSuggestions')}</p>
-      ) : (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{t('mentor')}</TableHead>
-              <TableHead>{t('mentee')}</TableHead>
-              <TableHead>{t('score')}</TableHead>
-              <TableHead>{t('statusLabel')}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {committed.map((m) => (
-              <TableRow key={m.id}>
-                <TableCell className="font-medium">{m.mentor.name}</TableCell>
-                <TableCell>{m.mentee.name}</TableCell>
-                <TableCell>{Math.round(m.score)}</TableCell>
-                <TableCell>
-                  <Badge variant={m.status === MatchStatus.ACCEPTED ? 'default' : 'secondary'}>
-                    {m.status}
-                  </Badge>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      )}
+      <div className="space-y-3">
+        <h2 className="font-display text-h2 text-ink">{t('committedTitle')}</h2>
+        <PairsTimelineView timeline={timeline} lang={lang} />
+      </div>
     </section>
   );
 }

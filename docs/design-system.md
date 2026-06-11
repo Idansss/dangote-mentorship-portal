@@ -21,19 +21,26 @@ This is not a generic mentorship SaaS. It is the operating system for **one** pr
 
 A single, disciplined green system. One green does the heavy lifting; greys carry the structure; white is the canvas. Status colors are reserved strictly for status — never decoration.
 
+> **Refresh (Step 10) — "fresh light green" + floating-card depth.** The canvas
+> is inverted (light grey-green page, pure-white surfaces) so cards float, and
+> the green is a fresh light tone. Because a light green fails AA under white
+> text, green is **two-step**: a light brand green for accents and a deeper
+> same-hue tint for anything carrying white text. Values below are current.
+
 ```
---bg            #FFFFFF   page canvas
---surface       #F7F9F7   cards, raised panels (a barely-green off-white)
---surface-2     #EEF3EE   nested panels, table header rows
---border        #E2E8E2   hairlines, dividers, input borders
+--bg            #F4F7F5   page canvas (light grey-green, so white cards float)
+--surface       #FFFFFF   cards, sidebar, raised panels
+--surface-2     #EEF3EF   nested panels, table header rows, hovers
+--border        #E7EDE8   hairlines, dividers, input borders
 --ink           #14201A   primary text (near-black with a green undertone)
 --ink-2         #4A5A50   secondary text, labels
 --ink-3         #8A988F   muted text, placeholders, captions
 
---green         #1E7A46   PRIMARY brand green — buttons, active states, links
---green-strong  #155C34   hover/pressed, headings-on-green
---green-soft    #E4F1E9   selected rows, soft fills, chip backgrounds
---green-ring    #1E7A4633 focus ring (green at 20% alpha)
+--green-light   #34A853   brand LIGHT green — accents, links, active icons, charts, focus (AA for icons/large)
+--green         #288544   PRIMARY — buttons, filled pills, badges (white text, 4.64:1 AA)
+--green-strong  #1F7338   hover/pressed, headings-on-green
+--green-soft    #E6F4EA   selected rows, soft fills, chip backgrounds
+--green-ring    #34A85333 focus ring (light green at 20% alpha)
 
 --gold          #B5862A   recognition / certificates / highlights ONLY (used sparingly, the one warm accent)
 
@@ -52,14 +59,14 @@ A single, disciplined green system. One green does the heavy lifting; greys carr
 
 Avoid the default system-font look the reference kits all have. Two faces, both free and self-hostable (works offline / low-bandwidth):
 
-- **Display / headings:** **Fraunces** (optical serif) for page titles, section headers, the welcome line, big numbers, certificate text. It gives the warm, human, "this programme is about people" feel that distinguishes us from cold dashboard kits. Use it with restraint — headings only.
+- **Display / headings:** **Poppins** (geometric sans) for page titles, section headers, the welcome line, big numbers, certificate text — the clean, modern, slightly-rounded heading face of the reference HR dashboards. Use it with restraint — headings only. *(Was Fraunces serif through Step 9; switched to Poppins in the Step 10 refresh for an all-sans, dashboard-native look.)*
 - **Body / UI:** **Inter** for everything functional — body, labels, buttons, tables, forms, data.
 
 Type scale (don't deviate):
 
 ```
-Display   Fraunces  36/44  weight 500   page titles, certificates
-H1        Fraunces  28/36  weight 500   section headers
+Display   Poppins   36/44  weight 600   page titles, certificates
+H1        Poppins   28/36  weight 600   section headers
 H2        Inter     20/28  weight 600   card titles
 H3        Inter     16/24  weight 600   sub-labels
 Body      Inter     15/24  weight 400   default text
@@ -74,8 +81,8 @@ Sentence case everywhere (never Title Case On Buttons). Numbers in stat tiles us
 ## 3. Layout & spacing
 
 - **8px spacing system.** Gaps, padding, radii all multiples of 4/8. Card padding 24. Section gap 32.
-- **Radii:** 12px cards, 8px inputs/buttons, 999px pills/avatars. Consistent — no mixed rounding.
-- **Shadows:** one soft elevation only — `0 1px 2px rgba(20,32,26,.04), 0 4px 16px rgba(20,32,26,.06)`. No heavy drop shadows, no neumorphism.
+- **Radii:** 16px cards, 10px inputs/buttons, 999px pills/avatars. Consistent — no mixed rounding.
+- **Shadows:** soft layered elevation so white cards float over the canvas — `elevation` `0 1px 2px rgba(16,42,26,.04), 0 8px 24px -6px rgba(16,42,26,.08)`; `elevation-lg` for hover/raised; a colored `glow` (`0 6px 16px -4px rgba(40,133,68,.45)`) under primary buttons and the active nav pill. No heavy drop shadows, no neumorphism.
 - **Shell:** left sidebar nav (collapsible to icons), top bar with search + language toggle + notifications + profile, content area max-width ~1280 with comfortable gutters. On mobile the sidebar becomes a bottom tab bar with the 4–5 primary destinations.
 - **Cards over tables.** Reference kits lean on dense tables; we use cards for anything a person reads, tables only for true admin data grids (and those collapse to cards on mobile).
 - **Friendly empty states** everywhere: a one-line plain-language prompt + the action that fills it. Never a blank panel.

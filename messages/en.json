@@ -40,7 +40,8 @@
     "midTermReview": "Mid-term review",
     "finalReview": "Final review",
     "notifications": "Notifications",
-    "login": "Login"
+    "login": "Login",
+    "signup": "Sign up"
   },
   "shell": {
     "search": "Search…",
@@ -59,9 +60,22 @@
   "home": {
     "eyebrow": "Dangote Mentorship Programme 2026",
     "title": "An intelligent, bilingual mentorship operating system",
+    "heroTitleLead": "Bilingual mentorship that",
+    "heroTitleAccent": "moves people forward",
     "subtitle": "From manual, document-based mentorship to a measurable, AI-assisted programme for Dangote Group.",
     "cta": "Sign in to continue",
     "aboutCta": "Learn about the programme",
+    "preview": {
+      "eyebrow": "AI Matching Assistant",
+      "subtitle": "Advisory preview · admin approves",
+      "status": "Live",
+      "asksLabel": "Mentee asks",
+      "question": "Who should mentor me for a move into operations leadership?",
+      "point1": "Language-safe: matched EN↔EN within the same cohort.",
+      "point2": "Scored on competencies, career goals, and 15 yrs of ops experience.",
+      "point3": "Next action: an admin reviews and approves the pairing.",
+      "cta": "See the match in the portal"
+    },
     "badgeBilingual": "EN · FR bilingual",
     "badgeJourney": "9-month guided journey",
     "badgeAI": "AI-assisted, human-approved",
@@ -127,9 +141,11 @@
       }
     },
     "closing": {
+      "eyebrow": "Get started",
       "title": "Ready to continue your journey?",
       "subtitle": "Sign in with your Dangote account to pick up exactly where you left off.",
-      "cta": "Sign in"
+      "cta": "Sign in",
+      "micro": "Bilingual · Secure by design · AI-assisted, human-approved"
     },
     "footer": {
       "tagline": "The operating system for Dangote's bilingual mentorship programme.",
@@ -137,15 +153,26 @@
     }
   },
   "about": {
+    "eyebrow": "The programme",
     "title": "About the programme",
-    "body": "A 9-month bilingual mentorship programme that takes Dangote from manual mentorship management to an intelligent, measurable system: pre-training and matching, training, goal setting, mentorship sessions, reviews, clinics, reporting, and completion."
+    "body": "A 9-month bilingual mentorship programme that takes Dangote from manual mentorship management to an intelligent, measurable system: pre-training and matching, training, goal setting, mentorship sessions, reviews, clinics, reporting, and completion.",
+    "pillarsTitle": "What makes it different",
+    "ctaTitle": "Ready to get started?",
+    "ctaBody": "Sign in to your account, or request access to join the programme.",
+    "signin": "Sign in",
+    "requestAccess": "Request access"
   },
   "faq": {
+    "eyebrow": "Help",
     "title": "Frequently asked questions",
+    "subtitle": "Answers to the questions we hear most. Can't find yours? Your programme administrator is one message away.",
     "q1": "Is the programme available in French?",
     "a1": "Yes. The entire interface and your conversations are available in English and French, and you are never forced to write in English.",
     "q2": "Who can I contact for help?",
-    "a2": "Reach out to your programme administrator from within the portal."
+    "a2": "Reach out to your programme administrator from within the portal.",
+    "helpTitle": "Still need help?",
+    "helpBody": "Sign in and reach out to your programme administrator from within the portal.",
+    "helpCta": "Sign in"
   },
   "auth": {
     "loginTitle": "Sign in",
@@ -170,7 +197,24 @@
     "resetSubtitle": "Enter a new password for your account.",
     "resetInvalid": "This reset link is invalid or has expired.",
     "newPassword": "New password",
-    "resetSubmit": "Update password"
+    "resetSubmit": "Update password",
+    "brandTitle": "Your bilingual mentorship journey, all in one place.",
+    "brandSubtitle": "Sign in to pick up your goals, sessions, and conversations exactly where you left off.",
+    "noAccount": "Need an account?",
+    "signupLink": "Request access"
+  },
+  "signup": {
+    "title": "Join the programme",
+    "subtitle": "Accounts are created by your programme administrator. Activate yours with an invite link, or request access below.",
+    "inviteTitle": "Have an invite code?",
+    "inviteHint": "Paste the code from your invitation email to set up your account.",
+    "invitePlaceholder": "Invite code",
+    "inviteCta": "Continue",
+    "requestTitle": "No invite yet?",
+    "requestHint": "The programme is confidential and cohort-based, so access is granted by an administrator. Ask yours to send you an invite link.",
+    "requestCta": "Request access",
+    "haveAccount": "Already have an account?",
+    "signinLink": "Sign in"
   },
   "dashboard": {
     "welcome": "Welcome",
@@ -305,7 +349,21 @@
     "acceptMatch": "Accept",
     "rejectMatch": "Decline",
     "matchedWith": "Matched with",
-    "noMatchYet": "No match yet. Your administrator will pair you soon."
+    "noMatchYet": "No match yet. Your administrator will pair you soon.",
+    "timelineTitle": "Pairs engagement timeline",
+    "timelineHint": "Session activity for each committed pair across the programme months. Metadata only — no session content.",
+    "engagementLegend": "Engagement",
+    "legendLess": "Less",
+    "legendMore": "More",
+    "sessionsShort": "Sessions",
+    "sessionsInMonth": "{count, plural, =0 {No sessions in {month}} one {# session in {month}} other {# sessions in {month}}}",
+    "lastActive": "Last session",
+    "noSessionsYet": "No sessions yet",
+    "noCommitted": "No approved pairs yet",
+    "noCommittedHint": "Approve suggestions above and the pairs appear here with their engagement over time.",
+    "statusAccepted": "Accepted",
+    "statusApproved": "Approved",
+    "statusOverridden": "Overridden"
   },
   "profile": {
     "title": "My profile",
@@ -787,20 +845,50 @@
     "stepLabel": "Step {current} of {total}",
     "mentee": {
       "steps": [
-        { "title": "Welcome", "body": "This is your home base. The top button tells you what to do next whenever you're unsure." },
-        { "title": "Meet your mentor", "body": "Once matched, your mentor appears here. Open your shared workspace to see agreements, goals, and meetings in one place." },
-        { "title": "Set SMART goals", "body": "Use Goals to draft development goals — the AI Goal Coach can polish them, and your mentor approves them." },
-        { "title": "Meet and reflect", "body": "Schedule sessions, then log a quick reflection afterwards. The Journal keeps your private notes." },
-        { "title": "Need help?", "body": "Use the + button for quick actions, and Request Support privately if anything isn't working." }
+        {
+          "title": "Welcome",
+          "body": "This is your home base. The top button tells you what to do next whenever you're unsure."
+        },
+        {
+          "title": "Meet your mentor",
+          "body": "Once matched, your mentor appears here. Open your shared workspace to see agreements, goals, and meetings in one place."
+        },
+        {
+          "title": "Set SMART goals",
+          "body": "Use Goals to draft development goals — the AI Goal Coach can polish them, and your mentor approves them."
+        },
+        {
+          "title": "Meet and reflect",
+          "body": "Schedule sessions, then log a quick reflection afterwards. The Journal keeps your private notes."
+        },
+        {
+          "title": "Need help?",
+          "body": "Use the + button for quick actions, and Request Support privately if anything isn't working."
+        }
       ]
     },
     "mentor": {
       "steps": [
-        { "title": "Welcome", "body": "This is your home base. The top button surfaces your most important next action." },
-        { "title": "Your mentees", "body": "Each mentee has a shared workspace. Open it for their goals, agreements, sessions, and the first-meeting icebreaker." },
-        { "title": "Review goals", "body": "When a mentee submits a goal, approve it, request changes, or comment from the Goals page." },
-        { "title": "Log sessions", "body": "After each session, log what you discussed — paste rough notes and let the AI structure them and extract action items." },
-        { "title": "Stay on track", "body": "The dashboard flags reviews and logs awaiting you. Use the + button for quick actions." }
+        {
+          "title": "Welcome",
+          "body": "This is your home base. The top button surfaces your most important next action."
+        },
+        {
+          "title": "Your mentees",
+          "body": "Each mentee has a shared workspace. Open it for their goals, agreements, sessions, and the first-meeting icebreaker."
+        },
+        {
+          "title": "Review goals",
+          "body": "When a mentee submits a goal, approve it, request changes, or comment from the Goals page."
+        },
+        {
+          "title": "Log sessions",
+          "body": "After each session, log what you discussed — paste rough notes and let the AI structure them and extract action items."
+        },
+        {
+          "title": "Stay on track",
+          "body": "The dashboard flags reviews and logs awaiting you. Use the + button for quick actions."
+        }
       ]
     }
   },
@@ -889,7 +977,11 @@
   "calendar": {
     "title": "Calendar",
     "subtitle": "Your sessions and programme milestones. Scheduled meetings sync to Outlook when it's connected.",
-    "view": { "month": "Month", "week": "Week", "list": "List" },
+    "view": {
+      "month": "Month",
+      "week": "Week",
+      "list": "List"
+    },
     "previous": "Previous",
     "next": "Next",
     "today": "Today",
@@ -897,11 +989,27 @@
     "milestoneStart": "Programme start",
     "milestoneEnd": "Programme end",
     "months": {
-      "m0": "January", "m1": "February", "m2": "March", "m3": "April", "m4": "May", "m5": "June",
-      "m6": "July", "m7": "August", "m8": "September", "m9": "October", "m10": "November", "m11": "December"
+      "m0": "January",
+      "m1": "February",
+      "m2": "March",
+      "m3": "April",
+      "m4": "May",
+      "m5": "June",
+      "m6": "July",
+      "m7": "August",
+      "m8": "September",
+      "m9": "October",
+      "m10": "November",
+      "m11": "December"
     },
     "weekdaysShort": {
-      "d0": "Mon", "d1": "Tue", "d2": "Wed", "d3": "Thu", "d4": "Fri", "d5": "Sat", "d6": "Sun"
+      "d0": "Mon",
+      "d1": "Tue",
+      "d2": "Wed",
+      "d3": "Thu",
+      "d4": "Fri",
+      "d5": "Sat",
+      "d6": "Sun"
     }
   },
   "nextAction": {
@@ -1052,7 +1160,8 @@
         "title": "Support update",
         "body": "The programme team has responded to your support request."
       }
-    }
+    },
+    "emptyHint": "No pending items right now."
   },
   "forms": {
     "title": "Forms builder",
@@ -1104,5 +1213,57 @@
     "typeBoolean": "Yes / No",
     "questionCount": "{count} questions",
     "responseCount": "{count} responses"
+  },
+  "adminLists": {
+    "goalsTitle": "Goals",
+    "goalsSubtitle": "Every goal submitted across the programme, newest first.",
+    "meetingsTitle": "Upcoming meetings",
+    "meetingsSubtitle": "Scheduled sessions still ahead, soonest first.",
+    "trainingTitle": "Training completion",
+    "trainingSubtitle": "Who has completed onboarding training across the cohort.",
+    "navGoals": "Goals",
+    "navMeetings": "Meetings",
+    "navTraining": "Training",
+    "colMentee": "Mentee",
+    "colGoal": "Goal",
+    "colCompetency": "Competency",
+    "colStatus": "Status",
+    "colCohort": "Cohort",
+    "colCreated": "Submitted",
+    "colTitle": "Title",
+    "colType": "Type",
+    "colWhen": "When",
+    "colMentor": "Mentor",
+    "colParticipant": "Participant",
+    "colRole": "Role",
+    "noGoals": "No goals submitted yet.",
+    "noMeetings": "No upcoming meetings scheduled.",
+    "noTraining": "No participants yet.",
+    "mentorsTrained": "Mentors trained",
+    "menteesTrained": "Mentees trained",
+    "notScheduled": "Not scheduled"
+  },
+  "insights": {
+    "title": "Insights",
+    "subtitle": "Programme analytics across the active cohort.",
+    "navLabel": "Insights",
+    "languageTitle": "Language distribution",
+    "languageSubtitle": "EN vs FR across all participants.",
+    "matchingTitle": "Matching status",
+    "matchingSubtitle": "Matched vs unmatched, by role.",
+    "trainingTitle": "Training completion",
+    "trainingSubtitle": "Onboarding training completed vs pending.",
+    "goalsTitle": "Goal pipeline",
+    "goalsSubtitle": "Goals by stage across the programme.",
+    "mentors": "Mentors",
+    "mentees": "Mentees",
+    "matched": "Matched",
+    "unmatched": "Unmatched",
+    "completed": "Completed",
+    "pending": "Pending",
+    "submitted": "Submitted",
+    "approved": "Approved",
+    "goalCompleted": "Completed",
+    "empty": "No data yet."
   }
 }

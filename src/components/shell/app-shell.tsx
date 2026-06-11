@@ -24,16 +24,18 @@ import {
   ClipboardList,
   GraduationCap,
   Mail,
+  BarChart3,
   Menu,
   X,
-  PanelLeftClose,
-  PanelLeftOpen,
+  ChevronLeft,
+  ChevronRight,
   Search,
   LogOut,
   type LucideIcon,
 } from 'lucide-react';
 import { signOutAction } from '@/lib/auth/actions';
 import { LocaleSwitcher } from '@/components/locale-switcher';
+import { Wordmark } from '@/components/wordmark';
 import { cn } from '@/lib/utils';
 
 // AppShell (§19 §3) — the authenticated chrome shared by the participant and
@@ -63,7 +65,9 @@ export type IconKey =
   | 'forms'
   | 'mentors'
   | 'mentees'
-  | 'invites';
+  | 'invites'
+  | 'training'
+  | 'insights';
 
 const ICONS: Record<IconKey, LucideIcon> = {
   dashboard: LayoutDashboard,
@@ -87,6 +91,8 @@ const ICONS: Record<IconKey, LucideIcon> = {
   mentors: Users,
   mentees: GraduationCap,
   invites: Mail,
+  training: Award,
+  insights: BarChart3,
 };
 
 export interface NavItem {
@@ -174,7 +180,7 @@ export function AppShell({ sections, user, unread, labels, children }: AppShellP
       {/* ── Sidebar ── */}
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-50 flex flex-col border-r border-border bg-surface transition-[width,transform] duration-200 ease-out motion-reduce:transition-none',
+          'fixed inset-y-0 left-0 z-50 flex flex-col border-r border-border bg-green-soft/50 transition-[width,transform] duration-200 ease-out motion-reduce:transition-none',
           collapsed ? 'lg:w-[4.5rem]' : 'lg:w-64',
           'w-64', // mobile drawer width
           mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
@@ -182,20 +188,42 @@ export function AppShell({ sections, user, unread, labels, children }: AppShellP
       >
         {/* Brand */}
         <div className="flex h-16 items-center gap-2.5 px-4">
-          <Link href="/" className="flex items-center gap-2.5 overflow-hidden">
-            <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-green font-display text-h3 font-medium text-white">
+          <Link
+            href="/"
+            className={cn(
+              'flex items-center gap-2.5 overflow-hidden',
+              collapsed && 'lg:hidden', // narrow rail shows only the collapse chevron
+            )}
+          >
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-b from-green-light to-green font-display text-h3 font-medium text-white shadow-glow">
               D
             </span>
             {!collapsed && (
-              <span className="truncate font-display text-h3 font-medium text-ink">
-                {labels.brand}
-              </span>
+              <Wordmark
+                name={labels.brand}
+                className="truncate font-display text-h3 font-bold text-ink"
+              />
             )}
           </Link>
+
+          {/* Desktop collapse toggle (Atlas-style chevron at the top of the rail) */}
+          <button
+            type="button"
+            onClick={() => setCollapsed((c) => !c)}
+            aria-label={collapsed ? labels.expand : labels.collapse}
+            className={cn(
+              'hidden rounded-md p-1.5 text-ink-3 transition-colors hover:bg-surface hover:text-ink lg:inline-flex',
+              collapsed ? 'lg:mx-auto' : 'ml-auto',
+            )}
+          >
+            {collapsed ? <ChevronRight className="size-5" /> : <ChevronLeft className="size-5" />}
+          </button>
+
+          {/* Mobile drawer close */}
           <button
             type="button"
             aria-label={labels.closeMenu}
-            className="ml-auto rounded-md p-1.5 text-ink-2 hover:bg-surface-2 lg:hidden"
+            className="ml-auto rounded-md p-1.5 text-ink-2 hover:bg-surface lg:hidden"
             onClick={() => setMobileOpen(false)}
           >
             <X className="size-5" />
@@ -207,7 +235,9 @@ export function AppShell({ sections, user, unread, labels, children }: AppShellP
           {sections.map((section, si) => (
             <div key={section.label ?? si} className="space-y-1">
               {section.label && !collapsed && (
-                <p className="px-3 pb-1 text-micro uppercase text-ink-3">{section.label}</p>
+                <p className="px-3 pb-1 text-micro uppercase tracking-wider text-green-strong">
+                  {section.label}
+                </p>
               )}
               {section.items.map((item) => {
                 const Icon = ICONS[item.icon];
@@ -219,17 +249,27 @@ export function AppShell({ sections, user, unread, labels, children }: AppShellP
                     title={collapsed ? item.label : undefined}
                     aria-current={active ? 'page' : undefined}
                     className={cn(
-                      'group flex items-center gap-3 rounded-md px-3 py-2 text-body font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green/30',
+                      'group flex items-center gap-3 rounded-xl px-3 py-2 text-small font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green/30 motion-reduce:transition-none',
                       collapsed && 'lg:justify-center lg:px-0',
                       active
-                        ? 'bg-green-soft text-green-strong'
-                        : 'text-ink-2 hover:bg-surface-2 hover:text-ink',
+                        ? 'bg-gradient-to-b from-green to-green-strong text-white shadow-glow'
+                        : 'text-ink-2 hover:bg-surface hover:text-ink hover:shadow-elevation',
                     )}
                   >
-                    <Icon className={cn('size-5 shrink-0', active && 'text-green')} />
+                    <Icon
+                      className={cn(
+                        'size-5 shrink-0',
+                        active ? 'text-white' : 'text-ink-3 group-hover:text-green-light',
+                      )}
+                    />
                     {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
                     {!collapsed && item.badge ? (
-                      <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-green px-1.5 text-micro text-white">
+                      <span
+                        className={cn(
+                          'inline-flex min-w-5 items-center justify-center rounded-full px-1.5 text-micro',
+                          active ? 'bg-white/25 text-white' : 'bg-green text-white',
+                        )}
+                      >
                         {item.badge}
                       </span>
                     ) : null}
@@ -240,31 +280,13 @@ export function AppShell({ sections, user, unread, labels, children }: AppShellP
           ))}
         </nav>
 
-        {/* Collapse toggle (desktop) + sign out */}
-        <div className="space-y-1 border-t border-border p-3">
-          <button
-            type="button"
-            onClick={() => setCollapsed((c) => !c)}
-            aria-label={collapsed ? labels.expand : labels.collapse}
-            className={cn(
-              'hidden w-full items-center gap-3 rounded-md px-3 py-2 text-body font-medium text-ink-2 transition-colors hover:bg-surface-2 hover:text-ink lg:flex',
-              collapsed && 'lg:justify-center lg:px-0',
-            )}
-          >
-            {collapsed ? (
-              <PanelLeftOpen className="size-5 shrink-0" />
-            ) : (
-              <>
-                <PanelLeftClose className="size-5 shrink-0" />
-                <span>{labels.collapse}</span>
-              </>
-            )}
-          </button>
+        {/* Sign out */}
+        <div className="border-t border-border p-3">
           <form action={signOutAction}>
             <button
               type="submit"
               className={cn(
-                'flex w-full items-center gap-3 rounded-md px-3 py-2 text-body font-medium text-ink-2 transition-colors hover:bg-surface-2 hover:text-ink',
+                'flex w-full items-center gap-3 rounded-md px-3 py-2 text-small font-medium text-ink-2 transition-colors hover:bg-surface hover:text-ink',
                 collapsed && 'lg:justify-center lg:px-0',
               )}
               title={collapsed ? labels.signOut : undefined}

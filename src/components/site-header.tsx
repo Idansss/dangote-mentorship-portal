@@ -3,91 +3,48 @@ import { getTranslations } from 'next-intl/server';
 import { getCurrentUser } from '@/lib/auth/rbac';
 import { defaultDashboardPath } from '@/lib/auth/roles';
 import { signOutAction } from '@/lib/auth/actions';
-import { getUnreadCount } from '@/lib/notifications/data';
 import { LocaleSwitcher } from '@/components/locale-switcher';
-import { Badge } from '@/components/ui/badge';
+import { Wordmark } from '@/components/wordmark';
 import { Button } from '@/components/ui/button';
 
+// Public marketing header — wordmark + locale switcher + auth CTAs. Secondary nav
+// (About / FAQ) lives in the SiteFooter. For signed-in visitors it stays a lean
+// marketing bar — a single "Dashboard" CTA into the authenticated app shell (which
+// owns the full nav) — rather than re-listing every app destination here.
 export async function SiteHeader() {
   const t = await getTranslations();
   const user = await getCurrentUser();
-  const unread = user ? await getUnreadCount(user.id) : 0;
 
   return (
-    <header className="border-b">
+    <header className="sticky top-0 z-40 border-b border-border bg-bg/80 backdrop-blur">
       <div className="container flex h-16 items-center justify-between gap-4">
-        <Link href="/" className="font-semibold text-primary">
-          {t('common.appName')}
+        <Link href="/" className="font-display text-h3 font-bold text-ink">
+          <Wordmark name={t('common.appName')} />
         </Link>
 
-        <nav className="flex items-center gap-3 text-sm">
-          <Link href="/about" className="text-muted-foreground hover:text-foreground">
-            {t('nav.about')}
-          </Link>
-          <Link href="/faq" className="text-muted-foreground hover:text-foreground">
-            {t('nav.faq')}
-          </Link>
-
+        <nav className="flex items-center gap-2 text-small sm:gap-3">
           <LocaleSwitcher />
 
           {user ? (
             <>
-              <Button asChild size="sm" variant="ghost">
+              <Button asChild size="sm">
                 <Link href={defaultDashboardPath(user.roles)}>{t('nav.dashboard')}</Link>
               </Button>
-              <Button asChild size="sm" variant="ghost">
-                <Link href="/pair">{t('nav.pair')}</Link>
-              </Button>
-              <Button asChild size="sm" variant="ghost">
-                <Link href="/goals">{t('nav.goals')}</Link>
-              </Button>
-              <Button asChild size="sm" variant="ghost">
-                <Link href="/sessions">{t('nav.sessions')}</Link>
-              </Button>
-              <Button asChild size="sm" variant="ghost">
-                <Link href="/meetings">{t('nav.meetings')}</Link>
-              </Button>
-              <Button asChild size="sm" variant="ghost">
-                <Link href="/calendar">{t('nav.calendar')}</Link>
-              </Button>
-              <Button asChild size="sm" variant="ghost">
-                <Link href="/journal">{t('nav.journal')}</Link>
-              </Button>
-              <Button asChild size="sm" variant="ghost">
-                <Link href="/agreements">{t('nav.agreements')}</Link>
-              </Button>
-              <Button asChild size="sm" variant="ghost">
-                <Link href="/support">{t('nav.support')}</Link>
-              </Button>
-              <Button asChild size="sm" variant="ghost">
-                <Link href="/help">{t('nav.help')}</Link>
-              </Button>
-              <Button asChild size="sm" variant="ghost">
-                <Link href="/mid-term-review">{t('nav.midTermReview')}</Link>
-              </Button>
-              <Button asChild size="sm" variant="ghost">
-                <Link href="/final-review">{t('nav.finalReview')}</Link>
-              </Button>
-              <Button asChild size="sm" variant="ghost">
-                <Link href="/notifications" className="flex items-center gap-1">
-                  {t('nav.notifications')}
-                  {unread > 0 ? (
-                    <Badge variant="secondary" aria-label={t('notifications.unreadCount', { count: unread })}>
-                      {unread}
-                    </Badge>
-                  ) : null}
-                </Link>
-              </Button>
               <form action={signOutAction}>
-                <Button type="submit" size="sm" variant="outline">
+                <Button type="submit" size="sm" variant="ghost">
                   {t('common.signOut')}
                 </Button>
               </form>
             </>
           ) : (
-            <Button asChild size="sm">
-              <Link href="/login">{t('nav.login')}</Link>
-            </Button>
+            <>
+              <Button asChild size="sm" variant="ghost">
+                <Link href="/login">{t('nav.login')}</Link>
+              </Button>
+              <Button asChild size="sm">
+                <Link href="/signup">{t('nav.signup')}</Link>
+              </Button>
+            </>
           )}
         </nav>
       </div>

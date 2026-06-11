@@ -6,6 +6,13 @@ import { useTranslations } from 'next-intl';
 import { NoShowReason } from '@prisma/client';
 import { reportMeetingOutcome } from '@/features/meetings/actions';
 import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 const REASONS = Object.values(NoShowReason);
 
@@ -42,27 +49,25 @@ export function NoShowPrompt({ meetingId }: { meetingId: string }) {
         </div>
       ) : (
         <div className="flex flex-wrap items-center gap-2">
-          <label className="sr-only" htmlFor={`reason-${meetingId}`}>
-            {t('reason')}
-          </label>
-          <select
-            id={`reason-${meetingId}`}
-            defaultValue=""
+          <Select
             disabled={pending}
-            onChange={(e) => {
-              if (e.target.value) submit('no', e.target.value as NoShowReason);
-            }}
-            className="h-9 rounded-md border border-input bg-background px-2 text-sm"
+            onValueChange={(v) => submit('no', v as NoShowReason)}
           >
-            <option value="" disabled>
-              {t('chooseReason')}
-            </option>
-            {REASONS.map((r) => (
-              <option key={r} value={r}>
-                {t(`reasonOption.${r}`)}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger
+              id={`reason-${meetingId}`}
+              aria-label={t('reason')}
+              className="h-9 w-auto"
+            >
+              <SelectValue placeholder={t('chooseReason')} />
+            </SelectTrigger>
+            <SelectContent>
+              {REASONS.map((r) => (
+                <SelectItem key={r} value={r}>
+                  {t(`reasonOption.${r}`)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Button type="button" size="sm" variant="ghost" onClick={() => setAskReason(false)} disabled={pending}>
             {t('back')}
           </Button>

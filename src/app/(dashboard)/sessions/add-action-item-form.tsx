@@ -6,6 +6,13 @@ import { useTranslations } from 'next-intl';
 import { addActionItemForm, type SessionActionState } from '@/features/sessions/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 // Mentor adds a follow-up action item to an existing session log (§1.6).
 export function AddActionItemForm({ sessionLogId }: { sessionLogId: string }) {
@@ -29,11 +36,16 @@ export function AddActionItemForm({ sessionLogId }: { sessionLogId: string }) {
     <form ref={formRef} action={action} className="flex flex-wrap items-end gap-2">
       <input type="hidden" name="sessionLogId" value={sessionLogId} />
       <Input name="title" required maxLength={300} placeholder={t('taskPlaceholder')} className="min-w-[12rem] flex-1" aria-label={t('task')} />
-      <select name="assignee" defaultValue="mentee" aria-label={t('owner')} className="h-10 rounded-md border border-input bg-background px-2 text-sm">
-        <option value="mentee">{t('owner_mentee')}</option>
-        <option value="mentor">{t('owner_mentor')}</option>
-        <option value="none">{t('owner_none')}</option>
-      </select>
+      <Select name="assignee" defaultValue="mentee">
+        <SelectTrigger aria-label={t('owner')} className="h-10 w-auto">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="mentee">{t('owner_mentee')}</SelectItem>
+          <SelectItem value="mentor">{t('owner_mentor')}</SelectItem>
+          <SelectItem value="none">{t('owner_none')}</SelectItem>
+        </SelectContent>
+      </Select>
       <Input type="date" name="due" aria-label={t('dueDate')} className="w-auto" />
       <Button type="submit" size="sm" variant="outline" disabled={pending}>
         {t('addActionItem')}

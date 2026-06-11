@@ -11,6 +11,13 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 type ProgrammeOption = { id: string; name: string };
 
@@ -54,19 +61,18 @@ export function CohortEditForm({
 
         <div className="space-y-2">
           <Label htmlFor="programmeId">{t('programmes')}</Label>
-          <select
-            id="programmeId"
-            name="programmeId"
-            required
-            defaultValue={cohort.programmeId}
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-          >
-            {programmes.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
-            ))}
-          </select>
+          <Select name="programmeId" required defaultValue={cohort.programmeId}>
+            <SelectTrigger id="programmeId">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {programmes.map((p) => (
+                <SelectItem key={p.id} value={p.id}>
+                  {p.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="space-y-2">
@@ -93,19 +99,18 @@ export function CohortEditForm({
           </div>
           <div className="space-y-2">
             <Label htmlFor="status">{t('status')}</Label>
-            <select
-              id="status"
-              name="status"
-              required
-              defaultValue={cohort.status}
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-            >
-              {statuses.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
+            <Select name="status" required defaultValue={cohort.status}>
+              <SelectTrigger id="status">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {statuses.map((s) => (
+                  <SelectItem key={s} value={s}>
+                    {s}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 

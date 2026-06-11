@@ -6,6 +6,13 @@ import { createCohortForm, type CohortFormState } from '@/features/cohorts/form-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 type ProgrammeOption = { id: string; name: string };
 
@@ -27,18 +34,18 @@ export function CohortCreateForm({ programmes }: { programmes: ProgrammeOption[]
     <form ref={formRef} action={action} className="space-y-4 rounded-lg border p-4">
       <div className="space-y-2">
         <Label htmlFor="programmeId">{t('programmes')}</Label>
-        <select
-          id="programmeId"
-          name="programmeId"
-          required
-          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-        >
-          {programmes.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.name}
-            </option>
-          ))}
-        </select>
+        <Select name="programmeId" required defaultValue={programmes[0]?.id}>
+          <SelectTrigger id="programmeId">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {programmes.map((p) => (
+              <SelectItem key={p.id} value={p.id}>
+                {p.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="space-y-2">

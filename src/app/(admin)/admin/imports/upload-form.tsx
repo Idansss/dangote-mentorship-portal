@@ -7,6 +7,13 @@ import type { ActionResult } from '@/lib/actions/result';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 type UploadState = ActionResult<{ id: string }> | null;
 
@@ -29,30 +36,30 @@ export function UploadForm({ cohorts }: { cohorts: CohortOption[] }) {
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="cohortId">{t('cohort')}</Label>
-          <select
-            id="cohortId"
-            name="cohortId"
-            required
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-          >
-            {cohorts.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
+          <Select name="cohortId" required defaultValue={cohorts[0]?.id}>
+            <SelectTrigger id="cohortId">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {cohorts.map((c) => (
+                <SelectItem key={c.id} value={c.id}>
+                  {c.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <div className="space-y-2">
           <Label htmlFor="targetRole">{t('targetRole')}</Label>
-          <select
-            id="targetRole"
-            name="targetRole"
-            required
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-          >
-            <option value="MENTOR">{t('mentors')}</option>
-            <option value="MENTEE">{t('mentees')}</option>
-          </select>
+          <Select name="targetRole" required defaultValue="MENTOR">
+            <SelectTrigger id="targetRole">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="MENTOR">{t('mentors')}</SelectItem>
+              <SelectItem value="MENTEE">{t('mentees')}</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 

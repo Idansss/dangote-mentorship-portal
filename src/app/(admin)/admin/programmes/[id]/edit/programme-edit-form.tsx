@@ -11,6 +11,13 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 export interface ProgrammeEditValues {
   id: string;
@@ -67,19 +74,18 @@ export function ProgrammeEditForm({
 
         <div className="space-y-2">
           <Label htmlFor="status">{t('status')}</Label>
-          <select
-            id="status"
-            name="status"
-            required
-            defaultValue={programme.status}
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-          >
-            {statuses.map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
+          <Select name="status" required defaultValue={programme.status}>
+            <SelectTrigger id="status">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {statuses.map((s) => (
+                <SelectItem key={s} value={s}>
+                  {s}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {state?.ok ? <p className="text-sm text-primary">{t('updated')}</p> : null}

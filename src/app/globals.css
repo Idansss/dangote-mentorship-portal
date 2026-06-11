@@ -13,22 +13,31 @@
  */
 @layer base {
   :root {
-    /* ── Palette (§1) ── */
-    --bg: 255 255 255; /* #FFFFFF page canvas */
-    --surface: 247 249 247; /* #F7F9F7 cards, raised panels */
-    --surface-2: 238 243 238; /* #EEF3EE nested panels, table headers */
-    --border: 226 232 226; /* #E2E8E2 hairlines, dividers, input borders */
+    /* ── Palette (§1) — "fresh light green" / PulseHR-style depth ──
+     * The canvas is inverted from a flat white page: the PAGE is a light
+     * grey-green and SURFACES (cards, sidebar) are pure white, so white cards
+     * "float" above the canvas with the soft layered shadow (§3). */
+    --bg: 244 247 245; /* #F4F7F5 page canvas (light grey-green) */
+    --surface: 255 255 255; /* #FFFFFF cards, sidebar, raised panels */
+    --surface-2: 238 243 239; /* #EEF3EF nested panels, table headers, hovers */
+    --border: 231 237 232; /* #E7EDE8 hairlines, dividers, input borders */
     --ink: 20 32 26; /* #14201A primary text */
     --ink-2: 74 90 80; /* #4A5A50 secondary text, labels */
     --ink-3: 138 152 143; /* #8A988F muted text, placeholders */
 
-    --green: 30 122 70; /* #1E7A46 PRIMARY brand green */
-    --green-strong: 21 92 52; /* #155C34 hover/pressed */
-    --green-soft: 228 241 233; /* #E4F1E9 selected rows, soft fills, chips */
+    /* Two-step green: a fresh, light brand green for accents (icons, links,
+     * active states, charts, focus rings) and a deeper same-hue tint for any
+     * surface carrying WHITE text (buttons, filled pills, badges) so it clears
+     * WCAG AA. #34A853 → white = 3.06 (AA for icons/large); #288544 → white =
+     * 4.64 (AA for body text). */
+    --green-light: 52 168 83; /* #34A853 brand light — accents, links, active icon */
+    --green: 40 133 68; /* #288544 PRIMARY — buttons, filled pills (white text, AA) */
+    --green-strong: 31 115 56; /* #1F7338 hover/pressed */
+    --green-soft: 230 244 234; /* #E6F4EA selected rows, soft fills, chips */
     --gold: 181 134 42; /* #B5862A recognition / certificates ONLY */
 
     /* Status — functional, not decorative (§1) */
-    --ok: 30 122 70; /* #1E7A46 healthy / completed */
+    --ok: 40 133 68; /* #288544 healthy / completed */
     --warn: 199 122 18; /* #C77A12 needs attention / due soon */
     --risk: 192 57 43; /* #C0392B at risk / overdue / blocked */
     --info: 44 110 143; /* #2C6E8F informational / AI suggestions */
@@ -51,10 +60,10 @@
     --destructive: var(--risk);
     --destructive-foreground: 255 255 255;
     --input: var(--border);
-    --ring: var(--green);
+    --ring: var(--green-light);
 
-    /* ── Radii (§3): 12px cards, 8px controls, 999px pills ── */
-    --radius: 0.75rem; /* 12px — cards (rounded-lg) */
+    /* ── Radii (§3): 16px cards, 10px controls, 999px pills (modern/3D) ── */
+    --radius: 1rem; /* 16px — cards (rounded-lg) */
   }
 }
 
@@ -69,5 +78,62 @@
   /* Tabular figures for stat tiles so numbers don't jitter (§2). */
   .tabular-nums {
     font-variant-numeric: tabular-nums;
+  }
+
+  /* Themed scrollbars (§1) — kept deliberately quiet so the bar barely reads:
+   * a transparent track (no green stripe), a slim neutral thumb that only tints
+   * green on hover, and no native up/down arrow buttons. Firefox uses
+   * scrollbar-width/color; Chromium/WebKit use the pseudo elements. */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--ink-3) / 0.35) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: rgb(var(--ink-3) / 0.35);
+    border-radius: 999px;
+    /* Transparent border + content-box clip leaves breathing room around the
+     * thumb so it looks slim and pill-shaped, not edge-to-edge. */
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(var(--green) / 0.7);
+  }
+  /* Remove the native arrow buttons (single + double, both ends). */
+  ::-webkit-scrollbar-button,
+  ::-webkit-scrollbar-button:single-button,
+  ::-webkit-scrollbar-button:start,
+  ::-webkit-scrollbar-button:end {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}
+
+@layer utilities {
+  /* Faint engineering-grid texture for marketing panels (Atlas-style). Tinted
+   * to the brand green so it reads as part of the system. Pair with a bg colour;
+   * use `bg-grid-light` on dark panels. */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgb(var(--green-light) / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(var(--green-light) / 0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .bg-grid-light {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.08) 1px, transparent 1px);
+    background-size: 40px 40px;
   }
 }

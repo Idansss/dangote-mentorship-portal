@@ -9,6 +9,13 @@ import type { CounterpartOption } from '@/features/meetings/data';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 
 const MEETING_TYPES = Object.values(MeetingType);
@@ -36,33 +43,33 @@ export function ScheduleForm({ counterparts }: { counterparts: CounterpartOption
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1">
           <Label htmlFor="mt-counterpart">{t('with')}</Label>
-          <select
-            id="mt-counterpart"
-            name="counterpartId"
-            required
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-          >
-            {counterparts.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name} ({t(`role.${c.role}`)})
-              </option>
-            ))}
-          </select>
+          <Select name="counterpartId" required defaultValue={counterparts[0]?.id}>
+            <SelectTrigger id="mt-counterpart">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {counterparts.map((c) => (
+                <SelectItem key={c.id} value={c.id}>
+                  {c.name} ({t(`role.${c.role}`)})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <div className="space-y-1">
           <Label htmlFor="mt-type">{t('type')}</Label>
-          <select
-            id="mt-type"
-            name="type"
-            defaultValue={MeetingType.ZOOM}
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-          >
-            {MEETING_TYPES.map((mt) => (
-              <option key={mt} value={mt}>
-                {t(`meetingType.${mt}`)}
-              </option>
-            ))}
-          </select>
+          <Select name="type" defaultValue={MeetingType.ZOOM}>
+            <SelectTrigger id="mt-type">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {MEETING_TYPES.map((mt) => (
+                <SelectItem key={mt} value={mt}>
+                  {t(`meetingType.${mt}`)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <div className="space-y-1 sm:col-span-2">
           <Label htmlFor="mt-title">{t('titleField')}</Label>

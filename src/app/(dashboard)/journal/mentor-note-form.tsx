@@ -6,10 +6,20 @@ import { useTranslations } from 'next-intl';
 import { saveMentorNoteForm, type ReflectionActionState } from '@/features/reflections/actions';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 
 type Lang = 'EN' | 'FR';
 const KINDS = ['observation', 'strength', 'growth', 'followup', 'idea'] as const;
+// Radix Select has no empty-value item; "no category" rides a sentinel that we
+// translate back to '' on the wire via a hidden input.
+const NO_KIND = '__none__';
 
 // Mentor's private note about a mentee (experience-layer.md §1.16). Private to the
 // mentor — never shown to the mentee or admins. The `kind` is optional free
@@ -20,6 +30,7 @@ export function MentorNoteForm({ menteeId, defaultLang }: { menteeId: string; de
   const router = useRouter();
 
   const [body, setBody] = useState('');
+  const [kind, setKind] = useState(NO_KIND);
   const [state, action, pending] = useActionState<ReflectionActionState, FormData>(
     saveMentorNoteForm,
     null,
@@ -28,6 +39,7 @@ export function MentorNoteForm({ menteeId, defaultLang }: { menteeId: string; de
   useEffect(() => {
     if (state?.ok) {
       setBody('');
+      setKind(NO_KIND);
       router.refresh();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -51,28 +63,30 @@ export function MentorNoteForm({ menteeId, defaultLang }: { menteeId: string; de
           <Label htmlFor={`kind-${menteeId}`} className="text-xs">
             {t('noteKind')}
           </Label>
-          <select
-            id={`kind-${menteeId}`}
-            name="kind"
-            className="flex h-9 rounded-md border border-input bg-background px-2 text-sm"
-          >
-            <option value="">{t('noteKindNone')}</option>
-            {KINDS.map((k) => (
-              <option key={k} value={k}>
-                {t(`noteKinds.${k}`)}
-              </option>
-            ))}
-          </select>
+          <input type="hidden" name="kind" value={kind === NO_KIND ? '' : kind} />
+          <Select value={kind} onValueChange={setKind}>
+            <SelectTrigger id={`kind-${menteeId}`} className="h-9 w-auto">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={NO_KIND}>{t('noteKindNone')}</SelectItem>
+              {KINDS.map((k) => (
+                <SelectItem key={k} value={k}>
+                  {t(`noteKinds.${k}`)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
-        <select
-          name="bodyLang"
-          defaultValue={defaultLang}
-          aria-label={t('writtenIn')}
-          className="flex h-9 rounded-md border border-input bg-background px-2 text-sm"
-        >
-          <option value="EN">{tc('english')}</option>
-          <option value="FR">{tc('french')}</option>
-        </select>
+        <Select name="bodyLang" defaultValue={defaultLang}>
+          <SelectTrigger aria-label={t('writtenIn')} className="h-9 w-auto">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="EN">{tc('english')}</SelectItem>
+            <SelectItem value="FR">{tc('french')}</SelectItem>
+          </SelectContent>
+        </Select>
         <Button type="submit" size="sm" disabled={pending || !body.trim()}>
           {pending ? tc('loading') : t('saveNote')}
         </Button>

@@ -126,8 +126,8 @@ export default function DesignSystemPreview() {
 
       <Section title="Typography">
         <div className="space-y-2">
-          <p className="text-display text-ink">Display — Fraunces 36/44</p>
-          <p className="text-h1 font-display text-ink">H1 — Fraunces 28/36</p>
+          <p className="text-display text-ink">Display — Poppins 36/44</p>
+          <p className="text-h1 font-display text-ink">H1 — Poppins 28/36</p>
           <p className="text-h2 text-ink">H2 — Inter 20/28</p>
           <p className="text-h3 text-ink">H3 — Inter 16/24</p>
           <p className="text-body text-ink">Body — Inter 15/24, the default reading size.</p>

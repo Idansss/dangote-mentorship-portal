@@ -6,8 +6,19 @@ import { createInviteForm, type InviteFormState } from '@/features/invites/form-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 type CohortOption = { id: string; name: string };
+
+// Radix Select can't carry an empty-string item value, so "no cohort" uses a
+// sentinel that we translate back to '' on the wire via a hidden input.
+const NO_COHORT = '__none__';
 
 export function InviteCreateForm({
   roles,
@@ -24,10 +35,12 @@ export function InviteCreateForm({
     null,
   );
   const [copied, setCopied] = useState(false);
+  const [cohortId, setCohortId] = useState(NO_COHORT);
 
   useEffect(() => {
     if (state?.ok) {
       formRef.current?.reset();
+      setCohortId(NO_COHORT);
       setCopied(false);
     }
   }, [state]);
@@ -57,33 +70,35 @@ export function InviteCreateForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="roleName">{t('role')}</Label>
-          <select
-            id="roleName"
-            name="roleName"
-            required
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-          >
-            {roles.map((r) => (
-              <option key={r} value={r}>
-                {r}
-              </option>
-            ))}
-          </select>
+          <Select name="roleName" required defaultValue={roles[0]}>
+            <SelectTrigger id="roleName">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {roles.map((r) => (
+                <SelectItem key={r} value={r}>
+                  {r}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <div className="space-y-2">
           <Label htmlFor="cohortId">{t('cohort')}</Label>
-          <select
-            id="cohortId"
-            name="cohortId"
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-          >
-            <option value="">{t('noCohort')}</option>
-            {cohorts.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
+          <input type="hidden" name="cohortId" value={cohortId === NO_COHORT ? '' : cohortId} />
+          <Select value={cohortId} onValueChange={setCohortId}>
+            <SelectTrigger id="cohortId">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={NO_COHORT}>{t('noCohort')}</SelectItem>
+              {cohorts.map((c) => (
+                <SelectItem key={c.id} value={c.id}>
+                  {c.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 

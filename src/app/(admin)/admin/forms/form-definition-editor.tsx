@@ -13,8 +13,19 @@ import { FORM_FIELD_TYPES, type FormField, type FormFieldType } from '@/features
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 type CohortOption = { id: string; name: string };
+
+// Radix Select has no empty-value item; "all roles" rides a sentinel that the
+// hidden input translates back to '' on the wire.
+const ALL_ROLES = '__all__';
 
 type EditableOption = { value: string; labelEn: string; labelFr: string };
 type EditableField = {
@@ -93,6 +104,7 @@ export function FormDefinitionEditor({
   const [fields, setFields] = useState<EditableField[]>(
     initial && initial.fields.length > 0 ? initial.fields.map(toEditable) : [blankField()],
   );
+  const [roleName, setRoleName] = useState<string>(initial?.roleName ?? '');
 
   const action = isEdit ? updateFormDefinitionForm : createFormDefinitionForm;
   const [state, formAction, pending] = useActionState<FormDefinitionFormState, FormData>(action, null);
@@ -154,33 +166,31 @@ export function FormDefinitionEditor({
       <div className="grid gap-4 rounded-lg border border-border bg-surface p-6 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="cohortId">{t('cohort')}</Label>
-          <select
-            id="cohortId"
-            name="cohortId"
-            required
-            defaultValue={initial?.cohortId ?? cohorts[0]?.id}
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            {cohorts.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
+          <Select name="cohortId" required defaultValue={initial?.cohortId ?? cohorts[0]?.id}>
+            <SelectTrigger id="cohortId">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {cohorts.map((c) => (
+                <SelectItem key={c.id} value={c.id}>
+                  {c.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="type">{t('reviewType')}</Label>
-          <select
-            id="type"
-            name="type"
-            required
-            defaultValue={initial?.type ?? ReviewType.MIDTERM}
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <option value={ReviewType.MIDTERM}>{t('midterm')}</option>
-            <option value={ReviewType.FINAL}>{t('final')}</option>
-          </select>
+          <Select name="type" required defaultValue={initial?.type ?? ReviewType.MIDTERM}>
+            <SelectTrigger id="type">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ReviewType.MIDTERM}>{t('midterm')}</SelectItem>
+              <SelectItem value={ReviewType.FINAL}>{t('final')}</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="space-y-2 sm:col-span-2">
@@ -193,17 +203,21 @@ export function FormDefinitionEditor({
 
         <div className="space-y-2">
           <Label htmlFor="roleName">{t('targetRole')}</Label>
-          <select
-            id="roleName"
-            name="roleName"
-            defaultValue={initial?.roleName ?? ''}
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          <input type="hidden" name="roleName" value={roleName} />
+          <Select
+            value={roleName || ALL_ROLES}
+            onValueChange={(v) => setRoleName(v === ALL_ROLES ? '' : v)}
           >
-            <option value="">{t('allRoles')}</option>
-            <option value={RoleName.MENTOR}>{t('roleMentor')}</option>
-            <option value={RoleName.MENTEE}>{t('roleMentee')}</option>
-            <option value={RoleName.REVIEWER}>{t('roleReviewer')}</option>
-          </select>
+            <SelectTrigger id="roleName">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ALL_ROLES}>{t('allRoles')}</SelectItem>
+              <SelectItem value={RoleName.MENTOR}>{t('roleMentor')}</SelectItem>
+              <SelectItem value={RoleName.MENTEE}>{t('roleMentee')}</SelectItem>
+              <SelectItem value={RoleName.REVIEWER}>{t('roleReviewer')}</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <label className="flex items-center gap-2 self-end text-sm">
@@ -296,18 +310,21 @@ export function FormDefinitionEditor({
             <div className="flex flex-wrap items-center gap-4">
               <div className="space-y-1">
                 <Label htmlFor={`${field.id}-type`}>{t('answerType')}</Label>
-                <select
-                  id={`${field.id}-type`}
+                <Select
                   value={field.type}
-                  onChange={(e) => patch(index, { type: e.target.value as FormFieldType })}
-                  className="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  onValueChange={(v) => patch(index, { type: v as FormFieldType })}
                 >
-                  {FORM_FIELD_TYPES.map((ft) => (
-                    <option key={ft} value={ft}>
-                      {fieldTypeLabels[ft]}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger id={`${field.id}-type`} className="w-auto min-w-[12rem]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {FORM_FIELD_TYPES.map((ft) => (
+                      <SelectItem key={ft} value={ft}>
+                        {fieldTypeLabels[ft]}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               {field.type === 'rating' ? (

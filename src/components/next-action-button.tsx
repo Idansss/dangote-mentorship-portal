@@ -47,7 +47,7 @@ export function NextActionButton() {
         {result ? (
           <AIContainer title={t('prompt')}>
             <p>{result.message}</p>
-            <Link href={result.link} className="mt-2 inline-block font-medium text-info hover:underline">
+            <Link href={result.link} className="mt-2 inline-block font-medium text-green hover:underline">
               {t('open')} →
             </Link>
           </AIContainer>

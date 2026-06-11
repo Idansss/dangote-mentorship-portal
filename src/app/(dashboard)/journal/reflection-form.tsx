@@ -11,10 +11,20 @@ import { useFormDraft } from '@/components/use-form-draft';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 
 type Lang = 'EN' | 'FR';
 const PROMPT_KEYS = ['learned', 'action', 'challenge', 'feedback', 'support'] as const;
+// Radix Select has no empty-value item; "no session" rides a sentinel while the
+// form state keeps '' so the hidden input and draft stay unchanged.
+const NO_SESSION = '__none__';
 
 // Mentee's new reflection entry (experience-layer.md §1.16). Autosaves a draft so
 // nothing is lost (§1.11); the post-session prompts are guidance, not required
@@ -101,33 +111,36 @@ export function ReflectionForm({
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="space-y-1">
           <Label htmlFor="rf-session">{t('linkSession')}</Label>
-          <select
-            id="rf-session"
-            name="sessionLogId"
-            value={values.sessionLogId}
-            onChange={(e) => set('sessionLogId', e.target.value)}
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+          <input type="hidden" name="sessionLogId" value={values.sessionLogId} />
+          <Select
+            value={values.sessionLogId || NO_SESSION}
+            onValueChange={(v) => set('sessionLogId', v === NO_SESSION ? '' : v)}
           >
-            <option value="">{t('noSession')}</option>
-            {logOptions.map((o) => (
-              <option key={o.id} value={o.id}>
-                {o.label}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger id="rf-session">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={NO_SESSION}>{t('noSession')}</SelectItem>
+              {logOptions.map((o) => (
+                <SelectItem key={o.id} value={o.id}>
+                  {o.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <div className="space-y-1">
           <Label htmlFor="rf-lang">{t('writtenIn')}</Label>
-          <select
-            id="rf-lang"
-            name="bodyLang"
-            value={values.bodyLang}
-            onChange={(e) => set('bodyLang', e.target.value)}
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-          >
-            <option value="EN">{tc('english')}</option>
-            <option value="FR">{tc('french')}</option>
-          </select>
+          <input type="hidden" name="bodyLang" value={values.bodyLang} />
+          <Select value={values.bodyLang} onValueChange={(v) => set('bodyLang', v)}>
+            <SelectTrigger id="rf-lang">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="EN">{tc('english')}</SelectItem>
+              <SelectItem value="FR">{tc('french')}</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 

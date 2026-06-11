@@ -10,6 +10,13 @@ import {
 } from '@/features/support/actions';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 
 const STATUSES = [
@@ -60,18 +67,18 @@ export function SupportRespondForm({
           <Label htmlFor={`status-${requestId}`} className="text-xs">
             {tc('status')}
           </Label>
-          <select
-            id={`status-${requestId}`}
-            name="status"
-            defaultValue={status}
-            className="flex h-9 rounded-md border border-input bg-background px-2 text-sm"
-          >
-            {STATUSES.map((s) => (
-              <option key={s} value={s}>
-                {t(`status.${s}`)}
-              </option>
-            ))}
-          </select>
+          <Select name="status" defaultValue={status}>
+            <SelectTrigger id={`status-${requestId}`} className="h-9 w-auto">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {STATUSES.map((s) => (
+                <SelectItem key={s} value={s}>
+                  {t(`status.${s}`)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <Button type="submit" size="sm" disabled={pending}>
           {pending ? tc('loading') : t('saveResponse')}

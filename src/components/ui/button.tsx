@@ -11,11 +11,14 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-green text-white hover:bg-green-strong',
-        secondary: 'border border-border bg-bg text-ink hover:bg-surface',
-        outline: 'border border-border bg-bg text-ink hover:bg-surface',
+        // Primary: a subtle top-light gradient + green glow gives the raised,
+        // slightly-3D feel; both gradient stops clear AA against white text.
+        default:
+          'bg-gradient-to-b from-green to-green-strong text-white shadow-glow hover:from-green-strong hover:to-green-strong hover:shadow-elevation active:translate-y-px',
+        secondary: 'border border-border bg-surface text-ink shadow-elevation hover:bg-surface-2',
+        outline: 'border border-border bg-surface text-ink hover:bg-surface-2',
         ghost: 'text-ink hover:bg-surface-2',
-        destructive: 'bg-risk text-white hover:bg-risk/90',
+        destructive: 'bg-risk text-white shadow-elevation hover:bg-risk/90 active:translate-y-px',
         link: 'text-green underline-offset-4 hover:underline',
       },
       size: {

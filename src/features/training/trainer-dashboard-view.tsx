@@ -1,4 +1,5 @@
 import { getTranslations } from 'next-intl/server';
+import { Layers, Users, CheckCircle2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { StatTile } from '@/components/ui/stat-tile';
 import { Progress } from '@/components/ui/progress';
@@ -17,12 +18,17 @@ export async function TrainerDashboardView({ data, lang }: { data: TrainerDashbo
   return (
     <div className="space-y-6">
       <div className="grid gap-4 sm:grid-cols-3">
-        <StatTile label={t('batches')} value={data.totals.batches} />
-        <StatTile label={t('participants')} value={data.totals.participants} />
+        <StatTile label={t('batches')} value={data.totals.batches} icon={<Layers className="size-5" />} />
+        <StatTile
+          label={t('participants')}
+          value={data.totals.participants}
+          icon={<Users className="size-5" />}
+        />
         <StatTile
           label={t('attendanceRate')}
           value={`${data.totals.attendanceRate}%`}
           tone={data.totals.attendanceRate >= 75 ? 'ok' : data.totals.attendanceRate >= 40 ? 'warn' : 'risk'}
+          icon={<CheckCircle2 className="size-5" />}
         />
       </div>
 
