@@ -189,3 +189,7 @@ The first slice of the screen sweep, on the spec's hero screens (the rest follow
 ## Matching — button feedback
 
 - **Approve / Override / Accept / Decline buttons now give feedback (CLAUDE.md §17 error+loading states).** Replaced the bare server-action `<form>` posts (which submitted silently — no pending state, and a failed action like an already-approved match or a blocked cross-language override produced no visible change, so the buttons looked broken) with client wrappers (`match-actions.tsx`) that mirror `RunMatchingButton`: pending labels, success/error toasts, and a refresh. Removed the now-unused void form wrappers; EN/FR strings added.
+
+## AI — OpenAI fallback provider
+
+- **OpenAI fallback for the AI adapter (CLAUDE.md §2 provider-agnostic).** Added `lib/ai/openai.ts` (Chat Completions) and a `withFallback` composer in `lib/ai/index.ts`: Anthropic stays primary, and any call that *throws* (bad key, unavailable model, regional block) is automatically retried on OpenAI. Atlas and every assistant keep working when one provider is down. Extracted the shared translate/summarize/score prompting into `lib/ai/assistant.ts` so both providers behave identically. Configured via the new `OPENAI_API_KEY` / `OPENAI_MODEL` env vars (default `gpt-4o-mini`); with only one key set that provider is used directly, with neither AI degrades gracefully as before.
