@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { prisma } from '@/lib/db/prisma';
 import { Badge } from '@/components/ui/badge';
@@ -34,7 +35,11 @@ export default async function MentorsPage() {
           <TableBody>
             {mentors.map((m) => (
               <TableRow key={m.id}>
-                <TableCell className="font-medium">{m.fullName}</TableCell>
+                <TableCell className="font-medium">
+                  <Link href={`/admin/mentors/${m.id}`} className="text-green hover:text-green-strong hover:underline">
+                    {m.fullName}
+                  </Link>
+                </TableCell>
                 <TableCell>{m.email}</TableCell>
                 <TableCell>
                   <Badge variant="secondary">{m.preferredLanguage}</Badge>

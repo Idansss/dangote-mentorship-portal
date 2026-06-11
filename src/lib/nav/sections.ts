@@ -71,6 +71,7 @@ export async function buildParticipantNavSections(
         { href: '/pair', label: tNav('pair'), icon: 'pair', primary: true },
         { href: '/goals', label: tNav('goals'), icon: 'goals', primary: true },
         { href: '/sessions', label: tNav('sessions'), icon: 'sessions', primary: true },
+        { href: '/messages', label: tNav('messages'), icon: 'messages' },
         { href: '/meetings', label: tNav('meetings'), icon: 'meetings' },
         { href: '/calendar', label: tNav('calendar'), icon: 'calendar' },
         { href: '/journal', label: tNav('journal'), icon: 'journal' },

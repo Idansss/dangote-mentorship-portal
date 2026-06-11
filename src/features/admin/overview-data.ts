@@ -24,6 +24,7 @@ export interface AdminGoalRow {
   competency: string | null;
   status: GoalStatus;
   menteeName: string | null;
+  menteeProfileId: string | null;
   cohortName: string;
   createdAt: Date;
 }
@@ -40,7 +41,7 @@ export async function getProgrammeGoals(): Promise<AdminGoalRow[]> {
       competency: true,
       status: true,
       createdAt: true,
-      mentee: { select: { name: true } },
+      mentee: { select: { name: true, menteeProfile: { select: { id: true } } } },
       cohort: { select: { name: true } },
     },
   });
@@ -51,6 +52,7 @@ export async function getProgrammeGoals(): Promise<AdminGoalRow[]> {
     competency: g.competency,
     status: g.status,
     menteeName: g.mentee.name,
+    menteeProfileId: g.mentee.menteeProfile?.id ?? null,
     cohortName: g.cohort.name,
     createdAt: g.createdAt,
   }));
@@ -64,7 +66,9 @@ export interface AdminMeetingRow {
   type: MeetingType;
   startsAt: Date | null;
   mentorName: string | null;
+  mentorProfileId: string | null;
   menteeName: string | null;
+  menteeProfileId: string | null;
   cohortName: string;
 }
 
@@ -85,8 +89,8 @@ export async function getUpcomingMeetings(): Promise<AdminMeetingRow[]> {
       title: true,
       type: true,
       startsAt: true,
-      mentor: { select: { name: true } },
-      mentee: { select: { name: true } },
+      mentor: { select: { name: true, mentorProfile: { select: { id: true } } } },
+      mentee: { select: { name: true, menteeProfile: { select: { id: true } } } },
       cohort: { select: { name: true } },
     },
   });
@@ -97,7 +101,9 @@ export async function getUpcomingMeetings(): Promise<AdminMeetingRow[]> {
     type: m.type,
     startsAt: m.startsAt,
     mentorName: m.mentor.name,
+    mentorProfileId: m.mentor.mentorProfile?.id ?? null,
     menteeName: m.mentee.name,
+    menteeProfileId: m.mentee.menteeProfile?.id ?? null,
     cohortName: m.cohort.name,
   }));
 }

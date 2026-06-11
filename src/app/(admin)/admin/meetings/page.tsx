@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { getUpcomingMeetings } from '@/features/admin/overview-data';
 import { Badge } from '@/components/ui/badge';
@@ -40,8 +41,24 @@ export default async function AdminMeetingsPage() {
                 <TableCell>
                   <Badge variant="secondary">{m.type}</Badge>
                 </TableCell>
-                <TableCell>{m.mentorName ?? '—'}</TableCell>
-                <TableCell>{m.menteeName ?? '—'}</TableCell>
+                <TableCell>
+                  {m.mentorProfileId ? (
+                    <Link href={`/admin/mentors/${m.mentorProfileId}`} className="text-green hover:text-green-strong hover:underline">
+                      {m.mentorName ?? '—'}
+                    </Link>
+                  ) : (
+                    (m.mentorName ?? '—')
+                  )}
+                </TableCell>
+                <TableCell>
+                  {m.menteeProfileId ? (
+                    <Link href={`/admin/mentees/${m.menteeProfileId}`} className="text-green hover:text-green-strong hover:underline">
+                      {m.menteeName ?? '—'}
+                    </Link>
+                  ) : (
+                    (m.menteeName ?? '—')
+                  )}
+                </TableCell>
                 <TableCell>{m.cohortName}</TableCell>
               </TableRow>
             ))}

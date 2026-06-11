@@ -3,8 +3,10 @@ import { getTranslations } from 'next-intl/server';
 import { RoleName } from '@prisma/client';
 import { getCurrentUser, hasAnyRole } from '@/lib/auth/rbac';
 import { ADMIN_ROLES } from '@/lib/auth/roles';
-import { getUnreadCount } from '@/lib/notifications/data';
+import { getUnreadCount, getUserNotifications } from '@/lib/notifications/data';
+import { getAiAdapter } from '@/lib/ai';
 import { AppShell, type AppShellLabels } from '@/components/shell/app-shell';
+import { AtlasCopilot, type AtlasLabels } from '@/features/copilot/atlas-copilot';
 import { buildAdminNavSections, buildParticipantNavSections } from '@/lib/nav/sections';
 import { QuickActions, type QuickActionItem } from '@/components/quick-actions';
 
@@ -53,12 +55,24 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const user = await getCurrentUser();
   if (!user) redirect('/login');
 
-  const [tNav, tShell, tCommon, unread] = await Promise.all([
+  const [tNav, tShell, tCommon, tCopilot, unread, recentRows] = await Promise.all([
     getTranslations('nav'),
     getTranslations('shell'),
     getTranslations('common'),
+    getTranslations('copilot'),
     getUnreadCount(user.id),
+    getUserNotifications(user.id, 6),
   ]);
+  const copilotLabels: AtlasLabels = {
+    title: tCopilot('title'),
+    subtitle: tCopilot('subtitle'),
+    open: tCopilot('open'),
+    close: tCopilot('close'),
+    placeholder: tCopilot('placeholder'),
+    send: tCopilot('send'),
+    greeting: tCopilot('greeting'),
+    error: tCopilot('error'),
+  };
 
   // Admins reach the shared Notifications / Support / Help / Profile pages (which
   // live in this group) too — give them their admin nav so they don't lose it on
@@ -71,6 +85,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
     brand: tCommon('appName'),
     search: tShell('search'),
     notifications: tNav('notifications'),
+    notificationsTitle: tNav('notifications'),
+    seeAll: tShell('seeAllNotifications'),
+    noNotifications: tShell('noNotifications'),
     signOut: tCommon('signOut'),
     openMenu: tShell('openMenu'),
     closeMenu: tShell('closeMenu'),
@@ -79,10 +96,19 @@ export default async function DashboardLayout({ children }: { children: React.Re
     more: tShell('more'),
   };
 
+  const recent = recentRows.map((n) => ({
+    id: n.id,
+    title: n.title,
+    body: n.body,
+    link: n.link,
+    read: n.readAt !== null,
+  }));
+
   return (
     <AppShell
       sections={sections}
       unread={unread}
+      recent={recent}
       user={{
         name: user.name ?? user.email,
         roleLabel: user.roles.map(roleLabelOf).join(' · '),
@@ -92,6 +118,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     >
       {children}
       <QuickActions items={quickActionsFor(user.roles)} />
+      <AtlasCopilot enabled={getAiAdapter().enabled} raised labels={copilotLabels} />
     </AppShell>
   );
 }

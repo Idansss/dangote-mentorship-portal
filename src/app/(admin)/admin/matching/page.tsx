@@ -1,8 +1,10 @@
+import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { CohortStatus, MatchStatus } from '@prisma/client';
 import { prisma } from '@/lib/db/prisma';
 import { getCurrentUser } from '@/lib/auth/rbac';
-import { approveMatchForm, overrideMatchForm, runMatchingForm } from '@/features/matching/actions';
+import { approveMatchForm, overrideMatchForm } from '@/features/matching/actions';
+import { RunMatchingButton } from '@/features/matching/run-matching-button';
 import { getPairsTimeline } from '@/features/matching/timeline';
 import { PairsTimelineView } from '@/features/matching/pairs-timeline';
 import { Badge } from '@/components/ui/badge';
@@ -36,8 +38,8 @@ export default async function MatchingPage() {
       where: { cohortId: cohort.id, status: MatchStatus.SUGGESTED, deletedAt: null },
       orderBy: { score: 'desc' },
       include: {
-        mentor: { select: { id: true, name: true } },
-        mentee: { select: { id: true, name: true } },
+        mentor: { select: { id: true, name: true, mentorProfile: { select: { id: true } } } },
+        mentee: { select: { id: true, name: true, menteeProfile: { select: { id: true } } } },
       },
     }),
     getPairsTimeline(cohort.id),
@@ -63,10 +65,17 @@ export default async function MatchingPage() {
           <h1 className="font-display text-h1 font-medium text-ink">{t('title')}</h1>
           <p className="text-body text-ink-2">{cohort.name}</p>
         </div>
-        <form action={runMatchingForm}>
-          <input type="hidden" name="cohortId" value={cohort.id} />
-          <Button type="submit">{t('run')}</Button>
-        </form>
+        <RunMatchingButton
+          cohortId={cohort.id}
+          labels={{
+            run: t('run'),
+            running: t('running'),
+            doneTitle: t('runDoneTitle'),
+            done: t('runDone'),
+            allMatched: t('runAllMatched'),
+            errorTitle: t('runErrorTitle'),
+          }}
+        />
       </header>
 
       <p className="text-small text-ink-2">{t('runHint')}</p>
@@ -85,7 +94,17 @@ export default async function MatchingPage() {
               <Card key={menteeId}>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-h3">
-                    {t('suggestionsFor')} {first.mentee.name}
+                    {t('suggestionsFor')}{' '}
+                    {first.mentee.menteeProfile ? (
+                      <Link
+                        href={`/admin/mentees/${first.mentee.menteeProfile.id}`}
+                        className="text-green hover:text-green-strong hover:underline"
+                      >
+                        {first.mentee.name}
+                      </Link>
+                    ) : (
+                      first.mentee.name
+                    )}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
@@ -96,7 +115,16 @@ export default async function MatchingPage() {
                     >
                       <div className="min-w-0 flex-1 space-y-1">
                         <p className="flex items-center gap-2 font-medium text-ink">
-                          {s.mentor.name}
+                          {s.mentor.mentorProfile ? (
+                            <Link
+                              href={`/admin/mentors/${s.mentor.mentorProfile.id}`}
+                              className="text-green hover:text-green-strong hover:underline"
+                            >
+                              {s.mentor.name}
+                            </Link>
+                          ) : (
+                            s.mentor.name
+                          )}
                           <Badge variant="ok">
                             {t('score')}: {Math.round(s.score)}
                           </Badge>

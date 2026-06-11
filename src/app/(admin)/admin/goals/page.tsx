@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { getProgrammeGoals } from '@/features/admin/overview-data';
 import { Badge } from '@/components/ui/badge';
@@ -34,7 +35,15 @@ export default async function AdminGoalsPage() {
           <TableBody>
             {goals.map((g) => (
               <TableRow key={g.id}>
-                <TableCell className="font-medium">{g.menteeName ?? '—'}</TableCell>
+                <TableCell className="font-medium">
+                  {g.menteeProfileId ? (
+                    <Link href={`/admin/mentees/${g.menteeProfileId}`} className="text-green hover:text-green-strong hover:underline">
+                      {g.menteeName ?? '—'}
+                    </Link>
+                  ) : (
+                    (g.menteeName ?? '—')
+                  )}
+                </TableCell>
                 <TableCell>{g.title}</TableCell>
                 <TableCell>{g.competency ?? '—'}</TableCell>
                 <TableCell>

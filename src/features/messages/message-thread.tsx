@@ -1,0 +1,139 @@
+'use client';
+
+import * as React from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, Send } from 'lucide-react';
+import { sendMessage } from './actions';
+import { cn } from '@/lib/utils';
+import type { ThreadMessage } from './data';
+
+export interface ThreadLabels {
+  placeholder: string;
+  send: string;
+  empty: string;
+  back: string;
+}
+
+// Client thread: renders the message history and a composer. Sends via the
+// sendMessage server action with an optimistic append, then refreshes so the
+// canonical server state (and read cursors) reconcile.
+export function MessageThread({
+  conversationId,
+  otherName,
+  initialMessages,
+  labels,
+}: {
+  conversationId: string;
+  otherName: string | null;
+  initialMessages: ThreadMessage[];
+  labels: ThreadLabels;
+}) {
+  const router = useRouter();
+  const [messages, setMessages] = React.useState<ThreadMessage[]>(initialMessages);
+  const [input, setInput] = React.useState('');
+  const [pending, setPending] = React.useState(false);
+  const listRef = React.useRef<HTMLDivElement>(null);
+
+  // Reconcile when the server sends fresh props (after refresh / navigation).
+  React.useEffect(() => {
+    setMessages(initialMessages);
+  }, [initialMessages]);
+
+  React.useEffect(() => {
+    listRef.current?.scrollTo({ top: listRef.current.scrollHeight });
+  }, [messages]);
+
+  async function submit() {
+    const body = input.trim();
+    if (!body || pending) return;
+    setPending(true);
+    // Optimistic append.
+    const optimistic: ThreadMessage = {
+      id: `tmp-${Date.now()}`,
+      mine: true,
+      senderName: null,
+      body,
+      createdAt: new Date(),
+    };
+    setMessages((m) => [...m, optimistic]);
+    setInput('');
+    try {
+      const res = await sendMessage({ conversationId, body });
+      if (!res.ok) {
+        // Roll back the optimistic message on failure.
+        setMessages((m) => m.filter((x) => x.id !== optimistic.id));
+        setInput(body);
+      } else {
+        router.refresh();
+      }
+    } finally {
+      setPending(false);
+    }
+  }
+
+  function onKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      void submit();
+    }
+  }
+
+  return (
+    <section className="flex h-[70vh] flex-col overflow-hidden rounded-2xl border border-border bg-surface">
+      {/* Header */}
+      <div className="flex items-center gap-3 border-b border-border px-4 py-3">
+        <Link href="/messages" className="rounded-md p-1.5 text-ink-2 hover:bg-surface-2 lg:hidden" aria-label={labels.back}>
+          <ArrowLeft className="size-5" />
+        </Link>
+        <span className="flex size-9 items-center justify-center rounded-full bg-green-soft text-small font-semibold text-green-strong">
+          {(otherName ?? '?').slice(0, 1).toUpperCase()}
+        </span>
+        <p className="font-display text-h3 font-semibold text-ink">{otherName ?? '—'}</p>
+      </div>
+
+      {/* Messages */}
+      <div ref={listRef} className="flex-1 space-y-2 overflow-y-auto p-4">
+        {messages.length === 0 ? (
+          <p className="py-10 text-center text-small text-ink-3">{labels.empty}</p>
+        ) : (
+          messages.map((m) => (
+            <div key={m.id} className={cn('flex', m.mine ? 'justify-end' : 'justify-start')}>
+              <div
+                className={cn(
+                  'max-w-[80%] whitespace-pre-line rounded-2xl px-3 py-2 text-small',
+                  m.mine ? 'bg-green text-white' : 'bg-surface-2 text-ink',
+                )}
+              >
+                {m.body}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Composer */}
+      <div className="border-t border-border p-3">
+        <div className="flex items-end gap-2">
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={onKeyDown}
+            rows={1}
+            placeholder={labels.placeholder}
+            className="max-h-28 min-h-[2.5rem] flex-1 resize-none rounded-md border border-border bg-bg px-3 py-2 text-small text-ink placeholder:text-ink-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green/30"
+          />
+          <button
+            type="button"
+            onClick={() => void submit()}
+            disabled={pending || input.trim() === ''}
+            aria-label={labels.send}
+            className="flex size-10 shrink-0 items-center justify-center rounded-md bg-green text-white transition-colors hover:bg-green-strong disabled:opacity-50"
+          >
+            <Send className="size-4" />
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}

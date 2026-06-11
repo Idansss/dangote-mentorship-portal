@@ -1,0 +1,158 @@
+import 'server-only';
+import { ConversationType } from '@prisma/client';
+import { prisma } from '@/lib/db/prisma';
+import { getMentorPairings, getMenteePairing } from '@/lib/pairings';
+
+// Direct messaging reads (CLAUDE.md §10). DMs are default-provisioned for each
+// matched mentor↔mentee pair. Confidentiality (§10): only the two participants
+// can read a conversation — admins are never participants, so they cannot read
+// content here (they see metadata elsewhere). Realtime, attachments, and the
+// per-message translate toggle are deferred to a later slice.
+
+export interface ConversationSummary {
+  id: string;
+  otherName: string | null;
+  lastMessage: string | null;
+  lastAt: Date | null;
+  unread: number;
+}
+
+export interface ThreadMessage {
+  id: string;
+  mine: boolean;
+  senderName: string | null;
+  body: string;
+  createdAt: Date;
+}
+
+export interface Thread {
+  id: string;
+  otherName: string | null;
+  messages: ThreadMessage[];
+}
+
+/** Provision a DIRECT conversation for each of the user's accepted pairings. */
+export async function ensureDirectConversations(userId: string): Promise<void> {
+  const pairs: { cohortId: string; otherId: string }[] = [];
+  for (const p of await getMentorPairings(userId)) {
+    pairs.push({ cohortId: p.cohortId, otherId: p.menteeId });
+  }
+  const asMentee = await getMenteePairing(userId);
+  if (asMentee) pairs.push({ cohortId: asMentee.cohortId, otherId: asMentee.mentorId });
+
+  for (const { cohortId, otherId } of pairs) {
+    // "exactly these two" = every participant is in {me, other} AND both present.
+    const existing = await prisma.conversation.findFirst({
+      where: {
+        type: ConversationType.DIRECT,
+        cohortId,
+        deletedAt: null,
+        participants: { every: { userId: { in: [userId, otherId] } } },
+        AND: [
+          { participants: { some: { userId } } },
+          { participants: { some: { userId: otherId } } },
+        ],
+      },
+      select: { id: true },
+    });
+    if (!existing) {
+      await prisma.conversation.create({
+        data: {
+          cohortId,
+          type: ConversationType.DIRECT,
+          participants: { create: [{ userId }, { userId: otherId }] },
+        },
+      });
+    }
+  }
+}
+
+export async function listConversations(userId: string): Promise<ConversationSummary[]> {
+  const parts = await prisma.conversationParticipant.findMany({
+    where: { userId, deletedAt: null, conversation: { deletedAt: null } },
+    include: {
+      conversation: {
+        include: {
+          participants: {
+            where: { userId: { not: userId } },
+            include: { user: { select: { name: true } } },
+          },
+          messages: { where: { deletedAt: null }, orderBy: { createdAt: 'desc' }, take: 1 },
+        },
+      },
+    },
+  });
+
+  const summaries = await Promise.all(
+    parts.map(async (p) => {
+      const c = p.conversation;
+      const last = c.messages[0] ?? null;
+      const unread = await prisma.message.count({
+        where: {
+          conversationId: c.id,
+          deletedAt: null,
+          senderId: { not: userId },
+          reads: { none: { userId } },
+        },
+      });
+      return {
+        id: c.id,
+        otherName: c.participants[0]?.user.name ?? null,
+        lastMessage: last?.bodyOriginal ?? null,
+        lastAt: last?.createdAt ?? c.updatedAt,
+        unread,
+      };
+    }),
+  );
+
+  summaries.sort((a, b) => (b.lastAt?.getTime() ?? 0) - (a.lastAt?.getTime() ?? 0));
+  return summaries;
+}
+
+/** A conversation the user participates in, or null (also covers authz). */
+export async function getThread(conversationId: string, userId: string): Promise<Thread | null> {
+  const convo = await prisma.conversation.findFirst({
+    where: { id: conversationId, deletedAt: null, participants: { some: { userId } } },
+    include: {
+      participants: {
+        where: { userId: { not: userId } },
+        include: { user: { select: { name: true } } },
+      },
+      messages: {
+        where: { deletedAt: null },
+        orderBy: { createdAt: 'asc' },
+        include: { sender: { select: { name: true } } },
+      },
+    },
+  });
+  if (!convo) return null;
+  return {
+    id: convo.id,
+    otherName: convo.participants[0]?.user.name ?? null,
+    messages: convo.messages.map((m) => ({
+      id: m.id,
+      mine: m.senderId === userId,
+      senderName: m.sender.name,
+      body: m.bodyOriginal,
+      createdAt: m.createdAt,
+    })),
+  };
+}
+
+/** Mark every message the user hasn't read in a conversation as read. */
+export async function markConversationRead(conversationId: string, userId: string): Promise<void> {
+  const unread = await prisma.message.findMany({
+    where: {
+      conversationId,
+      deletedAt: null,
+      senderId: { not: userId },
+      reads: { none: { userId } },
+    },
+    select: { id: true },
+  });
+  if (unread.length === 0) return;
+  await prisma.messageRead.createMany({
+    data: unread.map((m) => ({ messageId: m.id, userId })),
+    skipDuplicates: true,
+  });
+}

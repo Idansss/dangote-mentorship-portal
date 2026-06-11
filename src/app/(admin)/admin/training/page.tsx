@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import { RoleName } from '@prisma/client';
 import { getTranslations } from 'next-intl/server';
 import { getTrainingOverview } from '@/features/admin/overview-data';
 import { Badge } from '@/components/ui/badge';
@@ -51,7 +53,14 @@ export default async function AdminTrainingPage() {
           <TableBody>
             {overview.rows.map((r) => (
               <TableRow key={`${r.role}-${r.id}`}>
-                <TableCell className="font-medium">{r.name}</TableCell>
+                <TableCell className="font-medium">
+                  <Link
+                    href={`/admin/${r.role === RoleName.MENTOR ? 'mentors' : 'mentees'}/${r.id}`}
+                    className="text-green hover:text-green-strong hover:underline"
+                  >
+                    {r.name}
+                  </Link>
+                </TableCell>
                 <TableCell>{r.role}</TableCell>
                 <TableCell>
                   <Badge variant="secondary">{r.language}</Badge>

@@ -2,8 +2,10 @@ import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { getCurrentUser, hasAnyRole } from '@/lib/auth/rbac';
 import { ADMIN_ROLES } from '@/lib/auth/roles';
-import { getUnreadCount } from '@/lib/notifications/data';
+import { getUnreadCount, getUserNotifications } from '@/lib/notifications/data';
+import { getAiAdapter } from '@/lib/ai';
 import { AppShell, type AppShellLabels } from '@/components/shell/app-shell';
+import { AtlasCopilot, type AtlasLabels } from '@/features/copilot/atlas-copilot';
 import { buildAdminNavSections } from '@/lib/nav/sections';
 
 function initialsOf(name?: string | null, email?: string): string {
@@ -28,12 +30,24 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (!user) redirect('/login');
   if (!hasAnyRole(user, ADMIN_ROLES)) redirect('/dashboard');
 
-  const [tNav, tShell, tCommon, unread] = await Promise.all([
+  const [tNav, tShell, tCommon, tCopilot, unread, recentRows] = await Promise.all([
     getTranslations('nav'),
     getTranslations('shell'),
     getTranslations('common'),
+    getTranslations('copilot'),
     getUnreadCount(user.id),
+    getUserNotifications(user.id, 6),
   ]);
+  const copilotLabels: AtlasLabels = {
+    title: tCopilot('title'),
+    subtitle: tCopilot('subtitle'),
+    open: tCopilot('open'),
+    close: tCopilot('close'),
+    placeholder: tCopilot('placeholder'),
+    send: tCopilot('send'),
+    greeting: tCopilot('greeting'),
+    error: tCopilot('error'),
+  };
 
   const sections = await buildAdminNavSections(unread);
 
@@ -41,6 +55,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     brand: tCommon('appName'),
     search: tShell('search'),
     notifications: tNav('notifications'),
+    notificationsTitle: tNav('notifications'),
+    seeAll: tShell('seeAllNotifications'),
+    noNotifications: tShell('noNotifications'),
     signOut: tCommon('signOut'),
     openMenu: tShell('openMenu'),
     closeMenu: tShell('closeMenu'),
@@ -49,10 +66,19 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     more: tShell('more'),
   };
 
+  const recent = recentRows.map((n) => ({
+    id: n.id,
+    title: n.title,
+    body: n.body,
+    link: n.link,
+    read: n.readAt !== null,
+  }));
+
   return (
     <AppShell
       sections={sections}
       unread={unread}
+      recent={recent}
       user={{
         name: user.name ?? user.email,
         roleLabel: user.roles.map(roleLabelOf).join(' · '),
@@ -61,6 +87,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       labels={labels}
     >
       {children}
+      <AtlasCopilot enabled={getAiAdapter().enabled} labels={copilotLabels} />
     </AppShell>
   );
 }

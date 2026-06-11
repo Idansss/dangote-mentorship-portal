@@ -17,6 +17,7 @@ import {
   LifeBuoy,
   HelpCircle,
   Bell,
+  MessageSquare,
   FolderKanban,
   Layers,
   Upload,
@@ -29,13 +30,13 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-  Search,
   LogOut,
   type LucideIcon,
 } from 'lucide-react';
 import { signOutAction } from '@/lib/auth/actions';
 import { LocaleSwitcher } from '@/components/locale-switcher';
 import { Wordmark } from '@/components/wordmark';
+import { GlobalSearch } from '@/components/shell/global-search';
 import { cn } from '@/lib/utils';
 
 // AppShell (§19 §3) — the authenticated chrome shared by the participant and
@@ -58,6 +59,7 @@ export type IconKey =
   | 'support'
   | 'help'
   | 'notifications'
+  | 'messages'
   | 'programmes'
   | 'cohorts'
   | 'imports'
@@ -83,6 +85,7 @@ const ICONS: Record<IconKey, LucideIcon> = {
   support: LifeBuoy,
   help: HelpCircle,
   notifications: Bell,
+  messages: MessageSquare,
   programmes: FolderKanban,
   cohorts: Layers,
   imports: Upload,
@@ -115,12 +118,23 @@ export interface AppShellLabels {
   brand: string;
   search: string;
   notifications: string;
+  notificationsTitle: string;
+  seeAll: string;
+  noNotifications: string;
   signOut: string;
   openMenu: string;
   closeMenu: string;
   collapse: string;
   expand: string;
   more: string;
+}
+
+export interface NotifItem {
+  id: string;
+  title: string;
+  body: string | null;
+  link: string | null;
+  read: boolean;
 }
 
 export interface AppShellUser {
@@ -133,6 +147,7 @@ export interface AppShellProps {
   sections: NavSection[];
   user: AppShellUser;
   unread: number;
+  recent: NotifItem[];
   labels: AppShellLabels;
   children: React.ReactNode;
 }
@@ -144,10 +159,16 @@ function isActive(pathname: string, href: string, exact?: boolean): boolean {
   return href !== '/' && pathname.startsWith(href + '/');
 }
 
-export function AppShell({ sections, user, unread, labels, children }: AppShellProps) {
+export function AppShell({ sections, user, unread, recent, labels, children }: AppShellProps) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [notifOpen, setNotifOpen] = React.useState(false);
+
+  // Close the notification dropdown on route change.
+  React.useEffect(() => {
+    setNotifOpen(false);
+  }, [pathname]);
 
   // Persist the desktop collapse preference so it doesn't reset on navigation.
   React.useEffect(() => {
@@ -316,30 +337,80 @@ export function AppShell({ sections, user, unread, labels, children }: AppShellP
             <Menu className="size-5" />
           </button>
 
-          {/* Search (visual placeholder for the upcoming command palette) */}
-          <div className="relative hidden max-w-md flex-1 sm:block">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-ink-3" />
-            <input
-              type="search"
-              placeholder={labels.search}
-              className="h-10 w-full rounded-md border border-border bg-surface pl-9 pr-3 text-body text-ink placeholder:text-ink-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green/30"
-            />
-          </div>
+          {/* Global search — pages (client-side) + RBAC-scoped records (admins). */}
+          <GlobalSearch navItems={allItems.map((i) => ({ label: i.label, href: i.href }))} />
 
           <div className="ml-auto flex items-center gap-2">
             <LocaleSwitcher />
-            <Link
-              href="/notifications"
-              aria-label={labels.notifications}
-              className="relative rounded-md p-2 text-ink-2 hover:bg-surface-2"
-            >
-              <Bell className="size-5" />
-              {unread > 0 && (
-                <span className="absolute right-1 top-1 inline-flex min-w-4 items-center justify-center rounded-full bg-risk px-1 text-[0.625rem] font-semibold leading-none text-white">
-                  {unread > 9 ? '9+' : unread}
-                </span>
+            <div className="relative">
+              <button
+                type="button"
+                aria-label={labels.notifications}
+                aria-expanded={notifOpen}
+                onClick={() => setNotifOpen((o) => !o)}
+                className="relative rounded-md p-2 text-ink-2 hover:bg-surface-2"
+              >
+                <Bell className="size-5" />
+                {unread > 0 && (
+                  <span className="absolute right-1 top-1 inline-flex min-w-4 items-center justify-center rounded-full bg-risk px-1 text-[0.625rem] font-semibold leading-none text-white">
+                    {unread > 9 ? '9+' : unread}
+                  </span>
+                )}
+              </button>
+
+              {notifOpen && (
+                <>
+                  {/* Click-away backdrop */}
+                  <div
+                    aria-hidden
+                    className="fixed inset-0 z-40"
+                    onClick={() => setNotifOpen(false)}
+                  />
+                  <div className="absolute right-0 z-50 mt-2 w-80 overflow-hidden rounded-xl border border-border bg-surface shadow-elevation-lg">
+                    <div className="border-b border-border px-4 py-3">
+                      <p className="text-small font-semibold text-ink">{labels.notificationsTitle}</p>
+                    </div>
+                    {recent.length === 0 ? (
+                      <p className="px-4 py-6 text-center text-small text-ink-3">{labels.noNotifications}</p>
+                    ) : (
+                      <ul className="max-h-80 divide-y divide-border overflow-y-auto">
+                        {recent.map((n) => {
+                          const inner = (
+                            <div className="flex items-start gap-2">
+                              {!n.read && (
+                                <span aria-hidden className="mt-1.5 size-2 shrink-0 rounded-full bg-green" />
+                              )}
+                              <div className={cn('min-w-0', n.read && 'pl-4')}>
+                                <p className="truncate text-small font-medium text-ink">{n.title}</p>
+                                {n.body && <p className="line-clamp-2 text-micro text-ink-2">{n.body}</p>}
+                              </div>
+                            </div>
+                          );
+                          return (
+                            <li key={n.id} className={cn('px-4 py-3', !n.read && 'bg-green-soft/40')}>
+                              {n.link ? (
+                                <Link href={n.link} onClick={() => setNotifOpen(false)} className="block hover:opacity-80">
+                                  {inner}
+                                </Link>
+                              ) : (
+                                inner
+                              )}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                    <Link
+                      href="/notifications"
+                      onClick={() => setNotifOpen(false)}
+                      className="block border-t border-border px-4 py-3 text-center text-small font-medium text-green-strong hover:bg-surface-2"
+                    >
+                      {labels.seeAll}
+                    </Link>
+                  </div>
+                </>
               )}
-            </Link>
+            </div>
             <Link
               href="/profile"
               className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 hover:bg-surface-2"

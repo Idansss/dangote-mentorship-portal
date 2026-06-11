@@ -118,6 +118,27 @@
   ::-webkit-scrollbar-corner {
     background: transparent;
   }
+
+  /* Native form controls on-brand (§19): `accent-color` recolours the browser's
+   * native date-picker selected day (was default blue), plus native
+   * checkboxes/radios/range/progress, to the primary green. `color-scheme: light`
+   * keeps the picker on a light surface so it reads with the rest of the UI. */
+  :root {
+    accent-color: rgb(var(--green));
+    color-scheme: light;
+  }
+  /* Tint the date/time field's calendar icon green so the trigger matches the
+   * scheme (the popup itself is browser chrome and can't be styled directly).
+   * The filter maps the default near-black glyph onto ~#288544. */
+  input[type='date']::-webkit-calendar-picker-indicator,
+  input[type='time']::-webkit-calendar-picker-indicator,
+  input[type='datetime-local']::-webkit-calendar-picker-indicator,
+  input[type='month']::-webkit-calendar-picker-indicator,
+  input[type='week']::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(40%) sepia(64%) saturate(489%) hue-rotate(93deg) brightness(92%)
+      contrast(88%);
+  }
 }
 
 @layer utilities {
