@@ -4,10 +4,8 @@ import { DashboardHeader } from '@/components/dashboard/dashboard-header';
 import { MentorSummary } from '@/components/dashboard/mentor-summary';
 import { JourneyRail } from '@/components/journey-rail';
 import { NextActionButton } from '@/components/next-action-button';
-import { OnboardingTour } from '@/components/onboarding-tour';
 import { getJourney } from '@/features/journey/data';
 import { getMentorDashboard } from '@/features/dashboard/data';
-import { MatchPanel } from '@/features/matching/match-panel';
 
 export default async function MentorDashboardPage() {
   const user = await requireRole(RoleName.MENTOR);
@@ -18,11 +16,9 @@ export default async function MentorDashboardPage() {
   return (
     <div className="space-y-6">
       <DashboardHeader titleKey="mentor" userName={user.name} roles={user.roles} />
-      <OnboardingTour role="mentor" />
-      <JourneyRail result={journey} />
-      <NextActionButton />
-      <MatchPanel userId={user.id} role="mentor" />
       <MentorSummary data={dashboard} />
+      <NextActionButton />
+      <JourneyRail result={journey} />
     </div>
   );
 }
