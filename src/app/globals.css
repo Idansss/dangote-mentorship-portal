@@ -1,16 +1,121 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+/* tailwindcss-animate (used by tailwindcss/shadcn primitives). v4 loads plugins
+ * from CSS rather than the (now-removed) tailwind.config.ts. */
+@plugin 'tailwindcss-animate';
+
+/* Tailwind v4 is class-based dark mode (parity with the old `darkMode: ['class']`).
+ * Dark theme is still out of scope for v1; this just wires the variant. */
+@custom-variant dark (&:where(.dark, .dark *));
 
 /*
- * Design System (§19 — docs/design-system.md). Single source of truth for the
- * palette, radii, and elevation. Tokens are stored as space-separated RGB
- * channels (hex in the comment) so Tailwind's alpha modifiers work, e.g.
- * `bg-green/90`, `ring-green/20`. shadcn's semantic names are aliased onto these
- * tokens so every existing primitive is themed without ad-hoc values (§4: no raw
- * defaults). Dark mode is out of scope for v1 — tokens are structured so a dark
- * theme can be added later (§1).
+ * Design tokens (§19 — docs/design-system.md). Migrated from tailwind.config.ts
+ * to Tailwind v4's CSS-first `@theme`. The raw palette lives as space-separated
+ * RGB channels in `:root` below (hex in the comment) so both Tailwind alpha
+ * modifiers (`bg-green/90`) AND hand-written `rgb(var(--green) / 0.7)` values in
+ * components keep working. `@theme inline` maps those channels to `--color-*`
+ * utilities; because the values are real colors, v4 derives alpha via color-mix.
+ * shadcn's semantic names are aliased onto the same tokens so every primitive is
+ * themed without raw defaults (§4). Dark mode is structured-for but not enabled.
  */
+@theme inline {
+  /* ── Palette utilities (§1) ── */
+  --color-bg: rgb(var(--bg));
+  --color-surface: rgb(var(--surface));
+  --color-surface-2: rgb(var(--surface-2));
+  --color-ink: rgb(var(--ink));
+  --color-ink-2: rgb(var(--ink-2));
+  --color-ink-3: rgb(var(--ink-3));
+  --color-green: rgb(var(--green));
+  --color-green-light: rgb(var(--green-light));
+  --color-green-strong: rgb(var(--green-strong));
+  --color-green-soft: rgb(var(--green-soft));
+  --color-gold: rgb(var(--gold));
+  --color-ok: rgb(var(--ok));
+  --color-warn: rgb(var(--warn));
+  --color-risk: rgb(var(--risk));
+  --color-info: rgb(var(--info));
+
+  /* ── shadcn semantic aliases (themed onto the palette) ── */
+  --color-border: rgb(var(--border));
+  --color-input: rgb(var(--input));
+  --color-ring: rgb(var(--ring));
+  --color-background: rgb(var(--background));
+  --color-foreground: rgb(var(--foreground));
+  --color-primary: rgb(var(--primary));
+  --color-primary-foreground: rgb(var(--primary-foreground));
+  --color-secondary: rgb(var(--secondary));
+  --color-secondary-foreground: rgb(var(--secondary-foreground));
+  --color-destructive: rgb(var(--destructive));
+  --color-destructive-foreground: rgb(var(--destructive-foreground));
+  --color-muted: rgb(var(--muted));
+  --color-muted-foreground: rgb(var(--muted-foreground));
+  --color-accent: rgb(var(--accent));
+  --color-accent-foreground: rgb(var(--accent-foreground));
+  --color-popover: rgb(var(--popover));
+  --color-popover-foreground: rgb(var(--popover-foreground));
+  --color-card: rgb(var(--card));
+  --color-card-foreground: rgb(var(--card-foreground));
+
+  /* ── Typography (§2). One grotesque for everything (Atlas-style): Inter for
+   * headings (heavy weights) and body/UI, self-hosted via next/font. ── */
+  --font-display: var(--font-inter), system-ui, sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+
+  /* Type scale (§2) — headings run heavy: big titles extrabold, sub-heads bold. */
+  --text-display: 2.25rem; /* 36/44 */
+  --text-display--line-height: 2.75rem;
+  --text-display--font-weight: 800;
+  --text-h1: 1.75rem; /* 28/36 */
+  --text-h1--line-height: 2.25rem;
+  --text-h1--font-weight: 700;
+  --text-h2: 1.25rem; /* 20/28 */
+  --text-h2--line-height: 1.75rem;
+  --text-h2--font-weight: 700;
+  --text-h3: 1rem; /* 16/24 */
+  --text-h3--line-height: 1.5rem;
+  --text-h3--font-weight: 600;
+  --text-body: 0.9375rem; /* 15/24 */
+  --text-body--line-height: 1.5rem;
+  --text-small: 0.8125rem; /* 13/20 */
+  --text-small--line-height: 1.25rem;
+  --text-micro: 0.6875rem; /* 11/16 */
+  --text-micro--line-height: 1rem;
+  --text-micro--letter-spacing: 0.04em;
+  --text-micro--font-weight: 600;
+
+  /* ── Radii (§3): 16px cards, 10px controls, 8px sm, 999px pills ── */
+  --radius-lg: var(--radius); /* 16px — cards (rounded-lg) */
+  --radius-md: calc(var(--radius) - 6px); /* 10px controls */
+  --radius-sm: calc(var(--radius) - 8px); /* 8px */
+
+  /* ── Soft layered elevation (§3): white cards "float" over the light canvas.
+   * `elevation-lg` is the raised/hover state; `glow` is the green ambient shadow
+   * under primary buttons and the active nav pill. ── */
+  --shadow-elevation: 0 1px 2px rgba(16, 42, 26, 0.04), 0 8px 24px -6px rgba(16, 42, 26, 0.08);
+  --shadow-elevation-lg: 0 2px 4px rgba(16, 42, 26, 0.05), 0 18px 40px -10px rgba(16, 42, 26, 0.13);
+  --shadow-glow: 0 6px 16px -4px rgba(40, 133, 68, 0.45);
+}
+
+/* Centered content container (§3) — replaces the v3 `theme.container` config:
+ * centered, 1.5rem gutters, capped at ~1280px from the xl breakpoint up. */
+@utility container {
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+  @media (width >= 640px) {
+    max-width: 640px;
+  }
+  @media (width >= 768px) {
+    max-width: 768px;
+  }
+  @media (width >= 1024px) {
+    max-width: 1024px;
+  }
+  @media (width >= 1280px) {
+    max-width: 1280px;
+  }
+}
+
 @layer base {
   :root {
     /* ── Palette — STITCH REDESIGN (docs/stitch-redesign.md) ──
