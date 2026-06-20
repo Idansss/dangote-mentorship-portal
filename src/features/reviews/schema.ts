@@ -139,7 +139,7 @@ const answersJson = z
       return z.NEVER;
     }
   })
-  .pipe(z.record(z.unknown()));
+  .pipe(z.record(z.string(), z.unknown()));
 
 export const submitReviewSchema = z.object({
   formId: z.string().cuid(),
