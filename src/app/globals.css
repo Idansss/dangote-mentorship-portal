@@ -27,13 +27,14 @@
     --ink-2: 64 72 73; /* #404849 secondary text, labels (on-surface-variant) */
     --ink-3: 112 121 121; /* #707979 muted text, placeholders (outline) */
 
-    /* Two-step teal: a brighter teal accent for icons/links/charts/focus, and
-     * the deep primary-container teal for any surface carrying WHITE text
-     * (buttons, filled pills, badges). #004B50 → white = 8.9:1 (AAA). */
-    --green-light: 42 103 108; /* #2A676C brand accent — icons, links, charts (surface-tint) */
-    --green: 0 75 80; /* #004B50 PRIMARY — buttons, filled pills, active nav (white text) */
-    --green-strong: 0 51 54; /* #003336 hover/pressed, active nav text (M3 primary) */
-    --green-soft: 217 235 236; /* #D9EBEC selected rows, soft fills, chips */
+    /* Brand green ramp, derived from the BLAK MOH logo green (#10b91f). The vivid
+     * logo green is too light for white text, so the ramp keeps a bright accent
+     * (icons/links/charts/focus) and darker shades for any surface carrying WHITE
+     * text (buttons, filled pills, badges). All checked for WCAG AA. */
+    --green-light: 12 133 23; /* #0C8517 brand accent — icons, links, charts (4.79:1 on white) */
+    --green: 10 110 19; /* #0A6E13 PRIMARY — buttons, filled pills, active nav, white text (6.46:1) */
+    --green-strong: 6 83 14; /* #06530E hover/pressed, active nav text (9.33:1) */
+    --green-soft: 217 243 220; /* #D9F3DC selected rows, soft fills, chips */
     --gold: 100 56 26; /* #64381A recognition / weekly-tip / certificates (M3 tertiary) */
 
     /* Status — functional, not decorative (§1) */
