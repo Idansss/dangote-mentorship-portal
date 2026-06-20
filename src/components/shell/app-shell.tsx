@@ -203,13 +203,13 @@ export function AppShell({ sections, user, unread, recent, labels, children }: A
       <aside
         className={cn(
           'fixed inset-y-0 left-0 z-50 flex flex-col border-r border-border bg-surface transition-[width,transform] duration-200 ease-out motion-reduce:transition-none',
-          collapsed ? 'lg:w-[4.5rem]' : 'lg:w-[280px]',
-          'w-[280px]', // mobile drawer width
+          collapsed ? 'lg:w-[4.5rem]' : 'lg:w-[180px]',
+          'w-[260px]', // mobile drawer width
           mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
         )}
       >
         {/* Brand */}
-        <div className="flex h-16 items-center gap-2.5 px-4">
+        <div className="flex h-[72px] items-center gap-2 px-4">
           <Link
             href="/"
             className={cn(
@@ -217,10 +217,10 @@ export function AppShell({ sections, user, unread, recent, labels, children }: A
               collapsed && 'lg:hidden', // narrow rail shows only the collapse chevron
             )}
           >
-            <BrandMark className="size-9 shrink-0" />
+            <BrandMark className="size-7 shrink-0" />
             {!collapsed && (
               <span className="min-w-0 leading-tight">
-                <span className="block truncate font-display text-h3 font-bold text-green-strong">
+                <span className="block truncate font-display text-small font-bold text-green-strong">
                   {labels.brand}
                 </span>
                 <span className="block truncate text-micro text-ink-3">{labels.subtitle}</span>
@@ -253,11 +253,11 @@ export function AppShell({ sections, user, unread, recent, labels, children }: A
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 space-y-5 overflow-y-auto px-3 py-2">
+        <nav className="flex-1 space-y-3 overflow-y-auto px-2 py-2">
           {sections.map((section, si) => (
             <div key={section.label ?? si} className="space-y-1">
               {section.label && !collapsed && (
-                <p className="px-3 pb-1 text-micro uppercase tracking-wider text-ink-3">
+                <p className="sr-only">
                   {section.label}
                 </p>
               )}
@@ -271,16 +271,16 @@ export function AppShell({ sections, user, unread, recent, labels, children }: A
                     title={collapsed ? item.label : undefined}
                     aria-current={active ? 'page' : undefined}
                     className={cn(
-                      'group flex items-center gap-3 rounded-lg px-3 py-2.5 text-small transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-light/30 motion-reduce:transition-none',
+                      'group flex items-center gap-2.5 rounded-md px-3 py-2 text-[0.72rem] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-light/30 motion-reduce:transition-none',
                       collapsed && 'lg:justify-center lg:px-0',
                       active
-                        ? 'rounded-r-none border-r-[3px] border-green bg-green-soft/60 font-bold text-green-strong'
+                        ? 'rounded-r-none border-r-2 border-green bg-green-soft/50 font-bold text-green-strong'
                         : 'font-medium text-ink-2 hover:bg-surface-2 hover:text-ink',
                     )}
                   >
                     <Icon
                       className={cn(
-                        'size-5 shrink-0',
+                        'size-4 shrink-0',
                         active ? 'text-green-strong' : 'text-ink-3 group-hover:text-green-light',
                       )}
                     />
@@ -306,13 +306,13 @@ export function AppShell({ sections, user, unread, recent, labels, children }: A
         <div className="p-3">
           <div
             className={cn(
-              'flex items-center gap-3 rounded-xl bg-surface-2 p-2.5',
+              'flex items-center gap-2 rounded-md p-1.5',
               collapsed && 'lg:justify-center lg:bg-transparent lg:p-0',
             )}
           >
             <Link
               href="/profile"
-              className="flex size-10 shrink-0 items-center justify-center rounded-full bg-green-soft text-small font-bold text-green-strong"
+              className="flex size-8 shrink-0 items-center justify-center rounded-full bg-green-soft text-micro font-bold text-green-strong"
               title={user.name}
             >
               {user.initials}
@@ -343,11 +343,11 @@ export function AppShell({ sections, user, unread, recent, labels, children }: A
       <div
         className={cn(
           'flex min-h-screen flex-col transition-[padding] duration-200 ease-out motion-reduce:transition-none',
-          collapsed ? 'lg:pl-[4.5rem]' : 'lg:pl-[280px]',
+          collapsed ? 'lg:pl-[4.5rem]' : 'lg:pl-[180px]',
         )}
       >
         {/* Top bar */}
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-surface px-4 sm:px-6">
+        <header className="sticky top-0 z-30 flex h-[52px] items-center gap-3 border-b border-border bg-surface px-4 sm:px-5">
           <button
             type="button"
             aria-label={labels.openMenu}
@@ -460,7 +460,7 @@ export function AppShell({ sections, user, unread, recent, labels, children }: A
         </header>
 
         {/* Content */}
-        <main className="mx-auto w-full max-w-[1280px] flex-1 px-4 py-8 pb-24 sm:px-6 lg:pb-8">
+        <main className="mx-auto w-full max-w-[1180px] flex-1 px-4 py-5 pb-24 sm:px-5 lg:pb-8">
           {children}
         </main>
       </div>
