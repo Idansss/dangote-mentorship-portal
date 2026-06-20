@@ -1,257 +1,113 @@
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { ImportRowStatus, ImportStatus } from '@prisma/client';
+import { AlertTriangle, Check, ShieldCheck, Sparkles } from 'lucide-react';
 import { prisma } from '@/lib/db/prisma';
-import { commitImportForm, fixImportRowForm, setImportRowStatusForm } from '@/features/imports/actions';
+import { commitImportForm, setImportRowStatusForm } from '@/features/imports/actions';
 import { cleanRow, hasBlockingErrors, type Finding } from '@/features/imports/validation';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { StatTile } from '@/components/ui/stat-tile';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
-import { Check } from 'lucide-react';
 
-// Workflow stepper (Stitch import "Workflow Progress"). The data is committed
-// once the admin clicks Commit, so before then we're at Review; everything up to
-// Validation already ran during ingest.
 function WorkflowProgress({ committed, labels }: { committed: boolean; labels: string[] }) {
-  const currentIndex = committed ? 4 : 3; // 0..4 → Upload Mapping Validation Review Commit
+  const currentIndex = committed ? 4 : 3;
   return (
-    <div className="relative rounded-lg border border-border bg-surface p-6 shadow-elevation">
-      <div className="absolute left-10 right-10 top-[2.6rem] h-0.5 bg-surface-2" aria-hidden />
-      <div
-        className="absolute left-10 top-[2.6rem] h-0.5 rounded-full bg-green transition-[width]"
-        style={{ width: `calc((100% - 5rem) * ${labels.length > 1 ? currentIndex / (labels.length - 1) : 0})` }}
-        aria-hidden
-      />
+    <div className="relative rounded-lg border border-border bg-surface p-5 shadow-elevation">
+      <div className="absolute left-10 right-10 top-[2.35rem] h-0.5 bg-surface-2" />
+      <div className="absolute left-10 top-[2.35rem] h-0.5 rounded-full bg-green" style={{ width: `calc((100% - 5rem) * ${currentIndex / 4})` }} />
       <ol className="relative flex justify-between">
-        {labels.map((label, i) => {
-          const done = i < currentIndex;
-          const current = i === currentIndex;
-          return (
-            <li key={label} className="flex flex-col items-center gap-2">
-              <span
-                className={cn(
-                  'flex size-8 items-center justify-center rounded-full border-2 bg-surface text-small font-bold',
-                  done ? 'border-green bg-green text-white' : current ? 'border-green text-green' : 'border-border text-ink-3',
-                )}
-              >
-                {done ? <Check className="size-4" /> : i + 1}
-              </span>
-              <span className={cn('text-micro uppercase tracking-wider', done || current ? 'font-bold text-green-strong' : 'text-ink-3')}>
-                {label}
-              </span>
-            </li>
-          );
-        })}
+        {labels.map((label, index) => (
+          <li key={label} className="flex w-20 flex-col items-center gap-1.5 text-center">
+            <span className={cn('grid size-8 place-items-center rounded-full border-2 bg-surface text-micro font-bold', index < currentIndex ? 'border-green bg-green text-white' : index === currentIndex ? 'border-green text-green' : 'border-border text-ink-3')}>
+              {index < currentIndex ? <Check className="size-4" /> : index + 1}
+            </span>
+            <span className="text-micro uppercase text-ink-3">{label}</span>
+          </li>
+        ))}
       </ol>
     </div>
   );
 }
 
-function statusVariant(status: ImportRowStatus): 'default' | 'secondary' | 'destructive' | 'outline' {
-  switch (status) {
-    case ImportRowStatus.VALID:
-    case ImportRowStatus.FIXED:
-    case ImportRowStatus.ACCEPTED:
-      return 'default';
-    case ImportRowStatus.REJECTED:
-      return 'destructive';
-    case ImportRowStatus.FLAGGED:
-      return 'outline';
-    default:
-      return 'secondary';
-  }
-}
-
 export default async function ImportReviewPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const t = await getTranslations('imports');
-
   const imported = await prisma.import.findUnique({
     where: { id },
-    include: {
-      cohort: { select: { name: true } },
-      rows: { where: { deletedAt: null }, orderBy: { rowNumber: 'asc' } },
-    },
+    include: { cohort: { select: { name: true } }, rows: { where: { deletedAt: null }, orderBy: { rowNumber: 'asc' } } },
   });
   if (!imported || imported.deletedAt) notFound();
 
-  const isCommitted = imported.status === ImportStatus.COMMITTED;
-
-  // Real validation summary for the stat band.
+  const committed = imported.status === ImportStatus.COMMITTED;
   const total = imported.rows.length;
-  const flaggedCount = imported.rows.filter(
-    (r) =>
-      hasBlockingErrors((r.validation ?? []) as unknown as Finding[]) ||
-      r.status === ImportRowStatus.FLAGGED,
-  ).length;
-  const validCount = total - flaggedCount;
+  const flagged = imported.rows.filter((row) => hasBlockingErrors((row.validation ?? []) as unknown as Finding[]) || row.status === ImportRowStatus.FLAGGED).length;
+  const valid = total - flagged;
 
   return (
-    <section className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="space-y-1">
-          <h1 className="font-display text-h1 font-bold text-ink">{t('reviewTitle')}</h1>
-          <p className="text-body text-ink-2">
-            {imported.fileName} · {imported.cohort.name} ·{' '}
-            {imported.targetRole === 'MENTOR' ? t('mentors') : t('mentees')}
-          </p>
+    <section className="space-y-5">
+      <header className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <p className="text-micro text-ink-3">Admin / User management / Batch data import</p>
+          <h1 className="mt-1 font-display text-h1 font-bold text-ink">Data Import &amp; Validation</h1>
+          <p className="text-small text-ink-2">Review, validate, and commit newly uploaded mentor and mentee records.</p>
         </div>
-        {isCommitted ? (
-          <Badge>{t('committed')}</Badge>
-        ) : (
-          <form action={commitImportForm}>
-            <input type="hidden" name="importId" value={imported.id} />
-            <Button type="submit">{t('commit')}</Button>
-          </form>
-        )}
-      </div>
+        <div className="flex gap-2">
+          <Button size="sm" variant="outline">Export CSV</Button>
+          {committed ? <Badge>{t('committed')}</Badge> : (
+            <form action={commitImportForm}><input type="hidden" name="importId" value={imported.id} /><Button size="sm" type="submit">{t('commit')}</Button></form>
+          )}
+        </div>
+      </header>
 
-      {/* Summary + workflow stepper (Stitch import overview) */}
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatTile label={t('totalRows')} value={total} />
-        <StatTile label={t('valid')} value={validCount} tone="ok" />
-        <StatTile label={t('flaggedCount')} value={flaggedCount} tone={flaggedCount > 0 ? 'warn' : 'default'} />
+        <StatTile label={t('valid')} value={valid} tone="ok" />
+        <StatTile label={t('flaggedCount')} value={flagged} tone={flagged ? 'risk' : 'default'} />
+        <StatTile label="System health" value={flagged ? 'Review needed' : 'Optimized'} tone={flagged ? 'info' : 'ok'} valueClassName="text-h3" />
       </div>
 
-      <WorkflowProgress
-        committed={isCommitted}
-        labels={[t('stepUpload'), t('stepMapping'), t('stepValidation'), t('stepReview'), t('stepCommit')]}
-      />
+      <WorkflowProgress committed={committed} labels={[t('stepUpload'), t('stepMapping'), t('stepValidation'), t('stepReview'), t('stepCommit')]} />
 
-      <p className="text-small text-ink-2">{t('blockedHint')}</p>
+      <div className="grid items-start gap-5 lg:grid-cols-[1fr_270px]">
+        <section className="overflow-hidden rounded-lg border border-border bg-surface shadow-elevation">
+          <div className="flex items-center justify-between border-b border-border px-5 py-4"><h2 className="text-h3">Imported records</h2><span className="text-micro text-ink-3">{imported.fileName}</span></div>
+          <Table>
+            <TableHeader><TableRow><TableHead>Status</TableHead><TableHead>Full name</TableHead><TableHead>Role</TableHead><TableHead>Email</TableHead><TableHead /></TableRow></TableHeader>
+            <TableBody>
+              {imported.rows.map((row) => {
+                const findings = (row.validation ?? []) as unknown as Finding[];
+                const clean = cleanRow(row.raw as Record<string, unknown>);
+                const blocked = hasBlockingErrors(findings);
+                return (
+                  <TableRow key={row.id}>
+                    <TableCell><span className={cn('inline-flex size-7 items-center justify-center rounded-full', blocked ? 'bg-risk/10 text-risk' : findings.length ? 'bg-warn/10 text-warn' : 'bg-green-soft text-green-strong')}>{blocked ? <AlertTriangle className="size-3.5" /> : <Check className="size-3.5" />}</span></TableCell>
+                    <TableCell className="font-medium">{clean.fullName || '—'}</TableCell>
+                    <TableCell><Badge variant="neutral">{imported.targetRole}</Badge></TableCell>
+                    <TableCell className="text-small text-ink-2">{clean.email || '—'}</TableCell>
+                    <TableCell>
+                      {!committed ? <div className="flex justify-end gap-1">
+                        <form action={setImportRowStatusForm}><input type="hidden" name="rowId" value={row.id} /><input type="hidden" name="status" value={ImportRowStatus.ACCEPTED} /><Button type="submit" size="sm" variant="ghost" disabled={blocked}>{t('accept')}</Button></form>
+                        <form action={setImportRowStatusForm}><input type="hidden" name="rowId" value={row.id} /><input type="hidden" name="status" value={ImportRowStatus.REJECTED} /><Button type="submit" size="sm" variant="ghost">{t('reject')}</Button></form>
+                      </div> : <Badge variant="neutral">{row.status}</Badge>}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </section>
 
-      <div className="space-y-4">
-        {imported.rows.map((row) => {
-          const findings = (row.validation ?? []) as unknown as Finding[];
-          const clean = cleanRow(row.raw as Record<string, unknown>);
-          const blocked = hasBlockingErrors(findings);
-          const decided =
-            row.status === ImportRowStatus.ACCEPTED || row.status === ImportRowStatus.REJECTED;
-
-          return (
-            <Card key={row.id}>
-              <CardHeader className="pb-2">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <CardTitle className="text-base">
-                    {t('row')} {row.rowNumber}: {clean.fullName || '—'}{' '}
-                    <span className="font-normal text-muted-foreground">
-                      {clean.email || '—'} · {clean.language || '—'} · {clean.department || '—'}
-                    </span>
-                  </CardTitle>
-                  <Badge variant={statusVariant(row.status)}>{row.status}</Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {findings.length === 0 ? (
-                  <p className="text-sm text-primary">{t('noFindings')}</p>
-                ) : (
-                  <ul className="space-y-1 text-sm">
-                    {findings.map((f, i) => (
-                      <li key={`${f.code}-${i}`} className="flex items-center gap-2">
-                        <Badge variant={f.severity === 'ERROR' ? 'destructive' : 'outline'}>
-                          {f.severity}
-                        </Badge>
-                        {f.message}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-
-                {!isCommitted && !decided ? (
-                  <div className="flex flex-wrap items-center gap-2">
-                    <form action={setImportRowStatusForm}>
-                      <input type="hidden" name="rowId" value={row.id} />
-                      <input type="hidden" name="status" value={ImportRowStatus.ACCEPTED} />
-                      <Button type="submit" size="sm" variant="outline" disabled={blocked}>
-                        {t('accept')}
-                      </Button>
-                    </form>
-                    <form action={setImportRowStatusForm}>
-                      <input type="hidden" name="rowId" value={row.id} />
-                      <input type="hidden" name="status" value={ImportRowStatus.REJECTED} />
-                      <Button type="submit" size="sm" variant="ghost">
-                        {t('reject')}
-                      </Button>
-                    </form>
-                  </div>
-                ) : null}
-
-                {!isCommitted && row.status !== ImportRowStatus.REJECTED ? (
-                  <details className="rounded border p-3">
-                    <summary className="cursor-pointer text-sm font-medium">{t('fix')}</summary>
-                    <form action={fixImportRowForm} className="mt-3 grid gap-3 sm:grid-cols-2">
-                      <input type="hidden" name="rowId" value={row.id} />
-                      <div className="space-y-1">
-                        <Label htmlFor={`name-${row.id}`}>{t('name')}</Label>
-                        <Input id={`name-${row.id}`} name="fullName" defaultValue={clean.fullName} />
-                      </div>
-                      <div className="space-y-1">
-                        <Label htmlFor={`email-${row.id}`}>{t('email')}</Label>
-                        <Input id={`email-${row.id}`} name="email" defaultValue={clean.email} />
-                      </div>
-                      <div className="space-y-1">
-                        <Label htmlFor={`lang-${row.id}`}>{t('languageField')}</Label>
-                        <Select name="language" defaultValue={clean.language || undefined}>
-                          <SelectTrigger id={`lang-${row.id}`}>
-                            <SelectValue placeholder="—" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="EN">EN</SelectItem>
-                            <SelectItem value="FR">FR</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-1">
-                        <Label htmlFor={`dept-${row.id}`}>{t('department')}</Label>
-                        <Input id={`dept-${row.id}`} name="department" defaultValue={clean.department} />
-                      </div>
-                      <div className="space-y-1">
-                        <Label htmlFor={`job-${row.id}`}>{t('jobTitle')}</Label>
-                        <Input id={`job-${row.id}`} name="jobTitle" defaultValue={clean.jobTitle} />
-                      </div>
-                      <div className="space-y-1">
-                        <Label htmlFor={`exp-${row.id}`}>{t('experience')}</Label>
-                        <Input
-                          id={`exp-${row.id}`}
-                          name="yearsExperience"
-                          defaultValue={clean.yearsExperience ?? ''}
-                        />
-                      </div>
-                      <div className="space-y-1 sm:col-span-2">
-                        <Label htmlFor={`comp-${row.id}`}>{t('competencies')}</Label>
-                        <Input
-                          id={`comp-${row.id}`}
-                          name="competencies"
-                          defaultValue={clean.competencies.join(', ')}
-                        />
-                      </div>
-                      <div className="space-y-1 sm:col-span-2">
-                        <Label htmlFor={`goals-${row.id}`}>{t('careerGoals')}</Label>
-                        <Input id={`goals-${row.id}`} name="careerGoals" defaultValue={clean.careerGoals} />
-                      </div>
-                      <div className="sm:col-span-2">
-                        <Button type="submit" size="sm">
-                          {t('saveFix')}
-                        </Button>
-                      </div>
-                    </form>
-                  </details>
-                ) : null}
-              </CardContent>
-            </Card>
-          );
-        })}
+        <aside className="rounded-lg border border-info/20 bg-info/[0.07] p-5 shadow-elevation">
+          <p className="flex items-center gap-2 text-small font-bold text-info"><Sparkles className="size-4" /> AI assistant</p>
+          <p className="mt-3 text-small text-ink-2">Validation identified {flagged} record{flagged === 1 ? '' : 's'} requiring attention before commit.</p>
+          <div className="mt-4 space-y-3">
+            <div className="rounded-md bg-surface p-3"><p className="text-micro font-bold uppercase text-ink-3">Critical insight</p><p className="mt-1 text-small text-ink-2">{flagged ? 'Resolve blocking email and required-field errors first.' : 'All records are ready for final review.'}</p></div>
+            <div className="rounded-md bg-surface p-3"><p className="text-micro font-bold uppercase text-ink-3">System status</p><p className="mt-1 flex items-center gap-2 text-small text-green-strong"><ShieldCheck className="size-4" /> Validation complete</p></div>
+          </div>
+          <Button variant="outline" className="mt-4 w-full border-info/30 text-info">Generate full audit report</Button>
+        </aside>
       </div>
     </section>
   );
