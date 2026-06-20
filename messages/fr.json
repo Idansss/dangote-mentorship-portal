@@ -159,7 +159,7 @@
       "tagline": "Apprentissage et bien-être optimal grâce à un mentorat guidé.",
       "privacy": "Confidentiel par conception — les messages directs restent privés entre les participants."
     },
-    "heroBadge": "Excellence d’entreprise",
+    "heroBadge": "Mentor et mentoré progressant vers un objectif commun",
     "heroLine1": "Former la",
     "heroAccent": "prochaine génération",
     "heroLine2": "de leaders",
@@ -244,7 +244,8 @@
     "forgotShort": "Oublié ?",
     "rememberMe": "Se souvenir de moi pendant 30 jours",
     "dangoteSso": "Connexion SSO BLAK MOH",
-    "orCredentials": "Ou utiliser les identifiants"
+    "orCredentials": "Ou utiliser les identifiants",
+    "backToHome": "Retour à l’accueil"
   },
   "signup": {
     "title": "Rejoindre le programme",

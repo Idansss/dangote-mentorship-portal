@@ -3,17 +3,10 @@ import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { getCurrentUser } from '@/lib/auth/rbac';
 import { defaultDashboardPath } from '@/lib/auth/roles';
-import {
-  ShieldCheck,
-  ArrowRight,
-  ArrowUpRight,
-  TrendingUp,
-  Network,
-  Languages,
-  Sparkles,
-} from 'lucide-react';
+import { ArrowRight, ArrowUpRight, TrendingUp, Network, Languages, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { JourneyRailView, type RailNode } from '@/components/journey-rail-view';
+import { MentorshipAnimation } from '@/components/mentorship-animation';
 
 // Public landing page (Stitch redesign — docs/stitch-redesign.md). Full-bleed
 // sections matching the Stitch "Public Marketing Home": centered hero + real stat
@@ -34,15 +27,78 @@ export default async function HomePage() {
 
   // A mentee mid-programme — illustrative rail (links nulled, no auth bounce).
   const journeyNodes: RailNode[] = [
-    { key: 'profile', label: t('journey.nodes.profile'), stateLabel: t('journey.states.done'), state: 'completed', link: null, isCurrent: false },
-    { key: 'training', label: t('journey.nodes.training'), stateLabel: t('journey.states.done'), state: 'completed', link: null, isCurrent: false },
-    { key: 'matched', label: t('journey.nodes.matched'), stateLabel: t('journey.states.done'), state: 'completed', link: null, isCurrent: false },
-    { key: 'agreement', label: t('journey.nodes.agreement'), stateLabel: t('journey.states.done'), state: 'completed', link: null, isCurrent: false },
-    { key: 'goals', label: t('journey.nodes.goals'), stateLabel: t('journey.states.yourTurn'), state: 'needs_action', link: null, isCurrent: true },
-    { key: 'sessions', label: t('journey.nodes.sessions'), stateLabel: t('journey.states.upcoming'), state: 'pending', link: null, isCurrent: false },
-    { key: 'midterm', label: t('journey.nodes.midterm'), stateLabel: t('journey.states.upcoming'), state: 'pending', link: null, isCurrent: false },
-    { key: 'final', label: t('journey.nodes.final'), stateLabel: t('journey.states.upcoming'), state: 'pending', link: null, isCurrent: false },
-    { key: 'certificate', label: t('journey.nodes.certificate'), stateLabel: t('journey.states.upcoming'), state: 'pending', link: null, isCurrent: false },
+    {
+      key: 'profile',
+      label: t('journey.nodes.profile'),
+      stateLabel: t('journey.states.done'),
+      state: 'completed',
+      link: null,
+      isCurrent: false,
+    },
+    {
+      key: 'training',
+      label: t('journey.nodes.training'),
+      stateLabel: t('journey.states.done'),
+      state: 'completed',
+      link: null,
+      isCurrent: false,
+    },
+    {
+      key: 'matched',
+      label: t('journey.nodes.matched'),
+      stateLabel: t('journey.states.done'),
+      state: 'completed',
+      link: null,
+      isCurrent: false,
+    },
+    {
+      key: 'agreement',
+      label: t('journey.nodes.agreement'),
+      stateLabel: t('journey.states.done'),
+      state: 'completed',
+      link: null,
+      isCurrent: false,
+    },
+    {
+      key: 'goals',
+      label: t('journey.nodes.goals'),
+      stateLabel: t('journey.states.yourTurn'),
+      state: 'needs_action',
+      link: null,
+      isCurrent: true,
+    },
+    {
+      key: 'sessions',
+      label: t('journey.nodes.sessions'),
+      stateLabel: t('journey.states.upcoming'),
+      state: 'pending',
+      link: null,
+      isCurrent: false,
+    },
+    {
+      key: 'midterm',
+      label: t('journey.nodes.midterm'),
+      stateLabel: t('journey.states.upcoming'),
+      state: 'pending',
+      link: null,
+      isCurrent: false,
+    },
+    {
+      key: 'final',
+      label: t('journey.nodes.final'),
+      stateLabel: t('journey.states.upcoming'),
+      state: 'pending',
+      link: null,
+      isCurrent: false,
+    },
+    {
+      key: 'certificate',
+      label: t('journey.nodes.certificate'),
+      stateLabel: t('journey.states.upcoming'),
+      state: 'pending',
+      link: null,
+      isCurrent: false,
+    },
   ];
 
   const stats = [
@@ -57,10 +113,7 @@ export default async function HomePage() {
       {/* ── Hero ── */}
       <section className="bg-surface-2 px-4 py-20 sm:px-6 sm:py-28">
         <div className="mx-auto max-w-4xl text-center">
-          <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-green-soft px-4 py-1.5 text-micro font-bold uppercase tracking-wider text-green-strong shadow-elevation">
-            <ShieldCheck className="size-4" />
-            {t('heroBadge')}
-          </span>
+          <MentorshipAnimation label={t('heroBadge')} />
           <h1 className="font-display text-[2.5rem] font-extrabold leading-[1.1] tracking-tight text-green-strong sm:text-[3.5rem]">
             {t('heroLine1')} <span className="text-green-light">{t('heroAccent')}</span>{' '}
             {t('heroLine2')}
@@ -148,7 +201,10 @@ export default async function HomePage() {
 
           {/* Card 2 — teal highlight */}
           <div className="group relative flex flex-col justify-between overflow-hidden rounded-xl bg-gradient-to-br from-green-strong via-green to-green-strong p-8 text-white shadow-elevation-lg">
-            <Network aria-hidden className="pointer-events-none absolute -right-6 -top-6 size-40 text-white/10" />
+            <Network
+              aria-hidden
+              className="pointer-events-none absolute -right-6 -top-6 size-40 text-white/10"
+            />
             <div className="relative">
               <span className="mb-6 inline-flex size-12 items-center justify-center rounded-lg bg-white/15 text-white">
                 <Sparkles className="size-6" />
@@ -157,7 +213,11 @@ export default async function HomePage() {
               <p className="mt-3 text-body text-green-soft">{t('bento.knowledgeBody')}</p>
             </div>
             <div className="relative mt-8">
-              <Button asChild variant="secondary" className="rounded-md font-semibold text-green-strong">
+              <Button
+                asChild
+                variant="secondary"
+                className="rounded-md font-semibold text-green-strong"
+              >
                 <Link href="/about">{t('bento.knowledgeCta')}</Link>
               </Button>
             </div>
@@ -187,15 +247,28 @@ export default async function HomePage() {
       <section className="px-4 py-20 sm:px-6 sm:py-24">
         <div className={SHELL}>
           <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-strong via-green to-green-strong p-12 shadow-elevation-lg ring-1 ring-white/10 sm:p-20">
-            <div aria-hidden className="bg-grid-light pointer-events-none absolute inset-0 opacity-70" />
-            <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-green-light/30 blur-3xl" />
+            <div
+              aria-hidden
+              className="bg-grid-light pointer-events-none absolute inset-0 opacity-70"
+            />
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-green-light/30 blur-3xl"
+            />
             <div className="relative max-w-2xl">
               <h2 className="font-display text-display font-extrabold leading-tight text-white">
                 {t('cta2Title')}
               </h2>
-              <p className="mt-6 max-w-xl text-body text-green-soft sm:text-lg">{t('cta2Subtitle')}</p>
+              <p className="mt-6 max-w-xl text-body text-green-soft sm:text-lg">
+                {t('cta2Subtitle')}
+              </p>
               <div className="mt-10 flex flex-wrap gap-4">
-                <Button asChild size="lg" variant="secondary" className="rounded-md px-8 font-semibold text-green-strong">
+                <Button
+                  asChild
+                  size="lg"
+                  variant="secondary"
+                  className="rounded-md px-8 font-semibold text-green-strong"
+                >
                   <Link href="/login">
                     {t('getStarted')}
                     <ArrowUpRight className="size-5" />

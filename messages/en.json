@@ -159,7 +159,7 @@
       "tagline": "Learning and optimal wellbeing through guided mentorship.",
       "privacy": "Confidential by design — direct messages stay private to participants."
     },
-    "heroBadge": "Enterprise excellence",
+    "heroBadge": "Mentor and mentee progressing toward a shared goal",
     "heroLine1": "Empowering the",
     "heroAccent": "next generation",
     "heroLine2": "of leaders",
@@ -244,7 +244,8 @@
     "forgotShort": "Forgot?",
     "rememberMe": "Remember me for 30 days",
     "dangoteSso": "BLAK MOH SSO login",
-    "orCredentials": "Or use credentials"
+    "orCredentials": "Or use credentials",
+    "backToHome": "Back to home"
   },
   "signup": {
     "title": "Join the programme",

@@ -22,11 +22,15 @@ export default async function LoginPage() {
 
   return (
     <div>
-      {/* Brand header */}
+      {/* Brand header — logo links back to the public landing page */}
       <div className="mb-8 flex flex-col items-center">
-        <div className="mb-4 rounded-2xl bg-surface-2 p-3 shadow-elevation">
+        <Link
+          href="/"
+          aria-label={t('backToHome')}
+          className="mb-4 rounded-2xl bg-surface-2 p-3 shadow-elevation transition-shadow hover:shadow-elevation-lg"
+        >
           <BrandMark className="size-14" />
-        </div>
+        </Link>
         <h1 className="text-center font-display text-h1 font-bold text-ink">
           <Wordmark name={tc('appShortName')} />
         </h1>
@@ -58,6 +62,12 @@ export default async function LoginPage() {
           </Link>
         </div>
         <p className="mt-4 text-micro text-ink-3">{t('copyright')}</p>
+        <Link
+          href="/"
+          className="mt-4 inline-flex items-center gap-1 text-small font-medium text-ink-2 hover:text-green-strong"
+        >
+          <span aria-hidden>←</span> {t('backToHome')}
+        </Link>
       </footer>
     </div>
   );
