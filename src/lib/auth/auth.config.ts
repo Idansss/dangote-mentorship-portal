@@ -1,6 +1,7 @@
 import type { NextAuthConfig } from 'next-auth';
 import type { RoleName } from '@prisma/client';
 import MicrosoftEntraID from 'next-auth/providers/microsoft-entra-id';
+import { isEntraConfigured } from './entra';
 
 // Edge-safe base config. NO Prisma import here (not even the RoleName enum) —
 // this config is what middleware.ts instantiates, so it must stay outside the
@@ -25,25 +26,29 @@ function isPublicPath(pathname: string): boolean {
   return PUBLIC_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 }
 
+// Entra SSO is registered ONLY when its full credential set is configured. A
+// half-/mis-configured tenant makes Auth.js run OIDC discovery against an
+// invalid issuer; that discovery throws during init and crashes EVERY sign-in
+// attempt — including the email/password fallback (the login page already gates
+// the SSO *button* on the same check, so this keeps button and provider in
+// lockstep). Until Entra is properly set up, credentials login stays available.
+const entraProvider = MicrosoftEntraID({
+  clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
+  clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+  issuer: `https://login.microsoftonline.com/${process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID}/v2.0`,
+  // Link an Entra SSO sign-in to an admin-pre-created account that shares the
+  // same email, instead of creating a duplicate User (CLAUDE.md §2: Entra SSO
+  // + admin-created accounts must be the same identity). This is only safe
+  // because Entra is a trusted IdP that verifies email ownership; never enable
+  // it for an unverified provider.
+  allowDangerousEmailAccountLinking: true,
+});
+
 export const authConfig = {
   session: { strategy: 'jwt' },
   pages: { signIn: '/login' },
-  providers: [
-    // Primary SSO provider (CLAUDE.md §2). OAuth config is edge-safe.
-    MicrosoftEntraID({
-      clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
-      clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
-      issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID
-        ? `https://login.microsoftonline.com/${process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID}/v2.0`
-        : undefined,
-      // Link an Entra SSO sign-in to an admin-pre-created account that shares the
-      // same email, instead of creating a duplicate User (CLAUDE.md §2: Entra SSO
-      // + admin-created accounts must be the same identity). This is only safe
-      // because Entra is a trusted IdP that verifies email ownership; never enable
-      // it for an unverified provider.
-      allowDangerousEmailAccountLinking: true,
-    }),
-  ],
+  // Primary SSO provider (CLAUDE.md §2), registered only when fully configured.
+  providers: isEntraConfigured() ? [entraProvider] : [],
   callbacks: {
     // Coarse route gating (CLAUDE.md §3). Fine-grained authz is enforced
     // per server action via requireRole().

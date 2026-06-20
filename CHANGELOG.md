@@ -203,3 +203,7 @@ The first slice of the screen sweep, on the spec's hero screens (the rest follow
 - **Removed the Programme Admin, Trainer/Facilitator, and Reviewer roles** (`RoleName` enum is now `SUPER_ADMIN | MENTOR | MENTEE`). Their programme-staff capabilities fold into **Super Admin**: `ADMIN_ROLES` is now Super-Admin-only, so import/matching/forms/calendar/reports authz and the AI Review report all resolve to Super Admin. Mentors and Mentees are unchanged.
 - Deleted the `/dashboard/trainer` and `/dashboard/reviewer` screens; `defaultDashboardPath` no longer routes to them. The Forms Builder no longer offers a Reviewer target audience.
 - Seed drops the three staff demo accounts. Migration `20260620120000_remove_staff_roles` reassigns existing grants/invites for the removed roles to Super Admin, nulls the role target on affected form definitions, and recreates the `RoleName` enum without the three values.
+
+## Fix — Entra SSO no longer crashes all sign-in
+
+- **The Microsoft Entra ID provider is now registered only when `isEntraConfigured()` is true.** It was registered unconditionally, so a mis-configured tenant (present-but-invalid `AUTH_MICROSOFT_ENTRA_ID_*` on the host) made Auth.js run OIDC discovery against an invalid issuer; discovery threw `TypeError: …reading 'replace'` (`json.issuer` undefined) and surfaced as `error=Configuration`, crashing **every** sign-in — including the email/password fallback. The login page already gated the SSO *button* on the same check; the provider now matches it. When Entra is unconfigured, credentials login works.
