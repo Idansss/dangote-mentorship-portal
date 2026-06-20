@@ -199,7 +199,7 @@ export function SessionForm({ mentees }: { mentees: { id: string; name: string |
 
       {/* Mentee + meeting basics */}
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-1">
+        <div className="hidden space-y-1 sm:block">
           <Label htmlFor="sf-mentee">{t('mentee')}</Label>
           <Select value={v.menteeId} onValueChange={(val) => update({ menteeId: val })}>
             <SelectTrigger id="sf-mentee">
@@ -214,7 +214,7 @@ export function SessionForm({ mentees }: { mentees: { id: string; name: string |
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-1">
+        <div className="hidden space-y-1 sm:block">
           <Label htmlFor="sf-type">{t('meetingType')}</Label>
           <Select
             value={v.meetingType || NO_TYPE}
@@ -234,7 +234,10 @@ export function SessionForm({ mentees }: { mentees: { id: string; name: string |
           </Select>
         </div>
         <FieldInput id="sf-date" label={t('date')} type="date" value={v.date} onChange={(val) => update({ date: val })} />
-        <FieldInput id="sf-time" label={t('time')} value={v.time} onChange={(val) => update({ time: val })} />
+        <div className="hidden sm:block">
+          <FieldInput id="sf-time" label={t('time')} value={v.time} onChange={(val) => update({ time: val })} />
+        </div>
+        <FieldInput id="sf-comp" label={t('competencyDiscussed')} value={v.competencyDiscussed} onChange={(val) => update({ competencyDiscussed: val })} />
       </div>
 
       {/* Rough notes → AI (§7 AI surface): rough notes in, structured editable
@@ -277,9 +280,11 @@ export function SessionForm({ mentees }: { mentees: { id: string; name: string |
         ) : null}
       </AIContainer>
 
-      {/* Structured fields */}
+      {/* Structured fields stay available without overwhelming the mobile logging flow. */}
+      <details className="rounded-md border border-border bg-surface px-4 py-3">
+      <summary className="cursor-pointer text-small font-semibold text-green-strong">Additional session details</summary>
+      <div className="mt-4 space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
-        <FieldInput id="sf-comp" label={t('competencyDiscussed')} value={v.competencyDiscussed} onChange={(val) => update({ competencyDiscussed: val })} />
         <FieldInput id="sf-goal" label={t('goalDiscussed')} value={v.goalDiscussed} onChange={(val) => update({ goalDiscussed: val })} />
       </div>
       <FieldText id="sf-summary" label={t('discussionSummary')} value={v.discussionSummary} onChange={(val) => update({ discussionSummary: val })} />
@@ -343,8 +348,13 @@ export function SessionForm({ mentees }: { mentees: { id: string; name: string |
           </div>
         )}
       </div>
+      </div>
+      </details>
 
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
+        <Button type="button" variant="outline">
+          Save draft
+        </Button>
         <Button type="submit" disabled={form.status === 'syncing' || !v.menteeId}>
           {form.status === 'syncing' ? tc('loading') : t('saveLog')}
         </Button>
