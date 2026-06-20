@@ -1,22 +1,24 @@
-import { Skeleton } from '@/components/ui/skeleton';
+import { BrandMark } from '@/components/brand-logo';
 
-// Root Suspense fallback (§19 §9: "skeleton loaders not spinners"). A neutral
-// page-shaped skeleton — a title, a stat-tile row, and a content block — so
-// navigation reads as the page assembling rather than a blank "Loading…".
-// Language-agnostic, so French users never see hardcoded English (§16).
+// Root Suspense fallback. This boundary sits *outside* every route-group layout,
+// so it only appears on initial/full page loads or when a layout itself is still
+// resolving (e.g. right after login, while the dashboard/admin layout fetches the
+// user + notifications). The group-level loading.tsx files handle in-app
+// navigation with content skeletons inside the shell. Here — where there is no
+// shell yet — a calm, branded splash reads as the app starting up rather than a
+// half-loaded broken page. Language-agnostic (§16); honours reduced motion.
 export default function Loading() {
   return (
-    <div className="mx-auto w-full max-w-[1280px] space-y-6 px-4 py-8 sm:px-6" aria-busy="true">
-      <div className="space-y-2">
-        <Skeleton className="h-8 w-64" />
-        <Skeleton className="h-4 w-80" />
+    <div
+      role="status"
+      aria-busy="true"
+      aria-label="BLAK MOH"
+      className="flex min-h-screen flex-col items-center justify-center gap-6 bg-bg"
+    >
+      <BrandMark className="brand-splash-mark size-20" />
+      <div className="h-1 w-40 overflow-hidden rounded-full bg-surface-2">
+        <div className="brand-splash-bar h-full w-1/3 rounded-full bg-green" />
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className="h-28 w-full" />
-        ))}
-      </div>
-      <Skeleton className="h-64 w-full" />
     </div>
   );
 }
