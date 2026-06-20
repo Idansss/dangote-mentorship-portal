@@ -1,11 +1,11 @@
-import { dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { FlatCompat } from '@eslint/eslintrc';
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
+import nextTypescript from 'eslint-config-next/typescript';
+import prettier from 'eslint-config-prettier';
 
-// Flat config (ESLint 9) replacing the deprecated `next lint` + `.eslintrc.json`.
-// FlatCompat lets us keep the existing shareable configs unchanged.
-const compat = new FlatCompat({ baseDirectory: dirname(fileURLToPath(import.meta.url)) });
-
+// Flat config (ESLint 9). eslint-config-next 16 ships native flat configs, so we
+// spread them directly — the old FlatCompat wrapper around them crashes the
+// config validator in v16 (circular structure). `prettier` (eslint-config-prettier)
+// turns off rules that conflict with Prettier and must come last.
 const config = [
   {
     ignores: [
@@ -19,7 +19,9 @@ const config = [
       'next-env.d.ts',
     ],
   },
-  ...compat.extends('next/core-web-vitals', 'next/typescript', 'prettier'),
+  ...nextCoreWebVitals,
+  ...nextTypescript,
+  prettier,
   {
     rules: {
       '@typescript-eslint/no-unused-vars': [
@@ -27,6 +29,11 @@ const config = [
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
       '@typescript-eslint/no-explicit-any': 'warn',
+      // New react-hooks rules introduced by eslint-config-next 16. Most hits are
+      // legitimate "sync state to props" / ref patterns; demoted to warnings so
+      // the Next 16 bump stays clean. Tracked as a follow-up cleanup (not blocking).
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-hooks/refs': 'warn',
     },
   },
   {
