@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dangote Mentorship | Mentee Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .journey-rail-line {
+            background: repeating-linear-gradient(to right, #004b50 0%, #004b50 50%, #e2e8f0 50%, #e2e8f0 100%);
+            background-size: 200% 100%;
+            background-position: right bottom;
+            transition: background-position 1s ease-in-out;
+        }
+        .ai-shimmer {
+            background: linear-gradient(90deg, #eef2ff 0%, #e0e7ff 50%, #eef2ff 100%);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .pulse-ring {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .5; transform: scale(1.1); }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#e1e3e3",
+                        "surface-container-low": "#f2f4f4",
+                        "on-secondary-fixed": "#111c2d",
+                        "primary-fixed": "#b1edf2",
+                        "tertiary": "#492306",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#404849",
+                        "on-error": "#ffffff",
+                        "background": "#f8faf9",
+                        "inverse-on-surface": "#eff1f1",
+                        "on-primary-fixed-variant": "#074f54",
+                        "on-error-container": "#93000a",
+                        "outline": "#707979",
+                        "on-surface": "#191c1c",
+                        "outline-variant": "#bfc8c9",
+                        "secondary-fixed": "#d8e3fb",
+                        "on-secondary-container": "#586377",
+                        "surface": "#f8faf9",
+                        "surface-variant": "#e1e3e3",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#321300",
+                        "tertiary-fixed": "#ffdbc8",
+                        "surface-container": "#edeeee",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#e1a27c",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#2a676c",
+                        "on-secondary-fixed-variant": "#3c475a",
+                        "inverse-primary": "#96d1d6",
+                        "primary-container": "#004b50",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#fab891",
+                        "primary": "#003336",
+                        "surface-bright": "#f8faf9",
+                        "tertiary-container": "#64381a",
+                        "on-tertiary-fixed-variant": "#683c1d",
+                        "error-container": "#ffdad6",
+                        "surface-container-high": "#e7e8e8",
+                        "on-primary-container": "#7fbabf",
+                        "secondary-container": "#d5e0f8",
+                        "on-primary-fixed": "#002022",
+                        "surface-dim": "#d9dada",
+                        "secondary": "#545f73",
+                        "primary-fixed-dim": "#96d1d6",
+                        "on-background": "#191c1c",
+                        "inverse-surface": "#2e3131",
+                        "secondary-fixed-dim": "#bcc7de"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "md": "24px",
+                        "xl": "64px",
+                        "lg": "40px",
+                        "sm": "12px",
+                        "max-width-desktop": "1280px",
+                        "gutter": "24px",
+                        "base": "8px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Public Sans"],
+                        "body-md": ["Public Sans"],
+                        "headline-xl": ["Public Sans"],
+                        "body-lg": ["Public Sans"],
+                        "body-sm": ["Public Sans"],
+                        "headline-md": ["Public Sans"],
+                        "label-md": ["Public Sans"],
+                        "headline-lg": ["Public Sans"],
+                        "headline-lg-mobile": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Desktop Side Navigation -->
+<nav class="hidden md:flex flex-col h-full py-md px-sm w-[280px] h-screen fixed left-0 top-0 bg-surface shadow-sm z-50">
+<div class="mb-lg px-sm">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Dangote Mentorship</h1>
+<p class="text-on-surface-variant font-label-md">Enterprise Portal</p>
+</div>
+<div class="flex flex-col gap-xs grow">
+<a class="flex items-center gap-sm px-sm py-3 rounded-lg text-primary font-bold border-r-4 border-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-sm px-sm py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">target</span>
+<span class="font-body-md">Goals</span>
+</a>
+<a class="flex items-center gap-sm px-sm py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">event_repeat</span>
+<span class="font-body-md">Sessions</span>
+</a>
+<a class="flex items-center gap-sm px-sm py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">mail</span>
+<span class="font-body-md">Messages</span>
+</a>
+<a class="flex items-center gap-sm px-sm py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<span class="font-body-md">Admin</span>
+</a>
+</div>
+<div class="mt-auto px-sm py-md">
+<div class="flex items-center gap-sm bg-surface-container-low p-sm rounded-xl">
+<div class="w-10 h-10 rounded-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional corporate headshot of a smiling African businessman in a sharp navy suit, shot with soft studio lighting against a clean, neutral gray background. The style is modern, professional, and reflects leadership and confidence within a high-stakes enterprise environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAC1zBet1awgyFkE-ScfR8DV63RauCkr-44gMWEfv0jY5k9dOL-iU33GtCv6JzN2LRjfrvRQMwabt6ye0BdYI4JSxFwDhSpnteJBu03tq26vC_OAa5CcDd8T6rfGt3X4Z5-tzh46IS_XmNR55BLE0oOMwfim5-nnunKQV-pDPprCg6zJCzVgcCMIHiWvo3C4v4tCE6gjUbwBHb7KRsKv7Kep9n8DbXPgPe_ltlzsJYcjUkxVPRgXnxzRqI7ZV63wI62nHB3u9gh6ZJd"/>
+</div>
+<div>
+<p class="font-label-md text-on-surface font-bold">Kofi Mensah</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider">Level 4 Mentee</p>
+</div>
+</div>
+</div>
+</nav>
+<!-- Top Navigation Bar -->
+<header class="flex justify-between items-center w-full px-md h-16 ml-0 md:ml-[280px] md:w-[calc(100%-280px)] bg-surface shadow-sm sticky top-0 z-40">
+<div class="flex items-center gap-md">
+<div class="hidden md:flex items-center bg-surface-container-low px-sm py-2 rounded-full border border-outline-variant">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-64" placeholder="Search resources..." type="text"/>
+</div>
+<button class="md:hidden p-2"><span class="material-symbols-outlined">menu</span></button>
+</div>
+<div class="flex items-center gap-md">
+<div class="font-label-md text-on-surface-variant flex items-center gap-2">
+<span class="text-primary font-bold underline">EN</span> | <span class="hover:text-primary cursor-pointer transition-colors">FR</span>
+</div>
+<div class="flex items-center gap-sm">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-transform scale-95 active:scale-90 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-transform scale-95 active:scale-90">
+<span class="material-symbols-outlined">translate</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant ml-2">
+<img class="w-full h-full object-cover" data-alt="A close-up professional profile image of a young African professional looking thoughtfully into the camera. The background is a blurred office environment with warm sunlight filtering through glass, emphasizing a bright and professional tone." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUT_Zkl2lBP6pPso5ajvkKoGuZjjEC94E39Vrvl3oFFSkTHrBP2gDy7StSDIvb0oG8CpV3LtyrNjlCi8-lwKjURB9XjOY01a0t1Gq0oG6ME98YXf3t3oWSiiG7xoETo496qUjIqY2EcG1m2DXkLT6j_SfMqQeDBQfAqjRYt2ugwG6x0ZP0wtJC4J52QInAcEAEdwPuN7RhDcOPz3uOhntpEUcHhCHTqTzps6QXierjjCpwo_YQNsBTBwPS3i9FLhfACXL25lgBiYpf"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-0 md:ml-[280px] p-4 md:p-8 min-h-screen">
+<div class="max-w-desktop mx-auto">
+<!-- Journey Rail Section -->
+<section class="bg-surface-container-lowest p-md md:p-lg rounded-2xl shadow-sm mb-lg border border-surface-container">
+<div class="flex justify-between items-end mb-md">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary mb-1">Your Growth Journey</h2>
+<p class="text-on-surface-variant font-body-sm">Tracking 9 milestones of the Dangote Executive Program</p>
+</div>
+<div class="hidden md:block">
+<span class="text-label-md font-bold px-3 py-1 bg-primary-container text-on-primary-container rounded-full">STEP 4 OF 9</span>
+</div>
+</div>
+<!-- 9-Step Journey Rail -->
+<div class="relative py-4">
+<div class="absolute top-1/2 left-0 w-full h-[2px] bg-outline-variant -translate-y-1/2 z-0"></div>
+<div class="absolute top-1/2 left-0 w-[42%] h-[2px] bg-primary -translate-y-1/2 z-0 transition-all duration-1000"></div>
+<div class="relative z-10 flex justify-between items-center">
+<!-- Step 1: Complete -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white shadow-md">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'wght' 700;">check</span>
+</div>
+<span class="font-label-md text-primary font-bold">Initiation</span>
+</div>
+<!-- Step 2: Complete -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white shadow-md">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'wght' 700;">check</span>
+</div>
+<span class="font-label-md text-primary font-bold">Mapping</span>
+</div>
+<!-- Step 3: Complete -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white shadow-md">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'wght' 700;">check</span>
+</div>
+<span class="font-label-md text-primary font-bold">Alignment</span>
+</div>
+<!-- Step 4: Current -->
+<div class="flex flex-col items-center gap-2">
+<div class="relative">
+<div class="w-8 h-8 rounded-full border-2 border-primary bg-white flex items-center justify-center z-10">
+<div class="w-3 h-3 bg-primary rounded-full pulse-ring"></div>
+</div>
+<div class="absolute -inset-1 border-2 border-primary/20 rounded-full animate-ping"></div>
+</div>
+<span class="font-label-md text-primary font-bold">Execution</span>
+</div>
+<!-- Steps 5-9: Future -->
+<div class="flex flex-col items-center gap-2 opacity-50">
+<div class="w-8 h-8 border-2 border-outline-variant bg-white rounded-full flex items-center justify-center"></div>
+<span class="font-label-md text-on-surface-variant">Review</span>
+</div>
+<div class="flex flex-col items-center gap-2 opacity-50">
+<div class="w-8 h-8 border-2 border-outline-variant bg-white rounded-full flex items-center justify-center"></div>
+<span class="font-label-md text-on-surface-variant">Pivot</span>
+</div>
+<div class="flex flex-col items-center gap-2 opacity-50">
+<div class="w-8 h-8 border-2 border-outline-variant bg-white rounded-full flex items-center justify-center"></div>
+<span class="font-label-md text-on-surface-variant">Scale</span>
+</div>
+<div class="flex flex-col items-center gap-2 opacity-50">
+<div class="w-8 h-8 border-2 border-outline-variant bg-white rounded-full flex items-center justify-center"></div>
+<span class="font-label-md text-on-surface-variant">Impact</span>
+</div>
+<div class="flex flex-col items-center gap-2 opacity-50">
+<div class="w-8 h-8 border-2 border-outline-variant bg-white rounded-full flex items-center justify-center"></div>
+<span class="font-label-md text-on-surface-variant">Mastery</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Grid Content -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- AI Assistant Pill (Priority) -->
+<div class="md:col-span-12">
+<div class="ai-shimmer border border-indigo-200 rounded-xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div>
+<p class="text-indigo-900 font-bold font-body-md">✨ AI Suggested: 'What next?'</p>
+<p class="text-indigo-800 text-body-sm italic">You've completed 80% of your Execution goals. Consider scheduling a final review with Sarah.</p>
+</div>
+</div>
+<button class="bg-white text-indigo-600 border border-indigo-200 hover:bg-indigo-50 px-6 py-2 rounded-[10px] font-bold text-body-sm transition-colors shadow-sm whitespace-nowrap">
+                            Plan Session
+                        </button>
+</div>
+</div>
+<!-- Next Meeting Widget -->
+<div class="md:col-span-4 flex flex-col gap-gutter">
+<div class="bg-surface-container-lowest p-md rounded-2xl shadow-sm border border-surface-container flex flex-col justify-between h-full group hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start">
+<span class="text-label-md font-bold text-on-secondary-fixed bg-secondary-fixed px-2 py-1 rounded">UPCOMING SESSION</span>
+<div class="text-on-surface-variant font-label-md">EN | <span class="opacity-50">FR</span></div>
+</div>
+<div class="mt-4">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Strategy Alignment</h3>
+<p class="text-primary font-bold text-body-lg">Tomorrow, 14:30 WAT</p>
+</div>
+<div class="mt-6 flex items-center gap-3 border-t border-outline-variant pt-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A portrait of a senior female executive in a professional setting, wearing a sophisticated white blouse and gold jewelry. She has a warm, mentor-like expression and is set against a background of a modern, sunlit corporate boardroom. The aesthetic is high-end, professional, and encourages a mentorship culture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyXEcN70HL61FP5qA1X1-8BHgYx6JAvoGHquJYKPpRW-DaQXpV5JwcGuVHxTnXtF4yj4oPF7vWzXCm2dIP2Vx9UaT4f_1nSzV83xTsB8UA8pLkCOe8sWmHq_MyM0jUSSH_SsPtrR1kvcQczf6cKfMLbwYyIJqUESeP9nyxygK3_-o9YkDEdFXZxO7sVx1RF4axpE0RaCbSdlcdQ8lF3wlUaxhFaW9jRAMsB2j4ujzh1KyUtbCQGCegmyTdCibyvmGP4UZpj_z1qW9O"/>
+</div>
+<div>
+<p class="font-label-md text-on-surface font-bold">Sarah Alabi</p>
+<p class="text-body-sm text-on-surface-variant">Senior Mentor</p>
+</div>
+<button class="ml-auto p-2 bg-primary text-white rounded-lg group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined">videocam</span>
+</button>
+</div>
+</div>
+<!-- Upcoming Clinic Card -->
+<div class="bg-primary text-on-primary p-md rounded-2xl shadow-lg border border-primary-container relative overflow-hidden group">
+<div class="absolute -right-4 -bottom-4 w-32 h-32 bg-primary-container opacity-50 rounded-full scale-150 transition-transform group-hover:scale-110"></div>
+<div class="relative z-10">
+<span class="font-label-md bg-on-primary-container text-primary px-2 py-1 rounded-full uppercase tracking-tighter">Knowledge Clinic</span>
+<h3 class="font-headline-sm text-headline-sm mt-3">Leadership in Chaos</h3>
+<p class="text-primary-fixed-dim text-body-sm mt-2">Special guest lecture on crisis management and rapid scaling.</p>
+<div class="mt-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+<span class="font-label-md">Friday, 16:00</span>
+</div>
+<button class="mt-6 w-full py-3 bg-primary-fixed text-on-primary-fixed font-bold rounded-[10px] hover:bg-white transition-colors">
+                                RSVP Now
+                            </button>
+</div>
+</div>
+</div>
+<!-- Goals Section with Circular Progress -->
+<div class="md:col-span-5 bg-surface-container-lowest p-md rounded-2xl shadow-sm border border-surface-container">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Active Goals</h3>
+<button class="text-primary font-bold text-label-md flex items-center gap-1">VIEW ALL <span class="material-symbols-outlined text-[16px]">arrow_forward</span></button>
+</div>
+<div class="space-y-6">
+<!-- Goal 1 -->
+<div class="flex items-center gap-4 p-sm bg-surface-container-low rounded-xl">
+<div class="relative w-16 h-16 flex-shrink-0">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-outline-variant" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="6"></circle>
+<circle class="text-primary" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="175" stroke-dashoffset="35" stroke-width="6"></circle>
+</svg>
+<span class="absolute inset-0 flex items-center justify-center font-bold text-label-md text-primary">80%</span>
+</div>
+<div class="grow">
+<p class="font-body-md font-bold text-on-surface">Supply Chain Optimization</p>
+<p class="text-body-sm text-on-surface-variant">Reviewing Q3 logistics bottlenecks.</p>
+</div>
+<div class="text-on-surface-variant">
+<span class="material-symbols-outlined">more_vert</span>
+</div>
+</div>
+<!-- Goal 2 -->
+<div class="flex items-center gap-4 p-sm bg-surface-container-low rounded-xl">
+<div class="relative w-16 h-16 flex-shrink-0">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-outline-variant" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="6"></circle>
+<circle class="text-on-tertiary-container" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="175" stroke-dashoffset="100" stroke-width="6"></circle>
+</svg>
+<span class="absolute inset-0 flex items-center justify-center font-bold text-label-md text-on-tertiary-container">42%</span>
+</div>
+<div class="grow">
+<p class="font-body-md font-bold text-on-surface">Team Leadership Skills</p>
+<p class="text-body-sm text-on-surface-variant">Completing EQ assessment module.</p>
+</div>
+<div class="text-on-surface-variant">
+<span class="material-symbols-outlined">more_vert</span>
+</div>
+</div>
+<!-- Goal 3 -->
+<div class="flex items-center gap-4 p-sm bg-surface-container-low rounded-xl">
+<div class="relative w-16 h-16 flex-shrink-0">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-outline-variant" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="6"></circle>
+<circle class="text-secondary" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="175" stroke-dashoffset="150" stroke-width="6"></circle>
+</svg>
+<span class="absolute inset-0 flex items-center justify-center font-bold text-label-md text-secondary">15%</span>
+</div>
+<div class="grow">
+<p class="font-body-md font-bold text-on-surface">Public Speaking</p>
+<p class="text-body-sm text-on-surface-variant">Drafting the Regional Summit pitch.</p>
+</div>
+<div class="text-on-surface-variant">
+<span class="material-symbols-outlined">more_vert</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Weekly Tip & Resources -->
+<div class="md:col-span-3 flex flex-col gap-gutter">
+<!-- Weekly Tip Card -->
+<div class="bg-tertiary-container text-tertiary-fixed p-md rounded-2xl shadow-sm h-full flex flex-col">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+<h3 class="font-label-md uppercase tracking-widest font-bold">Weekly Tip</h3>
+</div>
+<p class="font-body-lg text-body-lg text-white mb-4 italic leading-tight">
+                            "Innovation is not just about new products; it's about better ways of thinking about existing problems."
+                        </p>
+<p class="text-body-sm text-tertiary-fixed-dim mt-auto">— Aliko Dangote</p>
+<button class="mt-6 text-label-md font-bold underline text-left">SHARE INSIGHT</button>
+</div>
+<!-- Resource Card -->
+<div class="bg-surface-container-highest p-md rounded-2xl shadow-sm border border-surface-container">
+<h3 class="font-label-md font-bold text-on-surface-variant mb-4 uppercase tracking-wider">New Resources</h3>
+<ul class="space-y-4">
+<li class="flex gap-3">
+<div class="p-2 bg-white rounded-lg text-primary">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+</div>
+<div>
+<p class="text-body-sm font-bold">2024 Strategy Guide</p>
+<p class="text-[10px] text-on-surface-variant">PDF • 12MB</p>
+</div>
+</li>
+<li class="flex gap-3">
+<div class="p-2 bg-white rounded-lg text-primary">
+<span class="material-symbols-outlined">play_circle</span>
+</div>
+<div>
+<p class="text-body-sm font-bold">Managing Upwards</p>
+<p class="text-[10px] text-on-surface-variant">Video • 15min</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Mobile Navigation Bar -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] rounded-t-xl">
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-2xl px-4 py-1">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1">
+<span class="material-symbols-outlined">target</span>
+<span class="font-label-md">Goals</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1">
+<span class="material-symbols-outlined">event_repeat</span>
+<span class="font-label-md">Sessions</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1">
+<span class="material-symbols-outlined">mail</span>
+<span class="font-label-md">Chat</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<span class="font-label-md">Admin</span>
+</button>
+</nav>
+<!-- Floating Action Button: Suppressed for Dashboard context in favor of specific UI triggers, 
+         but technically applicable here as "Start Session" if needed. 
+         Keeping it clean based on "Suppress on Settings/Profile/Details" rule - Dashboard is primary so we could have one. -->
+<button class="fixed bottom-24 right-6 md:bottom-10 md:right-10 w-14 h-14 bg-primary text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-transform z-40">
+<span class="material-symbols-outlined" style="font-variation-settings: 'wght' 700;">add</span>
+</button>
+<script>
+        // Simple logic for interactive progress steps (Visual only)
+        document.querySelectorAll('.journey-rail-line').forEach(line => {
+            setTimeout(() => {
+                line.style.backgroundPosition = 'left bottom';
+            }, 500);
+        });
+
+        // Toggle language interaction
+        const langToggle = document.querySelectorAll('.font-label-md span');
+        langToggle.forEach(span => {
+            span.addEventListener('click', () => {
+                langToggle.forEach(s => s.classList.remove('text-primary', 'font-bold', 'underline'));
+                span.classList.add('text-primary', 'font-bold', 'underline');
+            });
+        });
+    </script>
+</body></html>

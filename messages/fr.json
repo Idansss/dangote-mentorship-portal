@@ -20,7 +20,8 @@
     "yes": "Oui",
     "no": "Non",
     "errorTitle": "Une erreur est survenue",
-    "errorBody": "Veuillez réessayer. Si le problème persiste, contactez un administrateur."
+    "errorBody": "Veuillez réessayer. Si le problème persiste, contactez un administrateur.",
+    "appShortName": "Dangote Mentorship"
   },
   "nav": {
     "home": "Accueil",
@@ -58,7 +59,8 @@
     "navReviews": "Évaluations",
     "navHelp": "Aide",
     "navManage": "Gérer",
-    "navPeople": "Personnes"
+    "navPeople": "Personnes",
+    "enterprisePortal": "Portail Entreprise"
   },
   "home": {
     "eyebrow": "Programme de mentorat Dangote 2026",
@@ -113,7 +115,9 @@
         "done": "Terminé",
         "yourTurn": "À vous",
         "upcoming": "À venir"
-      }
+      },
+      "showcaseTitle": "Le parcours d’excellence en 9 étapes",
+      "showcaseSubtitle": "Un parcours structuré qui mène chaque mentorat du premier profil au certificat final."
     },
     "features": {
       "eyebrow": "Ce que contient le portail",
@@ -153,7 +157,30 @@
     "footer": {
       "tagline": "Le système d’exploitation du programme de mentorat bilingue de Dangote.",
       "privacy": "Confidentiel par conception — les messages directs restent privés entre les participants."
-    }
+    },
+    "heroBadge": "Excellence d’entreprise",
+    "heroLine1": "Former la",
+    "heroAccent": "prochaine génération",
+    "heroLine2": "de leaders",
+    "heroSubtitle": "Un écosystème de mentorat professionnel conçu pour combler les écarts de connaissances et accélérer les carrières au sein du Groupe Dangote et au-delà.",
+    "getStarted": "Commencer",
+    "showcaseTitle": "Le parcours d’excellence en 9 étapes",
+    "showcaseSubtitle": "Un parcours structuré qui mène chaque mentorat du premier profil au certificat final.",
+    "aiPathLabel": "Parcours suggéré par l’IA",
+    "aiPathBody": "À partir du profil d’un mentoré, l’assistant recommande la meilleure prochaine étape — toujours à titre indicatif, l’humain garde le contrôle.",
+    "bento": {
+      "growthTitle": "Évolution de carrière",
+      "growthBody": "Accélérez votre trajectoire grâce à des feuilles de route personnalisées et au suivi des étapes, pensés pour l’entreprise.",
+      "growthCta": "En savoir plus",
+      "knowledgeTitle": "Partage des savoirs",
+      "knowledgeBody": "Puisez dans un vaste réservoir de savoir institutionnel — un transfert fluide des compétences des cadres expérimentés vers les talents émergents.",
+      "knowledgeCta": "Partager",
+      "networkTitle": "Bilingue par conception",
+      "networkBody": "Travaillez en anglais ou en français. Traduisez tout objectif, note ou message à la demande, l’original étant toujours conservé.",
+      "networkCta": "Explorer"
+    },
+    "cta2Title": "Prêt à définir votre avenir ?",
+    "cta2Subtitle": "Que vous guidiez la prochaine génération ou cherchiez la sagesse pour diriger, votre parcours commence ici."
   },
   "about": {
     "eyebrow": "Le programme",
@@ -204,7 +231,19 @@
     "brandTitle": "Votre parcours de mentorat bilingue, réuni en un seul endroit.",
     "brandSubtitle": "Connectez-vous pour reprendre vos objectifs, vos séances et vos conversations là où vous les avez laissés.",
     "noAccount": "Besoin d’un compte ?",
-    "signupLink": "Demander l’accès"
+    "signupLink": "Demander l’accès",
+    "enterprisePortal": "Portail Entreprise",
+    "requestAccess": "Demander un accès",
+    "privacyPolicy": "Confidentialité",
+    "termsOfService": "Conditions d’utilisation",
+    "supportLink": "Assistance",
+    "copyright": "© 2026 Dangote Group. Tous droits réservés.",
+    "corporateEmail": "E-mail professionnel",
+    "emailPlaceholder": "nom@dangote.com",
+    "forgotShort": "Oublié ?",
+    "rememberMe": "Se souvenir de moi pendant 30 jours",
+    "dangoteSso": "Connexion SSO Dangote",
+    "orCredentials": "Ou utiliser les identifiants"
   },
   "signup": {
     "title": "Rejoindre le programme",
@@ -386,7 +425,13 @@
     "respondAcceptedDone": "Vous êtes maintenant jumelé avec {name}.",
     "respondDeclinedTitle": "Jumelage refusé",
     "respondDeclinedDone": "Vous avez refusé le jumelage avec {name}.",
-    "respondErrorTitle": "Échec de la mise à jour"
+    "respondErrorTitle": "Échec de la mise à jour",
+    "reviewing": "Examen des jumelages générés par l’IA pour",
+    "rankMatch": "Jumelage n°{rank}",
+    "confidence": "Confiance du jumelage",
+    "optimalPair": "Paire optimale",
+    "aiRationale": "Justification de l’IA",
+    "queue": "File d’attente ({count} jumelages)"
   },
   "profile": {
     "title": "Mon profil",
@@ -754,7 +799,9 @@
       "IN_PROGRESS": "En cours",
       "DONE": "Terminé",
       "BLOCKED": "Bloqué"
-    }
+    },
+    "loggingSession": "Enregistrement de la séance",
+    "complete": "complété"
   },
   "messages": {
     "title": "Messages",
@@ -764,7 +811,10 @@
     "placeholder": "Écrivez un message…",
     "send": "Envoyer",
     "threadEmpty": "Aucun message — dites bonjour.",
-    "back": "Retour aux conversations"
+    "back": "Retour aux conversations",
+    "participantSubtitle": "Binôme de mentorat",
+    "viewPair": "Ouvrir l’espace du binôme",
+    "viewGoals": "Objectifs partagés"
   },
   "meetings": {
     "title": "Rencontres",

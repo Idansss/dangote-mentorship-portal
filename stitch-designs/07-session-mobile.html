@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dangote Mentorship - Session Log</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Public Sans & Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "surface-container-highest": "#e1e3e3",
+                "surface-container-low": "#f2f4f4",
+                "on-secondary-fixed": "#111c2d",
+                "primary-fixed": "#b1edf2",
+                "tertiary": "#492306",
+                "on-secondary": "#ffffff",
+                "on-surface-variant": "#404849",
+                "on-error": "#ffffff",
+                "background": "#f8faf9",
+                "inverse-on-surface": "#eff1f1",
+                "on-primary-fixed-variant": "#074f54",
+                "on-error-container": "#93000a",
+                "outline": "#707979",
+                "on-surface": "#191c1c",
+                "outline-variant": "#bfc8c9",
+                "secondary-fixed": "#d8e3fb",
+                "on-secondary-container": "#586377",
+                "surface": "#f8faf9",
+                "surface-variant": "#e1e3e3",
+                "surface-container-lowest": "#ffffff",
+                "on-tertiary-fixed": "#321300",
+                "tertiary-fixed": "#ffdbc8",
+                "surface-container": "#edeeee",
+                "on-primary": "#ffffff",
+                "on-tertiary-container": "#e1a27c",
+                "error": "#ba1a1a",
+                "surface-tint": "#2a676c",
+                "on-secondary-fixed-variant": "#3c475a",
+                "inverse-primary": "#96d1d6",
+                "primary-container": "#004b50",
+                "on-tertiary": "#ffffff",
+                "tertiary-fixed-dim": "#fab891",
+                "primary": "#003336",
+                "surface-bright": "#f8faf9",
+                "tertiary-container": "#64381a",
+                "on-tertiary-fixed-variant": "#683c1d",
+                "error-container": "#ffdad6",
+                "surface-container-high": "#e7e8e8",
+                "on-primary-container": "#7fbabf",
+                "secondary-container": "#d5e0f8",
+                "on-primary-fixed": "#002022",
+                "surface-dim": "#d9dada",
+                "secondary": "#545f73",
+                "primary-fixed-dim": "#96d1d6",
+                "on-background": "#191c1c",
+                "inverse-surface": "#2e3131",
+                "secondary-fixed-dim": "#bcc7de"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "margin-mobile": "16px",
+                "md": "24px",
+                "xl": "64px",
+                "lg": "40px",
+                "sm": "12px",
+                "max-width-desktop": "1280px",
+                "gutter": "24px",
+                "base": "8px",
+                "xs": "4px"
+            },
+            "fontFamily": {
+                "headline-sm": ["Public Sans"],
+                "body-md": ["Public Sans"],
+                "headline-xl": ["Public Sans"],
+                "body-lg": ["Public Sans"],
+                "body-sm": ["Public Sans"],
+                "headline-md": ["Public Sans"],
+                "label-md": ["Public Sans"],
+                "headline-lg": ["Public Sans"],
+                "headline-lg-mobile": ["Public Sans"]
+            },
+            "fontSize": {
+                "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #f8faf9;
+        }
+        /* Soft Ambient Shadows Level 1 */
+        .shadow-level-1 {
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.05);
+        }
+        /* Mobile-first constraints */
+        .main-canvas {
+            max-width: 100%;
+            margin-bottom: 80px; /* Space for BottomNavBar */
+        }
+        @media (min-width: 768px) {
+            .main-canvas {
+                max-width: 600px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+        .ai-assistant-border {
+            border: 1px dashed #7fbabf;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface">
+<!-- Top Navigation Anchor -->
+<header class="flex justify-between items-center w-full px-md h-16 bg-surface shadow-sm sticky top-0 z-40">
+<div class="flex flex-col">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Dangote Mentorship</h1>
+<span class="font-label-md text-label-md text-on-surface-variant -mt-1 uppercase tracking-wider">Session Log</span>
+</div>
+<div class="flex gap-4">
+<button class="material-symbols-outlined text-primary scale-95 active:scale-90 transition-transform">notifications</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a female engineer wearing a high-visibility vest and a white hard hat, set against a blurred background of a modern industrial cement plant. The lighting is bright and natural, conveying a clean and professional corporate atmosphere consistent with Dangote Group's disciplined aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuASXPw7YfvjaXQ2zMw3UM59wi2m8h-zFd9AGtblRf4eKca2_tccYAkZOoodzjqZrAdJKx9jG6WB6FOBOlpu8Yeg1qnq65uzEYot4mS9CKHWnON9U36H9nmtsIxKqb_-FlwXECymA3-3myNc0xKFRKBDptmiDYzvoakIaAzGwBF7988gfUAck3s9YCY2gQHab8udtsNuAaeUIDcYEgUWWuLrbrc-hzS2uhO0IcXkTbwQQSNb1C-AOByS5487MzYWUUP9BRFJTiy_kSHQ"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="main-canvas p-margin-mobile md:p-md">
+<!-- Status Indicator / Journey Rail (Simplified for Mobile) -->
+<div class="mb-lg">
+<div class="flex items-center justify-between mb-xs">
+<span class="font-label-md text-label-md text-on-surface-variant">LOGGING SESSION 08 / 12</span>
+<span class="font-label-md text-label-md text-primary font-bold">65% COMPLETE</span>
+</div>
+<div class="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[65%] transition-all duration-500"></div>
+</div>
+</div>
+<!-- Session Input Card -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-level-1 mb-md">
+<form class="space-y-md" id="session-form">
+<!-- Date Field -->
+<div class="space-y-xs">
+<label class="block font-label-md text-label-md text-on-surface-variant font-bold tracking-tight">SESSION DATE</label>
+<div class="relative">
+<input class="w-full h-14 px-md bg-surface border-outline-variant border rounded-lg focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all text-body-md font-body-md" type="date" value="2023-11-24"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">calendar_today</span>
+</div>
+</div>
+<!-- Topic Field -->
+<div class="space-y-xs">
+<label class="block font-label-md text-label-md text-on-surface-variant font-bold tracking-tight">PRIMARY TOPIC</label>
+<div class="relative">
+<select class="w-full h-14 px-md bg-surface border-outline-variant border rounded-lg focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all text-body-md font-body-md appearance-none">
+<option>Operational Excellence & Efficiency</option>
+<option>Supply Chain Logisitics</option>
+<option>Leadership & Team Dynamics</option>
+<option>Technical Plant Maintenance</option>
+<option>Safety Protocols (HSE)</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Notes Field -->
+<div class="space-y-xs">
+<div class="flex justify-between items-end">
+<label class="block font-label-md text-label-md text-on-surface-variant font-bold tracking-tight">OBSERVATIONS & NOTES</label>
+<span class="text-body-sm font-body-sm text-on-surface-variant italic">Bilingual: EN | <span class="text-primary-container underline font-bold">FR</span></span>
+</div>
+<textarea class="w-full min-h-[160px] p-md bg-surface border-outline-variant border rounded-lg focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all text-body-md font-body-md" id="notes-area" placeholder="Record observations from the site visit or discussion points...">During today's walkthrough of the Kiln 3 section, we identified a minor calibration offset in the temperature sensors. Mentee suggested a preemptive maintenance schedule shift which could improve uptime by 4%. Discussion also touched on the shift handover protocols which need more structure.</textarea>
+</div>
+<!-- AI Assistant Button -->
+<button class="w-full py-3 px-md ai-assistant-border bg-[#EEF2FF] text-on-primary-fixed-variant rounded-lg flex items-center justify-center gap-2 hover:bg-secondary-container transition-colors active:scale-[0.98]" onclick="summarizeNotes()" type="button">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">temp_preferences_custom</span>
+<span class="font-label-md text-label-md font-bold">SUMMARIZE MY NOTES</span>
+</button>
+<!-- AI Output Container (Hidden by default) -->
+<div class="hidden animate-in fade-in slide-in-from-top-4 duration-300" id="ai-output">
+<div class="p-md bg-[#EEF2FF] rounded-lg border-l-4 border-primary-container">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-[18px]">auto_awesome</span>
+<span class="font-label-md text-label-md text-primary font-bold">✨ AI SUGGESTED SUMMARY</span>
+</div>
+<p class="text-body-sm font-body-sm italic text-on-surface-variant leading-relaxed">
+                            Site visit at Kiln 3 revealed sensor calibration issues. Proposed solution: Adjust preemptive maintenance for +4% uptime. Secondary action: Standardize shift handover protocols for better consistency.
+                        </p>
+</div>
+</div>
+</form>
+</div>
+<!-- Action Buttons -->
+<div class="grid grid-cols-2 gap-md">
+<button class="h-12 border border-outline text-on-surface-variant font-label-md text-label-md rounded-lg uppercase tracking-widest font-bold active:bg-surface-container-high transition-colors">Save Draft</button>
+<button class="h-12 bg-primary text-on-primary font-label-md text-label-md rounded-lg uppercase tracking-widest font-bold flex items-center justify-center gap-2 shadow-level-1 active:scale-95 transition-all">
+                Submit Log
+                <span class="material-symbols-outlined text-[18px]">send</span>
+</button>
+</div>
+</main>
+<!-- Bottom Navigation Shell (Mobile-only Anchor) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 md:hidden bg-surface shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-low active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-low active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="target">target</span>
+<span class="font-label-md text-label-md mt-1">Goals</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-2xl px-4 py-1 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="event_repeat" style="font-variation-settings: 'FILL' 1;">event_repeat</span>
+<span class="font-label-md text-label-md mt-1">Sessions</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-low active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+<span class="font-label-md text-label-md mt-1">Chat</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-low active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="admin_panel_settings">admin_panel_settings</span>
+<span class="font-label-md text-label-md mt-1">Admin</span>
+</a>
+</nav>
+<!-- Site Visual Element (Background Decoration) -->
+<div class="fixed top-0 right-0 -z-10 opacity-10 pointer-events-none">
+<img class="w-64" data-alt="Faded technical blueprint illustration of an industrial grinding mill, rendered in thin architectural lines. The aesthetic is clean, professional, and corporate, emphasizing engineering precision within a modern African industrial context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHJZB5st9O11EO5DmQGevfSKOI58cScwY08IpQwpqxMdB5dEQbiN4RwODY9rnPmo-JoXgYCfo7yXdAYy-VqaXDgXSthSE0PUwVOXNZQoC6eqwBjF-RE7mhO9nY5h-zHQgo-k6aGlUPogfuh5aeMYJi4GRzueOF6gdA_4TL_J5N8veq3sofRjIKE6okrPhUVk6zfgZ6hxEW29DbnO-eUUzxaHnoBJUsXevVK_qluI-tqq5zD9qDMMBrS3VUf5vKVjTMYOI_iV99iLIc"/>
+</div>
+<script>
+        function summarizeNotes() {
+            const output = document.getElementById('ai-output');
+            const button = event.currentTarget;
+            
+            // Interaction feedback
+            button.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> <span class="font-label-md text-label-md font-bold">ANALYZING...</span>';
+            
+            setTimeout(() => {
+                output.classList.remove('hidden');
+                button.innerHTML = '<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: \'FILL\' 1;">temp_preferences_custom</span><span class="font-label-md text-label-md font-bold">RE-SUMMARIZE</span>';
+                
+                // Scroll to result on mobile
+                output.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 800);
+        }
+
+        // Handle Active states for simple feedback
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.querySelectorAll('nav a').forEach(l => {
+                    l.classList.remove('bg-secondary-container', 'text-on-secondary-container', 'rounded-2xl');
+                    l.classList.add('text-on-surface-variant');
+                    const icon = l.querySelector('.material-symbols-outlined');
+                    if(icon) icon.style.fontVariationSettings = "'FILL' 0";
+                });
+                this.classList.add('bg-secondary-container', 'text-on-secondary-container', 'rounded-2xl');
+                this.classList.remove('text-on-surface-variant');
+                const activeIcon = this.querySelector('.material-symbols-outlined');
+                if(activeIcon) activeIcon.style.fontVariationSettings = "'FILL' 1";
+            });
+        });
+    </script>
+</body></html>

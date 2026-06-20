@@ -20,7 +20,8 @@
     "yes": "Yes",
     "no": "No",
     "errorTitle": "Something went wrong",
-    "errorBody": "Please try again. If the problem persists, contact an administrator."
+    "errorBody": "Please try again. If the problem persists, contact an administrator.",
+    "appShortName": "Dangote Mentorship"
   },
   "nav": {
     "home": "Home",
@@ -58,7 +59,8 @@
     "navReviews": "Reviews",
     "navHelp": "Help",
     "navManage": "Manage",
-    "navPeople": "People"
+    "navPeople": "People",
+    "enterprisePortal": "Enterprise Portal"
   },
   "home": {
     "eyebrow": "Dangote Mentorship Programme 2026",
@@ -113,7 +115,9 @@
         "done": "Done",
         "yourTurn": "Your turn",
         "upcoming": "Upcoming"
-      }
+      },
+      "showcaseTitle": "The 9-step excellence journey",
+      "showcaseSubtitle": "A structured path that takes every mentorship from first profile to final certificate."
     },
     "features": {
       "eyebrow": "What's inside",
@@ -153,7 +157,30 @@
     "footer": {
       "tagline": "The operating system for Dangote's bilingual mentorship programme.",
       "privacy": "Confidential by design — direct messages stay private to participants."
-    }
+    },
+    "heroBadge": "Enterprise excellence",
+    "heroLine1": "Empowering the",
+    "heroAccent": "next generation",
+    "heroLine2": "of leaders",
+    "heroSubtitle": "A professional mentorship ecosystem designed to bridge knowledge gaps and accelerate careers within the Dangote Group and beyond.",
+    "getStarted": "Get started",
+    "showcaseTitle": "The 9-step excellence journey",
+    "showcaseSubtitle": "A structured path that takes every mentorship from first profile to final certificate.",
+    "aiPathLabel": "AI suggested path",
+    "aiPathBody": "Based on a mentee profile, the assistant recommends the next best step on the journey — always advisory, the human stays in control.",
+    "bento": {
+      "growthTitle": "Career growth",
+      "growthBody": "Accelerate your trajectory with personalized roadmaps and milestone tracking built for the enterprise.",
+      "growthCta": "Learn more",
+      "knowledgeTitle": "Knowledge sharing",
+      "knowledgeBody": "Tap a deep reservoir of institutional wisdom — seamless transfer of skills from seasoned executives to rising talent.",
+      "knowledgeCta": "Start sharing",
+      "networkTitle": "Bilingual by design",
+      "networkBody": "Work in English or French. Translate any goal, note or message on demand, with the original always preserved.",
+      "networkCta": "Explore"
+    },
+    "cta2Title": "Ready to define your future?",
+    "cta2Subtitle": "Whether you are guiding the next generation or seeking the wisdom to lead, your journey begins here."
   },
   "about": {
     "eyebrow": "The programme",
@@ -204,7 +231,19 @@
     "brandTitle": "Your bilingual mentorship journey, all in one place.",
     "brandSubtitle": "Sign in to pick up your goals, sessions, and conversations exactly where you left off.",
     "noAccount": "Need an account?",
-    "signupLink": "Request access"
+    "signupLink": "Request access",
+    "enterprisePortal": "Enterprise Portal",
+    "requestAccess": "Request access",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "supportLink": "Support",
+    "copyright": "© 2026 Dangote Group. All rights reserved.",
+    "corporateEmail": "Corporate email",
+    "emailPlaceholder": "name@dangote.com",
+    "forgotShort": "Forgot?",
+    "rememberMe": "Remember me for 30 days",
+    "dangoteSso": "Dangote SSO login",
+    "orCredentials": "Or use credentials"
   },
   "signup": {
     "title": "Join the programme",
@@ -386,7 +425,13 @@
     "respondAcceptedDone": "You’re now paired with {name}.",
     "respondDeclinedTitle": "Match declined",
     "respondDeclinedDone": "You declined the match with {name}.",
-    "respondErrorTitle": "Couldn’t update match"
+    "respondErrorTitle": "Couldn’t update match",
+    "reviewing": "Reviewing AI-generated pairings for",
+    "rankMatch": "Rank #{rank} match",
+    "confidence": "Match confidence",
+    "optimalPair": "Optimal pair",
+    "aiRationale": "AI rationale",
+    "queue": "Queue ({count} matches)"
   },
   "profile": {
     "title": "My profile",
@@ -754,7 +799,9 @@
       "IN_PROGRESS": "In progress",
       "DONE": "Completed",
       "BLOCKED": "Blocked"
-    }
+    },
+    "loggingSession": "Logging session",
+    "complete": "complete"
   },
   "messages": {
     "title": "Messages",
@@ -764,7 +811,10 @@
     "placeholder": "Write a message…",
     "send": "Send",
     "threadEmpty": "No messages yet — say hello.",
-    "back": "Back to conversations"
+    "back": "Back to conversations",
+    "participantSubtitle": "Mentorship pair",
+    "viewPair": "Open pair workspace",
+    "viewGoals": "Shared goals"
   },
   "meetings": {
     "title": "Meetings",

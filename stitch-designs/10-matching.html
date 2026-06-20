@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dangote Mentorship | Matching Engine</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-highest": "#e1e3e3",
+                    "surface-container-low": "#f2f4f4",
+                    "on-secondary-fixed": "#111c2d",
+                    "primary-fixed": "#b1edf2",
+                    "tertiary": "#492306",
+                    "on-secondary": "#ffffff",
+                    "on-surface-variant": "#404849",
+                    "on-error": "#ffffff",
+                    "background": "#f8faf9",
+                    "inverse-on-surface": "#eff1f1",
+                    "on-primary-fixed-variant": "#074f54",
+                    "on-error-container": "#93000a",
+                    "outline": "#707979",
+                    "on-surface": "#191c1c",
+                    "outline-variant": "#bfc8c9",
+                    "secondary-fixed": "#d8e3fb",
+                    "on-secondary-container": "#586377",
+                    "surface": "#f8faf9",
+                    "surface-variant": "#e1e3e3",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#321300",
+                    "tertiary-fixed": "#ffdbc8",
+                    "surface-container": "#edeeee",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-container": "#e1a27c",
+                    "error": "#ba1a1a",
+                    "surface-tint": "#2a676c",
+                    "on-secondary-fixed-variant": "#3c475a",
+                    "inverse-primary": "#96d1d6",
+                    "primary-container": "#004b50",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed-dim": "#fab891",
+                    "primary": "#003336",
+                    "surface-bright": "#f8faf9",
+                    "tertiary-container": "#64381a",
+                    "on-tertiary-fixed-variant": "#683c1d",
+                    "error-container": "#ffdad6",
+                    "surface-container-high": "#e7e8e8",
+                    "on-primary-container": "#7fbabf",
+                    "secondary-container": "#d5e0f8",
+                    "on-primary-fixed": "#002022",
+                    "surface-dim": "#d9dada",
+                    "secondary": "#545f73",
+                    "primary-fixed-dim": "#96d1d6",
+                    "on-background": "#191c1c",
+                    "inverse-surface": "#2e3131",
+                    "secondary-fixed-dim": "#bcc7de"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "md": "24px",
+                    "xl": "64px",
+                    "lg": "40px",
+                    "sm": "12px",
+                    "max-width-desktop": "1280px",
+                    "gutter": "24px",
+                    "base": "8px",
+                    "xs": "4px"
+            },
+            "fontFamily": {
+                    "headline-sm": ["Public Sans"],
+                    "body-md": ["Public Sans"],
+                    "headline-xl": ["Public Sans"],
+                    "body-lg": ["Public Sans"],
+                    "body-sm": ["Public Sans"],
+                    "headline-md": ["Public Sans"],
+                    "label-md": ["Public Sans"],
+                    "headline-lg": ["Public Sans"],
+                    "headline-lg-mobile": ["Public Sans"]
+            },
+            "fontSize": {
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Public Sans', sans-serif; background-color: #f8fafc; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .ai-assistant-glow { background: #EEF2FF; border: 1px dashed #004b50; }
+        .shadow-soft { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .transition-all-custom { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .scoring-track { height: 6px; border-radius: 3px; background: #edeeee; overflow: hidden; }
+        .scoring-fill { height: 100%; transition: width 1s ease-out; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- SIDEBAR NAVIGATION -->
+<aside class="w-[280px] h-screen fixed left-0 top-0 bg-surface dark:bg-surface-dim shadow-sm flex flex-col py-md px-sm z-50">
+<div class="mb-lg px-4">
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">Dangote Mentorship</h1>
+<p class="font-body-sm text-on-surface-variant opacity-70">Enterprise Portal</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">target</span>
+<span class="font-body-md text-body-md">Goals</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">event_repeat</span>
+<span class="font-body-md text-body-md">Sessions</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">mail</span>
+<span class="font-body-md text-body-md">Messages</span>
+</a>
+<!-- Active Admin Tab -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary font-bold border-r-4 border-primary bg-surface-container-high" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<span class="font-body-md text-body-md">Admin</span>
+</a>
+</nav>
+<div class="mt-auto p-4 bg-surface-container-low rounded-xl flex items-center gap-3">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="Close up professional portrait of an African executive in a crisp white shirt and tailored dark blazer, soft studio lighting, high-end corporate aesthetic, neutral gray background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAa6jYTepKmcgAMMx88BP-lcof_mvmiS8k_dL8_CerodGIdSxURYMFn9xyv0yx85ZnDhKhSUMVNQaPCwXsftXP3krlxcYWWbUlBzX7G8S6RgbgEZD_mCORRld-GZDGGbHn-Hk4wj5TaVwVNgWhXZCItgcwioO7aIXoSLQu5lU-pftUl89dsNCL2sdZ_3Rh_dstFLkU4WxaOFAn_7_nrd2uuc0ZvnUolX8dJFwX2KRhwsXEtb11Q9DYjRMbqOliGacE4dx5kjWDo0Vcx"/>
+<div>
+<p class="font-label-md text-label-md text-on-surface font-bold">Admin User</p>
+<p class="text-[10px] uppercase tracking-wider text-on-surface-variant">Systems Lead</p>
+</div>
+</div>
+</aside>
+<!-- TOP NAVIGATION BAR -->
+<header class="fixed top-0 right-0 left-[280px] h-16 bg-surface dark:bg-surface-dim shadow-sm flex justify-between items-center px-md z-40">
+<div class="flex items-center gap-4 flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Search cohorts or participants..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 font-label-md text-label-md">
+<span class="text-primary font-bold underline">EN</span>
+<span class="text-outline-variant">|</span>
+<span class="text-on-surface-variant hover:text-primary cursor-pointer transition-colors">FR</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="relative p-2 rounded-full hover:bg-surface-container-low transition-all active:scale-90">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-surface"></span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container-low transition-all active:scale-90">
+<span class="material-symbols-outlined text-on-surface-variant">translate</span>
+</button>
+</div>
+</div>
+</header>
+<!-- MAIN CONTENT -->
+<main class="ml-[280px] mt-16 p-md">
+<div class="max-w-[1280px] mx-auto">
+<!-- HEADER SECTION -->
+<div class="flex justify-between items-end mb-lg">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary mb-2">Matching Engine</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Reviewing AI-generated mentorship pairings for <span class="font-bold">Cohort 2024-B (Engineering &amp; Ops)</span>.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-2 border border-outline rounded-xl font-label-md text-label-md hover:bg-surface-container-low transition-all">Export Report</button>
+<button class="px-6 py-2 bg-primary text-on-primary rounded-xl font-label-md text-label-md shadow-lg hover:shadow-xl transition-all">Finalize All Matches</button>
+</div>
+</div>
+<!-- ASYMMETRIC BENTO GRID LAYOUT -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- TOP MATCH (HIGHLIGHTED) -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest p-md rounded-2xl shadow-soft border border-surface-container-high flex flex-col gap-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="bg-primary/10 text-primary px-3 py-1 rounded-full font-label-md text-label-md font-bold uppercase tracking-widest">Rank #1 Match</span>
+<span class="text-on-surface-variant text-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">schedule</span>
+                                2h ago
+                            </span>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-tighter">Match Confidence</p>
+<p class="font-headline-sm text-headline-sm text-primary">98.4%</p>
+</div>
+<div class="w-12 h-12 rounded-full border-4 border-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col md:flex-row items-center justify-between gap-xl">
+<!-- Mentee -->
+<div class="flex flex-col items-center text-center gap-2 flex-1">
+<div class="relative">
+<img class="w-24 h-24 rounded-full border-4 border-white shadow-md object-cover" data-alt="A professional young woman with a focused expression, wearing a smart casual tech attire, African descent, bright office lighting with blurred corporate background, realistic cinematic photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJPEGHyTVDglU3ZySKOEoDTSswEdezERZ2scjh1LEnXLiq5nq7RaiIyWviOf6PGcxjNBWX7YdM52wCFLuO3h1WPw_Mrzon8KNugnRKj2-iIVaf1vsNLJJpb4-gM56G9hs7ulQILrqabl0b3THhTFkNQiKavNMRaf6H--D39OiY34NQKKFpfyQmMd1W5Ja4aye2ENDwjhSHvL9qn9T30plvK7qOF9PMKSVem2fO8AhJeEhHV1Zw7wvqtMVKtflyJ7JS8m-pMXvkkyo4"/>
+<div class="absolute -bottom-1 -right-1 bg-secondary-container p-1 rounded-full border-2 border-white">
+<span class="material-symbols-outlined text-sm text-on-secondary-container">school</span>
+</div>
+</div>
+<h4 class="font-headline-sm text-headline-sm mt-2">Amara Okoro</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Junior Mechanical Engineer</p>
+</div>
+<!-- Connector -->
+<div class="flex-none flex flex-col items-center gap-2 min-w-[120px]">
+<div class="h-[2px] w-full bg-gradient-to-r from-transparent via-primary/30 to-transparent relative">
+<div class="absolute left-1/2 -top-4 -translate-x-1/2 bg-surface px-2">
+<span class="material-symbols-outlined text-primary animate-pulse">link</span>
+</div>
+</div>
+<span class="font-label-md text-label-md text-primary font-bold uppercase tracking-wider">Optimal Pair</span>
+</div>
+<!-- Mentor -->
+<div class="flex flex-col items-center text-center gap-2 flex-1">
+<div class="relative">
+<img class="w-24 h-24 rounded-full border-4 border-white shadow-md object-cover" data-alt="Distinguished senior male executive in a grey suit, warm approachable smile, light-filled modern executive office background, natural daylight, soft focus on the environment, professional portrait." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZKJoTkOH-dGrEVJP-1gibo2Tf09vm3J6ISX3bIoOhkdM2gCZqAftd3d8X8Pgr2Ddg45tdZ-K54-1Mp96KXIlYEozuBQ0xoowFHKh6C_VIxeDf__84QyJURlMX28eCO5g7WBzFKtnmmw7YgiHbGHrSDfdo_Le2qlSmxvWfLOdpTVsnn3KVDjHH134J6g2wSkF7Vq4fA1O4mRCk64MDJi7n8IEOScn3Gd1z58wP2vgZPD9WdyttQQMVEzm0nJKxtniFtR46U7W_r-rR"/>
+<div class="absolute -bottom-1 -right-1 bg-primary-container p-1 rounded-full border-2 border-white">
+<span class="material-symbols-outlined text-sm text-on-primary-container">psychology</span>
+</div>
+</div>
+<h4 class="font-headline-sm text-headline-sm mt-2">Dr. Samuel Adeyemi</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Director of Operations</p>
+</div>
+</div>
+<!-- AI Rationale -->
+<div class="ai-assistant-glow p-md rounded-xl">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-sm">auto_awesome</span>
+<h5 class="font-label-md text-label-md text-primary font-bold">✨ AI RATIONALE</h5>
+</div>
+<p class="font-body-md text-body-md italic text-on-primary-container leading-relaxed">
+                            Amara's recent focus on renewable energy logistics perfectly mirrors Dr. Adeyemi's 15-year tenure in thermal plant modernization. The pairing is reinforced by shared bilingualism (FR) which is critical for the upcoming Senegal project expansion. Social affinity scores indicate high alignment in communication styles.
+                        </p>
+</div>
+<!-- Actions -->
+<div class="flex gap-3 justify-end mt-2">
+<button class="flex items-center gap-2 px-6 py-3 rounded-xl border border-error text-error font-bold hover:bg-error/5 transition-all-custom">
+<span class="material-symbols-outlined">close</span>
+                            Override Match
+                        </button>
+<button class="flex items-center gap-2 px-8 py-3 rounded-xl bg-primary text-on-primary font-bold shadow-lg hover:scale-[1.02] active:scale-95 transition-all-custom">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            Approve Match
+                        </button>
+</div>
+</div>
+<!-- ANALYTICS CARD -->
+<div class="col-span-12 lg:col-span-4 bg-surface-container-lowest p-md rounded-2xl shadow-soft border border-surface-container-high flex flex-col">
+<h3 class="font-headline-sm text-headline-sm text-primary mb-md">Cohort Strength</h3>
+<div class="space-y-lg flex-1">
+<div>
+<div class="flex justify-between mb-2">
+<span class="font-label-md text-label-md text-on-surface-variant">Skill Alignment</span>
+<span class="font-label-md text-label-md font-bold">92%</span>
+</div>
+<div class="scoring-track">
+<div class="scoring-fill bg-primary" style="width: 92%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-2">
+<span class="font-label-md text-label-md text-on-surface-variant">Cultural Fit</span>
+<span class="font-label-md text-label-md font-bold">88%</span>
+</div>
+<div class="scoring-track">
+<div class="scoring-fill bg-primary-container" style="width: 88%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-2">
+<span class="font-label-md text-label-md text-on-surface-variant">Availability Sync</span>
+<span class="font-label-md text-label-md font-bold">75%</span>
+</div>
+<div class="scoring-track">
+<div class="scoring-fill bg-secondary" style="width: 75%"></div>
+</div>
+</div>
+<div class="p-md bg-secondary-container/30 rounded-xl mt-lg">
+<p class="font-body-sm text-body-sm text-on-secondary-container">
+<strong>Observation:</strong> 12 candidates still require manual intervention due to high profile outliers.
+                            </p>
+</div>
+</div>
+<button class="w-full mt-lg py-3 rounded-xl border-2 border-dashed border-outline-variant text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-low transition-all">
+                        View Matching Logic Config
+                    </button>
+</div>
+<!-- OTHER MATCHES (SCROLLABLE LIST) -->
+<div class="col-span-12 space-y-md">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Queue (12 matches)</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
+<!-- Match Card 2 -->
+<div class="bg-surface-container-lowest p-sm rounded-2xl shadow-soft border border-surface-container-high hover:border-primary/30 transition-all-custom group">
+<div class="flex items-center justify-between mb-4">
+<span class="bg-surface-container-high px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Rank #2</span>
+<div class="flex items-center gap-1 text-primary">
+<span class="font-bold text-sm">89%</span>
+<span class="material-symbols-outlined text-xs">trending_up</span>
+</div>
+</div>
+<div class="flex items-center gap-3 mb-md">
+<div class="flex -space-x-4">
+<img class="w-12 h-12 rounded-full border-2 border-white object-cover" data-alt="A young African professional male in a light blue oxford shirt, intelligent gaze, bright minimal studio background, high resolution photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBC5QZctylUmUQ8912XfYWkwwtDO5xH80aCrb-2NSUZCO-8efxGkukUkKdVeX33NyeT__AtQHwq2MwrHNcO_a5uWjNbDwzyiS9Q4p5dot5jZVpkMrdzqxXYM494oo8tcWaw_8-QUGoXIbGMi4SpjLLqD-qT0LInLp8ovkE7_qQbN-BqRgV6N2wS5HjR_Ww4kdV8kN3oZtXDPLfACm1e7YN9EzRFatM304BQVEXeb85OQyb646mokga8lFHqgXK4F0q9lAjPvf62TNff"/>
+<img class="w-12 h-12 rounded-full border-2 border-white object-cover" data-alt="Experienced African female professional in a tailored suit, warm eyes, corporate office background with glass walls and sunlight, professional photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPmDWe0rnpS2YY_ZtVQiO_rhDRxicz5AiRaAIJMqZkD3BZkRPvN98zFA8jk7FTI3d1voCsjZGl85wcM3xo37nOQYRIGmruhPNVqwZwJSmsta_sNtwnGczYgngLGYxSDx_nDg7VuqHesiUU15e4ME9qRM4OOnvFEghHJqxZEDSfNsBYwxG7QsHKc9vBEyCgRAQz9ijIDWA83XOgMJGuGkwtmhANVM4uqoszUvK-d-xHPn9q8vQoe--NLrHiTPb2l4gpacH4F_2QXATC"/>
+</div>
+<div>
+<p class="font-label-md text-label-md font-bold">Kwame Mensah &amp; Aisha Bello</p>
+<p class="text-[10px] text-on-surface-variant">Supply Chain Specialist</p>
+</div>
+</div>
+<div class="ai-assistant-glow p-3 rounded-lg mb-4 text-[12px] leading-tight">
+<p class="italic text-on-primary-container">"Strong overlap in cross-border logistics and ERP implementation goals."</p>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 py-2 text-[12px] font-bold text-primary bg-primary/5 rounded-lg hover:bg-primary/10">Quick Approve</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-sm">visibility</span>
+</button>
+</div>
+</div>
+<!-- Match Card 3 -->
+<div class="bg-surface-container-lowest p-sm rounded-2xl shadow-soft border border-surface-container-high hover:border-primary/30 transition-all-custom group">
+<div class="flex items-center justify-between mb-4">
+<span class="bg-surface-container-high px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Rank #3</span>
+<div class="flex items-center gap-1 text-primary">
+<span class="font-bold text-sm">84%</span>
+<span class="material-symbols-outlined text-xs">trending_up</span>
+</div>
+</div>
+<div class="flex items-center gap-3 mb-md">
+<div class="flex -space-x-4">
+<img class="w-12 h-12 rounded-full border-2 border-white object-cover" data-alt="A young smiling woman with braids, casual business attire, soft natural lighting, creative workspace background, sharp focus, professional portrait." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBm68yfcn643GudI3ottoOc0vp-b3WVSScisKfyRa7Rs5EcfPtj_udEw0A3V3_1bqCc-GH_EfGKLwKWn5UlZFvLoyL-8ovEtrXtcqieHyoOvxq2FY790MqPFYakcF0t0fiRcpmluSEtUz-XDQXMrPEhthbMT31pww2zg2pv1UvZGVnRfYKBV6w9J2O9_OOW9hgth9etc2Ixv_di1tpKH_OLGF4ola73bvfg0YWuVP58duHGrYNTbSo2upKsIr4KTe_uc5G0CZ-Rdf3z"/>
+<img class="w-12 h-12 rounded-full border-2 border-white object-cover" data-alt="Mature professional man with grey hair, wearing a white shirt and black waistcoat, standing in a library-style office, elegant lighting, professional portrait." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoXXpQq1NCw4ed1eQ7PncE5iSH34KCJKa1ZzpogO07dmMnK3kBzK8DnaT-tv303r6KTsPnz3h-KrffmBzep808FTfNhjPJfQbnh1-eL0qikfSu4O8rPiVsQRuP7AxB1sCmDfXHGZ4xlTPSvTCQbFMhVC1DaspHFbgCLYokW-vpm6UWiD4OkvBiwP9RGqUqwYR4dKnTBo0uFRN2VSGClY1QkilXL_CUtSbr1OuQUPCZuhGLPZn3sA6T-AhCNHtwVEAGbZCvRcvtl8DE"/>
+</div>
+<div>
+<p class="font-label-md text-label-md font-bold">Zainab Sani &amp; John Peters</p>
+<p class="text-[10px] text-on-surface-variant">Financial Analyst</p>
+</div>
+</div>
+<div class="ai-assistant-glow p-3 rounded-lg mb-4 text-[12px] leading-tight">
+<p class="italic text-on-primary-container">"John's recent CFO transition provides ideal roadmap for Zainab's fast-track."</p>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 py-2 text-[12px] font-bold text-primary bg-primary/5 rounded-lg hover:bg-primary/10">Quick Approve</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-sm">visibility</span>
+</button>
+</div>
+</div>
+<!-- Match Card 4 -->
+<div class="bg-surface-container-lowest p-sm rounded-2xl shadow-soft border border-surface-container-high hover:border-primary/30 transition-all-custom group opacity-75 grayscale hover:grayscale-0 hover:opacity-100">
+<div class="flex items-center justify-between mb-4">
+<span class="bg-surface-container-high px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Rank #4</span>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="font-bold text-sm">62%</span>
+<span class="material-symbols-outlined text-xs">trending_flat</span>
+</div>
+</div>
+<div class="flex items-center gap-3 mb-md">
+<div class="flex -space-x-4">
+<img class="w-12 h-12 rounded-full border-2 border-white object-cover" data-alt="Young professional man in glasses, thinking expression, bright office environment, high resolution close-up." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUTXdzMBRjjE9aN_-ZvaLz-DgbsA_sq4neMhqWnufd5b8s9HIQn3XB-afE_He377j8f4WM457Qk5IxGIAUpGy4fM7kZwuBBR4VkKCZbqKxJaSn1ZeKejvcsqAQejfMyL588L7Vb__SmTa14YdeRqVy6w__2FDPkJnS2S38NzlhU04NMB188-AcYBXJi4shqg5_FS13LsFOc0Jr2zuVuDIPgPZOuvJrAFW8H7Me6-hGJi319WB7Ndw9MqlgWDr-oRkfHbHW-wSIBAvu"/>
+<img class="w-12 h-12 rounded-full border-2 border-white object-cover" data-alt="Senior professional woman with a welcoming smile, wearing pearls and a dark suit, modern corporate boardroom background, cinematic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAq5LTL9_wKEKQKs8eAMzYx1oaAB35mdDfxbfWV01S2ATXPzH3EZp1BDsO5fKkg7MQl-iFl4ZP2QwIxGTJ3duR3Fa-sEjjKkK17326766AQF40hafonjOVYaucKI0DvdBZ2NHoOz8YY7Sx93w58PgFJULPB5CpLDIzu9MX5y3f8Ew3V73NLXgMRUo-rhUM7Ybm4DDDpUHoWBm-S0ogVdoZwPceUmltVYp2QmjqPFMGNBiiYlT6tNjbjoKsNI-Fayr_bEPoyzN44FM8B"/>
+</div>
+<div>
+<p class="font-label-md text-label-md font-bold">Kofi Ansah &amp; Elena Rossi</p>
+<p class="text-[10px] text-on-surface-variant">Legal Counsel</p>
+</div>
+</div>
+<div class="bg-error-container/20 p-3 rounded-lg mb-4 text-[12px] leading-tight border border-error/10">
+<p class="italic text-on-error-container">"Low availability overlap detected (1h/week). Manual review suggested."</p>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 py-2 text-[12px] font-bold text-error bg-error/5 rounded-lg hover:bg-error/10">Manual Override</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-sm">visibility</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FLOATING ACTION BUTTON (ONLY ON RELEVANT PAGES) -->
+<!-- Suppressed on Admin Match Review to avoid cluttering decision process -->
+<script>
+        // Simple micro-interactions
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-95');
+            });
+            button.addEventListener('mouseleave', () => {
+                button.classList.remove('scale-95');
+            });
+        });
+
+        // Search highlight effect
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('ring-2', 'ring-primary/20');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('ring-2', 'ring-primary/20');
+        });
+    </script>
+</body></html>

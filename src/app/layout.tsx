@@ -1,16 +1,17 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Public_Sans } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import './globals.css';
 
-// Self-hosted font (§19 §2). next/font downloads and serves Inter from our own
-// origin at build time — no runtime Google requests, so it works offline / on
-// low-bandwidth plant connections. We run a single grotesque (Inter) for the
-// whole UI — Atlas-style: heavy weights (700/800) for headings, regular for
-// body/UI/data — so `--font-inter` powers both the display and sans families.
-// (If the production build runs air-gapped, swap to @fontsource-variable.)
-const inter = Inter({
+// Self-hosted font (Stitch redesign — docs/stitch-redesign.md). next/font
+// downloads and serves Public Sans from our own origin at build time — no
+// runtime Google requests, so it works offline / on low-bandwidth plant
+// connections. Public Sans (an open, institutional grotesque) powers the whole
+// UI: heavy weights (700) for headings, regular for body/UI/data — so
+// `--font-inter` (variable name kept for zero-refactor) maps to Public Sans for
+// both the display and sans families.
+const publicSans = Public_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700', '800'],
   variable: '--font-inter',
@@ -27,7 +28,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className={inter.variable} suppressHydrationWarning>
+    <html lang={locale} className={publicSans.variable} suppressHydrationWarning>
       <body className="min-h-screen bg-background font-sans text-body text-foreground antialiased">
         <NextIntlClientProvider locale={locale} messages={messages}>
           {children}

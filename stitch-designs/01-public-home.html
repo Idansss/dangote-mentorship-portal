@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dangote Mentorship | Empowering Leaders</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#e1e3e3",
+                        "surface-container-low": "#f2f4f4",
+                        "on-secondary-fixed": "#111c2d",
+                        "primary-fixed": "#b1edf2",
+                        "tertiary": "#492306",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#404849",
+                        "on-error": "#ffffff",
+                        "background": "#f8faf9",
+                        "inverse-on-surface": "#eff1f1",
+                        "on-primary-fixed-variant": "#074f54",
+                        "on-error-container": "#93000a",
+                        "outline": "#707979",
+                        "on-surface": "#191c1c",
+                        "outline-variant": "#bfc8c9",
+                        "secondary-fixed": "#d8e3fb",
+                        "on-secondary-container": "#586377",
+                        "surface": "#f8faf9",
+                        "surface-variant": "#e1e3e3",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#321300",
+                        "tertiary-fixed": "#ffdbc8",
+                        "surface-container": "#edeeee",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#e1a27c",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#2a676c",
+                        "on-secondary-fixed-variant": "#3c475a",
+                        "inverse-primary": "#96d1d6",
+                        "primary-container": "#004b50",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#fab891",
+                        "primary": "#003336",
+                        "surface-bright": "#f8faf9",
+                        "tertiary-container": "#64381a",
+                        "on-tertiary-fixed-variant": "#683c1d",
+                        "error-container": "#ffdad6",
+                        "surface-container-high": "#e7e8e8",
+                        "on-primary-container": "#7fbabf",
+                        "secondary-container": "#d5e0f8",
+                        "on-primary-fixed": "#002022",
+                        "surface-dim": "#d9dada",
+                        "secondary": "#545f73",
+                        "primary-fixed-dim": "#96d1d6",
+                        "on-background": "#191c1c",
+                        "inverse-surface": "#2e3131",
+                        "secondary-fixed-dim": "#bcc7de"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "md": "24px",
+                        "xl": "64px",
+                        "lg": "40px",
+                        "sm": "12px",
+                        "max-width-desktop": "1280px",
+                        "gutter": "24px",
+                        "base": "8px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Public Sans"],
+                        "body-md": ["Public Sans"],
+                        "headline-xl": ["Public Sans"],
+                        "body-lg": ["Public Sans"],
+                        "body-sm": ["Public Sans"],
+                        "headline-md": ["Public Sans"],
+                        "label-md": ["Public Sans"],
+                        "headline-lg": ["Public Sans"],
+                        "headline-lg-mobile": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #f8faf9;
+            color: #191c1c;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .soft-shadow {
+            box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.05);
+        }
+        .journey-rail-line {
+            background: linear-gradient(90deg, #003336 40%, #e2e8f0 40%);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 0.2; }
+            100% { transform: scale(0.8); opacity: 0.5; }
+        }
+        .active-pulse {
+            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+<!-- TopNavBar (Standard Web) -->
+<nav class="flex justify-between items-center w-full px-md h-16 fixed top-0 z-[100] bg-surface shadow-sm">
+<div class="flex items-center gap-2">
+<span class="font-headline-md text-headline-md font-bold text-primary">Dangote Mentorship</span>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-primary font-bold underline font-body-md text-body-md" href="#">Home</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#">About</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#">Mentors</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#">EN | FR</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</button>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-[10px] font-body-md text-body-md font-semibold hover:opacity-90 transition-all scale-95 active:scale-90">Login</button>
+</div>
+</nav>
+<main class="mt-16">
+<!-- Hero Section -->
+<section class="relative min-h-[870px] flex items-center justify-center overflow-hidden bg-surface-container-low px-margin-mobile md:px-0">
+<!-- Background Decoration -->
+<div class="absolute inset-0 z-0">
+
+</div>
+<div class="relative z-10 max-w-max-width-desktop mx-auto text-center">
+<div class="inline-flex items-center gap-2 bg-secondary-container text-on-secondary-container px-4 py-1.5 rounded-full mb-6 soft-shadow border border-outline-variant">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span class="font-label-md text-label-md uppercase tracking-wider">Enterprise Excellence</span>
+</div>
+<h1 class="font-headline-xl text-[48px] md:text-[64px] leading-tight text-primary mb-8 max-w-4xl mx-auto">
+                    Empowering the <span class="text-primary-container">Next Generation</span> of Leaders
+                </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-10">
+                    A professional mentorship ecosystem designed to bridge knowledge gaps and foster career acceleration within the Dangote Group and beyond.
+                </p>
+<div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-16">
+<button class="bg-primary text-on-primary px-8 py-4 rounded-[10px] font-headline-sm text-headline-sm flex items-center gap-3 hover:shadow-lg transition-all">
+                        Get Started
+                        <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="bg-surface-container-lowest border border-outline-variant text-primary px-8 py-4 rounded-[10px] font-headline-sm text-headline-sm hover:bg-surface transition-all">
+                        View Mentors
+                    </button>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto border-t border-outline-variant pt-12">
+<div class="text-center">
+<div class="font-headline-lg text-headline-lg text-primary">120+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Expert Mentors</div>
+</div>
+<div class="text-center">
+<div class="font-headline-lg text-headline-lg text-primary">300+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Active Mentees</div>
+</div>
+<div class="text-center">
+<div class="font-headline-lg text-headline-lg text-primary">15+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Industry Domains</div>
+</div>
+<div class="text-center">
+<div class="font-headline-lg text-headline-lg text-primary">98%</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Success Rate</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Journey Showcase Section -->
+<section class="py-xl bg-surface">
+<div class="max-w-max-width-desktop mx-auto px-margin-mobile">
+<div class="text-center mb-16">
+<h2 class="font-headline-lg text-headline-lg text-primary mb-4">The 9-Step Excellence Journey</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xl mx-auto">Our structured curriculum ensures every mentorship connection follows a proven path toward professional mastery.</p>
+</div>
+<!-- Journey Rail Component -->
+<div class="relative py-12 px-8 bg-surface-container-lowest rounded-xl shadow-sm border border-surface-container-highest overflow-x-auto no-scrollbar">
+<div class="flex items-center justify-between min-w-[1000px] relative">
+<!-- Progress Line -->
+<div class="absolute top-[20px] left-0 w-full h-[3px] journey-rail-line z-0"></div>
+<!-- Steps -->
+<div class="flex flex-col items-center gap-3 relative z-10">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white soft-shadow">
+<span class="material-symbols-outlined text-[20px]">check</span>
+</div>
+<span class="font-body-sm text-body-sm font-semibold text-primary">Discovery</span>
+</div>
+<div class="flex flex-col items-center gap-3 relative z-10">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white soft-shadow">
+<span class="material-symbols-outlined text-[20px]">check</span>
+</div>
+<span class="font-body-sm text-body-sm font-semibold text-primary">Matching</span>
+</div>
+<div class="flex flex-col items-center gap-3 relative z-10">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white soft-shadow">
+<span class="material-symbols-outlined text-[20px]">check</span>
+</div>
+<span class="font-body-sm text-body-sm font-semibold text-primary">Kickoff</span>
+</div>
+<div class="flex flex-col items-center gap-3 relative z-10">
+<div class="relative w-10 h-10">
+<div class="absolute inset-0 bg-primary opacity-20 rounded-full active-pulse"></div>
+<div class="relative w-full h-full rounded-full border-4 border-primary bg-white flex items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+</div>
+</div>
+<span class="font-body-sm text-body-sm font-bold text-primary">Goal Setting</span>
+</div>
+<div class="flex flex-col items-center gap-3 relative z-10 opacity-50">
+<div class="w-10 h-10 rounded-full border-2 border-outline-variant bg-surface flex items-center justify-center text-on-surface-variant">
+<span class="text-label-md font-bold">5</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Sessions</span>
+</div>
+<div class="flex flex-col items-center gap-3 relative z-10 opacity-50">
+<div class="w-10 h-10 rounded-full border-2 border-outline-variant bg-surface flex items-center justify-center text-on-surface-variant">
+<span class="text-label-md font-bold">6</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Review</span>
+</div>
+<div class="flex flex-col items-center gap-3 relative z-10 opacity-50">
+<div class="w-10 h-10 rounded-full border-2 border-outline-variant bg-surface flex items-center justify-center text-on-surface-variant">
+<span class="text-label-md font-bold">7</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Project</span>
+</div>
+<div class="flex flex-col items-center gap-3 relative z-10 opacity-50">
+<div class="w-10 h-10 rounded-full border-2 border-outline-variant bg-surface flex items-center justify-center text-on-surface-variant">
+<span class="text-label-md font-bold">8</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Assessment</span>
+</div>
+<div class="flex flex-col items-center gap-3 relative z-10 opacity-50">
+<div class="w-10 h-10 rounded-full border-2 border-outline-variant bg-surface flex items-center justify-center text-on-surface-variant">
+<span class="text-label-md font-bold">9</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Graduation</span>
+</div>
+</div>
+<!-- AI Insight Pill -->
+<div class="mt-16 bg-[#EEF2FF] border border-dashed border-[#C7D2FE] p-6 rounded-xl flex items-start gap-4">
+<span class="material-symbols-outlined text-[#4F46E5]">auto_awesome</span>
+<div>
+<div class="font-label-md text-label-md font-bold text-[#4F46E5] mb-1">✨ AI SUGGESTED PATH</div>
+<p class="font-body-md text-body-md text-[#3730A3] italic">"Based on your profile in Infrastructure Engineering, we recommend prioritizing the 'Enterprise Networking' elective in Step 7 to align with group-wide strategy goals."</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature Cards (Bento Style) -->
+<section class="py-xl bg-surface-container-low">
+<div class="max-w-max-width-desktop mx-auto px-margin-mobile">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Card 1 -->
+<div class="group bg-white p-8 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-primary-fixed flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 bg-secondary-container rounded-lg flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-3">Career Growth</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Accelerate your professional trajectory with personalized roadmaps and milestone tracking tailored for the modern enterprise.</p>
+</div>
+<div class="mt-8 pt-6 border-t border-surface-container-highest flex justify-between items-center">
+<span class="font-label-md text-label-md font-bold text-primary">LEARN MORE</span>
+<span class="material-symbols-outlined text-primary group-hover:translate-x-2 transition-transform">arrow_right_alt</span>
+</div>
+</div>
+<!-- Card 2 (Large Highlight) -->
+<div class="group bg-primary p-8 rounded-xl shadow-xl flex flex-col justify-between relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-[160px]">share</span>
+</div>
+<div class="relative z-10">
+<div class="w-12 h-12 bg-primary-container rounded-lg flex items-center justify-center text-on-primary-container mb-6">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-primary mb-3">Knowledge Sharing</h3>
+<p class="font-body-md text-body-md text-primary-fixed-dim">Access a deep reservoir of institutional wisdom. Our platform facilitates seamless transfer of skills from seasoned executives to rising talents.</p>
+</div>
+<div class="relative z-10 mt-8">
+<button class="bg-primary-container text-on-primary-container px-6 py-2 rounded-[10px] font-body-md font-bold hover:bg-white hover:text-primary transition-colors">Start Sharing</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group bg-white p-8 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-primary-fixed flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 bg-secondary-container rounded-lg flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">hub</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-3">Enterprise Networking</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Break down organizational silos. Connect with cross-departmental leaders to build a powerful network of influence and support.</p>
+</div>
+<div class="mt-8 pt-6 border-t border-surface-container-highest flex justify-between items-center">
+<span class="font-label-md text-label-md font-bold text-primary">EXPLORE NETWORK</span>
+<span class="material-symbols-outlined text-primary group-hover:translate-x-2 transition-transform">arrow_right_alt</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Get Started CTA -->
+<section class="py-xl">
+<div class="max-w-max-width-desktop mx-auto px-margin-mobile">
+<div class="relative rounded-2xl overflow-hidden shadow-2xl">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A professional, high-end office environment in a skyscraper overlooking a modern African cityscape at sunset. Two professionals, one older and one younger, are engaged in a collaborative discussion in a sunlit lounge area. The lighting is warm and golden, reflecting a modern corporate aesthetic with clean glass surfaces and high-quality finishes." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDOUiA3ozyPeXVomK8RIfdya0yRIu6TWqmsyA9PZa3t39n8nOZJ6abfs4AFGEDbuxvUxTnoO5QDMIcoRYxJbnS0diyprFHndgxtWWqPbLaPFUj8o_jUfsVp7IJhjMYdhSc2qWmpf1h1FDhg1KOwtv0zcK8EFyT0AYQELBmdtW6hdvmulnvNTmpeujJyTH7B6V31BinoipRxa8rsfEUfrrwPQzGHVKfOw8DJ5q2V4UCqexyJ_1xXKObnOp-XzsQqN70DLxYDCEsIyieb')"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-primary via-primary/90 to-transparent"></div>
+<div class="relative z-10 p-12 md:p-24 md:max-w-2xl">
+<h2 class="font-headline-xl text-on-primary mb-6">Ready to Define Your Future?</h2>
+<p class="font-body-lg text-body-lg text-primary-fixed-dim mb-10">Whether you are looking to guide the next generation or seeking the wisdom to lead, your journey begins here.</p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-primary-fixed text-on-primary-fixed px-8 py-4 rounded-[10px] font-headline-sm hover:bg-white transition-colors">Join as Mentee</button>
+<button class="border border-primary-fixed text-primary-fixed px-8 py-4 rounded-[10px] font-headline-sm hover:bg-primary-container transition-colors">Become a Mentor</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-highest py-lg mt-xl">
+<div class="max-w-max-width-desktop mx-auto px-margin-mobile">
+<div class="flex flex-col md:flex-row justify-between items-start gap-12 border-b border-outline-variant pb-12 mb-12">
+<div class="max-w-sm">
+<div class="font-headline-md text-primary font-bold mb-4">Dangote Mentorship</div>
+<p class="font-body-sm text-on-surface-variant">A dedicated portal for professional development, fostering excellence through structured guidance and collaborative learning.</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-12">
+<div>
+<h4 class="font-label-md text-primary font-bold mb-4 uppercase">Portal</h4>
+<ul class="space-y-2">
+<li><a class="font-body-sm text-on-surface-variant hover:text-primary" href="#">Dashboard</a></li>
+<li><a class="font-body-sm text-on-surface-variant hover:text-primary" href="#">Find Mentors</a></li>
+<li><a class="font-body-sm text-on-surface-variant hover:text-primary" href="#">Resources</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-primary font-bold mb-4 uppercase">Company</h4>
+<ul class="space-y-2">
+<li><a class="font-body-sm text-on-surface-variant hover:text-primary" href="#">About Us</a></li>
+<li><a class="font-body-sm text-on-surface-variant hover:text-primary" href="#">Contact</a></li>
+<li><a class="font-body-sm text-on-surface-variant hover:text-primary" href="#">Privacy</a></li>
+</ul>
+</div>
+<div class="col-span-2 md:col-span-1">
+<h4 class="font-label-md text-primary font-bold mb-4 uppercase">Subscribe</h4>
+<div class="flex">
+<input class="bg-white border-outline-variant border rounded-l-[10px] px-4 py-2 font-body-sm focus:ring-primary-container focus:border-primary transition-all" placeholder="Work Email" type="email"/>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-r-[10px] font-body-sm">Join</button>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="font-body-sm text-on-surface-variant">© 2024 Dangote Group. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="material-symbols-outlined text-on-surface-variant hover:text-primary" href="#">language</a>
+<a class="material-symbols-outlined text-on-surface-variant hover:text-primary" href="#">diversity_1</a>
+<a class="material-symbols-outlined text-on-surface-variant hover:text-primary" href="#">assured_workload</a>
+</div>
+</div>
+</div>
+</footer>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 md:hidden bg-surface shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] rounded-t-xl">
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-2xl px-4 py-1">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1">
+<span class="material-symbols-outlined">target</span>
+<span class="font-label-md text-label-md">Goals</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1">
+<span class="material-symbols-outlined">event_repeat</span>
+<span class="font-label-md text-label-md">Sessions</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1">
+<span class="material-symbols-outlined">mail</span>
+<span class="font-label-md text-label-md">Chat</span>
+</button>
+</nav>
+<script>
+        // Micro-interaction for Journey Rail scroll shadow
+        const rail = document.querySelector('.overflow-x-auto');
+        if (rail) {
+            rail.addEventListener('scroll', () => {
+                const scrollLeft = rail.scrollLeft;
+                if (scrollLeft > 20) {
+                    rail.classList.add('shadow-inner');
+                } else {
+                    rail.classList.remove('shadow-inner');
+                }
+            });
+        }
+
+        // Header transparency on scroll
+        const header = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('bg-white/95', 'backdrop-blur-sm');
+                header.classList.remove('bg-surface');
+            } else {
+                header.classList.remove('bg-white/95', 'backdrop-blur-sm');
+                header.classList.add('bg-surface');
+            }
+        });
+    </script>
+</body></html>

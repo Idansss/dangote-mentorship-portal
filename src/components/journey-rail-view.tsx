@@ -143,7 +143,11 @@ export function JourneyRailView({
                     <span
                       className={cn(
                         'text-center text-micro leading-tight',
-                        node.state === 'pending' ? 'text-ink-3' : 'text-ink-2',
+                        node.state === 'completed' || node.isCurrent
+                          ? 'font-bold text-green-strong'
+                          : node.state === 'pending'
+                            ? 'text-ink-3 opacity-70'
+                            : 'text-ink-2',
                       )}
                     >
                       {node.label}

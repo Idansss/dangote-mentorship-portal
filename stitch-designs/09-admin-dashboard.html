@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dangote Mentorship - Admin Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #f8faf9;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e1e3e3;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                "surface-container-highest": "#e1e3e3",
+                "surface-container-low": "#f2f4f4",
+                "on-secondary-fixed": "#111c2d",
+                "primary-fixed": "#b1edf2",
+                "tertiary": "#492306",
+                "on-secondary": "#ffffff",
+                "on-surface-variant": "#404849",
+                "on-error": "#ffffff",
+                "background": "#f8faf9",
+                "inverse-on-surface": "#eff1f1",
+                "on-primary-fixed-variant": "#074f54",
+                "on-error-container": "#93000a",
+                "outline": "#707979",
+                "on-surface": "#191c1c",
+                "outline-variant": "#bfc8c9",
+                "secondary-fixed": "#d8e3fb",
+                "on-secondary-container": "#586377",
+                "surface": "#f8faf9",
+                "surface-variant": "#e1e3e3",
+                "surface-container-lowest": "#ffffff",
+                "on-tertiary-fixed": "#321300",
+                "tertiary-fixed": "#ffdbc8",
+                "surface-container": "#edeeee",
+                "on-primary": "#ffffff",
+                "on-tertiary-container": "#e1a27c",
+                "error": "#ba1a1a",
+                "surface-tint": "#2a676c",
+                "on-secondary-fixed-variant": "#3c475a",
+                "inverse-primary": "#96d1d6",
+                "primary-container": "#004b50",
+                "on-tertiary": "#ffffff",
+                "tertiary-fixed-dim": "#fab891",
+                "primary": "#003336",
+                "surface-bright": "#f8faf9",
+                "tertiary-container": "#64381a",
+                "on-tertiary-fixed-variant": "#683c1d",
+                "error-container": "#ffdad6",
+                "surface-container-high": "#e7e8e8",
+                "on-primary-container": "#7fbabf",
+                "secondary-container": "#d5e0f8",
+                "on-primary-fixed": "#002022",
+                "surface-dim": "#d9dada",
+                "secondary": "#545f73",
+                "primary-fixed-dim": "#96d1d6",
+                "on-background": "#191c1c",
+                "inverse-surface": "#2e3131",
+                "secondary-fixed-dim": "#bcc7de"
+              },
+              "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+              },
+              "spacing": {
+                "margin-mobile": "16px",
+                "md": "24px",
+                "xl": "64px",
+                "lg": "40px",
+                "sm": "12px",
+                "max-width-desktop": "1280px",
+                "gutter": "24px",
+                "base": "8px",
+                "xs": "4px"
+              },
+              "fontFamily": {
+                "headline-sm": ["Public Sans"],
+                "body-md": ["Public Sans"],
+                "headline-xl": ["Public Sans"],
+                "body-lg": ["Public Sans"],
+                "body-sm": ["Public Sans"],
+                "headline-md": ["Public Sans"],
+                "label-md": ["Public Sans"],
+                "headline-lg": ["Public Sans"],
+                "headline-lg-mobile": ["Public Sans"]
+              },
+              "fontSize": {
+                "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}]
+              }
+            }
+          }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar (Desktop) -->
+<aside class="hidden md:flex flex-col h-full py-md px-sm bg-surface dark:bg-surface-dim shadow-sm w-[280px] h-screen fixed left-0 top-0 z-50">
+<div class="px-md py-lg">
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">Dangote Mentorship</h1>
+<p class="text-on-surface-variant font-body-sm text-body-sm mt-xs">Enterprise Portal</p>
+</div>
+<nav class="flex-1 space-y-xs mt-lg">
+<a class="flex items-center gap-md px-md py-sm transition-all duration-200 hover:bg-surface-container-high dark:hover:bg-surface-container-highest text-on-surface-variant dark:text-on-surface-variant font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm transition-all duration-200 hover:bg-surface-container-high dark:hover:bg-surface-container-highest text-on-surface-variant dark:text-on-surface-variant font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="target">target</span>
+<span>Goals</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm transition-all duration-200 hover:bg-surface-container-high dark:hover:bg-surface-container-highest text-on-surface-variant dark:text-on-surface-variant font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="event_repeat">event_repeat</span>
+<span>Sessions</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm transition-all duration-200 hover:bg-surface-container-high dark:hover:bg-surface-container-highest text-on-surface-variant dark:text-on-surface-variant font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+<span>Messages</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm transition-all duration-200 text-primary dark:text-primary-fixed-dim font-bold border-r-4 border-primary dark:border-primary-fixed-dim bg-surface-container-low font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="admin_panel_settings" style="font-variation-settings: 'FILL' 1;">admin_panel_settings</span>
+<span>Admin</span>
+</a>
+</nav>
+<div class="mt-auto px-md py-md border-t border-outline-variant">
+<div class="flex items-center gap-sm">
+<img class="w-10 h-10 rounded-full bg-surface-container-highest object-cover" data-alt="Close-up professional headshot of a senior executive with a warm, confident expression. The person is dressed in modern business attire, and the background is a softly blurred office environment with corporate teal accents and clean white architecture. High-end professional lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeL7JiHgUiP7fuAqx1-FoiXvkI05jFf4p6K3Xwm_KAz4fzw_guPvkcp3Kph2yIz4dHO658Uhzbi2og0yMIvf8O0jMLwBPG5JG5qnbEEllOGBZLM720FrbVWEN0to8i1qf1bGGFkGFIe2l9SMxu8NEOcGr_WM29tCLjddP29toRKNr3OA7LErbzRn7rzZOJdCE2cyPLicrfoAV_6vNLL0k3-PEoI7LhnZmiej94MpQheSql2Jt-5P9A29iFeRym5DJvJCV_ZZgUzHCP"/>
+<div class="overflow-hidden">
+<p class="font-body-sm text-body-sm font-bold truncate">Alistair Okoro</p>
+<p class="text-on-surface-variant font-label-md text-label-md truncate">Program Director</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="flex justify-between items-center w-full px-md h-16 ml-0 md:ml-[280px] md:w-[calc(100%-280px)] bg-surface dark:bg-surface-dim shadow-sm fixed top-0 z-40">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/20" placeholder="Search cohorts, mentors, or reports..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="hidden md:flex gap-md font-body-md text-body-md">
+<a class="text-primary font-bold underline transition-colors hover:text-primary" href="#">EN</a>
+<span class="text-outline">|</span>
+<a class="text-on-surface-variant transition-colors hover:text-primary" href="#">FR</a>
+</div>
+<div class="flex gap-sm">
+<button class="p-2 rounded-full hover:bg-surface-container-high transition-transform scale-95 active:scale-90">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container-high transition-transform scale-95 active:scale-90">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="translate">translate</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-0 md:ml-[280px] pt-16 pb-24 md:pb-8 px-md min-h-screen">
+<div class="max-w-[1280px] mx-auto py-lg">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-lg gap-md">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary">Enterprise Health Dashboard</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Monitoring engagement across all global business units.</p>
+</div>
+<div class="flex items-center gap-sm">
+<button class="flex items-center gap-xs px-md py-2 rounded-lg border border-outline-variant font-label-md text-label-md hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="calendar_today">calendar_today</span>
+                        Last 30 Days
+                    </button>
+<button class="flex items-center gap-xs px-md py-2 rounded-lg bg-primary text-on-primary font-label-md text-label-md shadow-md hover:opacity-90 transition-all">
+<span class="material-symbols-outlined text-[18px]" data-icon="download">download</span>
+                        Export Report
+                    </button>
+</div>
+</div>
+<!-- Bento Grid Stats -->
+<div class="bento-grid mb-md">
+<!-- Stat Card 1 -->
+<div class="col-span-12 md:col-span-3 bg-surface-container-lowest p-md rounded-xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)] border border-white">
+<div class="flex items-center justify-between mb-sm">
+<div class="w-10 h-10 rounded-lg bg-primary-fixed-dim flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="diversity_3">diversity_3</span>
+</div>
+<span class="text-success-green font-label-md text-label-md text-green-600">+12%</span>
+</div>
+<p class="text-on-surface-variant font-label-md text-label-md uppercase tracking-wider">Pairs</p>
+<h3 class="font-headline-md text-headline-md mt-1">1,482</h3>
+<p class="text-on-surface-variant font-body-sm text-body-sm mt-2">Active mentorship matches</p>
+</div>
+<!-- Stat Card 2 -->
+<div class="col-span-12 md:col-span-3 bg-surface-container-lowest p-md rounded-xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)] border border-white">
+<div class="flex items-center justify-between mb-sm">
+<div class="w-10 h-10 rounded-lg bg-secondary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="person_search">person_search</span>
+</div>
+<span class="text-error font-label-md text-label-md text-red-600">-5%</span>
+</div>
+<p class="text-on-surface-variant font-label-md text-label-md uppercase tracking-wider">Unmatched</p>
+<h3 class="font-headline-md text-headline-md mt-1">124</h3>
+<p class="text-on-surface-variant font-body-sm text-body-sm mt-2">Awaiting mentor assignment</p>
+</div>
+<!-- Stat Card 3 -->
+<div class="col-span-12 md:col-span-3 bg-surface-container-lowest p-md rounded-xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)] border border-white">
+<div class="flex items-center justify-between mb-sm">
+<div class="w-10 h-10 rounded-lg bg-tertiary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary" data-icon="warning">warning</span>
+</div>
+<span class="bg-error-container text-on-error-container px-2 py-0.5 rounded font-label-md text-[10px]">CRITICAL</span>
+</div>
+<p class="text-on-surface-variant font-label-md text-label-md uppercase tracking-wider">At-Risk</p>
+<h3 class="font-headline-md text-headline-md mt-1">42</h3>
+<p class="text-on-surface-variant font-body-sm text-body-sm mt-2">Low activity reported (14d)</p>
+</div>
+<!-- Stat Card 4 -->
+<div class="col-span-12 md:col-span-3 bg-primary text-on-primary p-md rounded-xl shadow-lg relative overflow-hidden">
+<div class="relative z-10">
+<p class="opacity-80 font-label-md text-label-md uppercase tracking-wider">Global Health</p>
+<h3 class="font-headline-md text-headline-md mt-1">94.2%</h3>
+<div class="w-full bg-primary-container h-1.5 rounded-full mt-4">
+<div class="bg-primary-fixed h-full rounded-full w-[94%]"></div>
+</div>
+<p class="text-primary-fixed-dim font-body-sm text-body-sm mt-3 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="auto_graph">auto_graph</span>
+                            Peak performance level
+                        </p>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]" data-icon="health_and_safety">health_and_safety</span>
+</div>
+</div>
+</div>
+<!-- Visualization Row -->
+<div class="grid grid-cols-12 gap-md mb-md">
+<!-- Heatmap Engagement -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest p-md rounded-xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)] border border-white">
+<div class="flex justify-between items-center mb-lg">
+<h4 class="font-headline-sm text-headline-sm text-primary">Engagement Heatmap</h4>
+<div class="flex gap-2">
+<span class="flex items-center gap-1 text-label-md font-label-md text-on-surface-variant">
+<span class="w-3 h-3 rounded-sm bg-surface-container-high"></span> Low
+                            </span>
+<span class="flex items-center gap-1 text-label-md font-label-md text-on-surface-variant">
+<span class="w-3 h-3 rounded-sm bg-primary-fixed-dim"></span> Med
+                            </span>
+<span class="flex items-center gap-1 text-label-md font-label-md text-on-surface-variant">
+<span class="w-3 h-3 rounded-sm bg-primary"></span> High
+                            </span>
+</div>
+</div>
+<div class="grid grid-cols-7 gap-2">
+<!-- Heatmap Grid -->
+<script>
+                            const heatmap = document.currentScript.parentElement;
+                            const colors = ['bg-surface-container-high', 'bg-primary-fixed-dim', 'bg-primary-fixed', 'bg-primary', 'bg-primary-container'];
+                            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                            
+                            days.forEach(day => {
+                                const dayLabel = document.createElement('div');
+                                dayLabel.className = 'text-center font-label-md text-label-md text-on-surface-variant mb-2';
+                                dayLabel.textContent = day;
+                                heatmap.appendChild(dayLabel);
+                            });
+
+                            for (let i = 0; i < 28; i++) {
+                                const cell = document.createElement('div');
+                                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                                cell.className = `${randomColor} h-12 rounded-lg transition-transform hover:scale-105 cursor-pointer opacity-90 hover:opacity-100`;
+                                heatmap.appendChild(cell);
+                            }
+                        </script>
+</div>
+<div class="mt-md pt-md border-t border-surface-container flex justify-between items-center text-body-sm font-body-sm text-on-surface-variant">
+<p>Most active window: Wednesday afternoons (GMT+1)</p>
+<a class="text-primary font-bold hover:underline" href="#">View Deep Analytics</a>
+</div>
+</div>
+<!-- Programme Health Circular Gauge -->
+<div class="col-span-12 lg:col-span-4 bg-surface-container-lowest p-md rounded-xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)] border border-white flex flex-col items-center justify-center text-center">
+<h4 class="font-headline-sm text-headline-sm text-primary mb-lg self-start">Program Health</h4>
+<div class="relative w-48 h-48 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90">
+<circle class="text-surface-container-high" cx="96" cy="96" fill="transparent" r="80" stroke="currentColor" stroke-width="12"></circle>
+<circle class="text-primary transition-all duration-1000" cx="96" cy="96" fill="transparent" r="80" stroke="currentColor" stroke-dasharray="502" stroke-dashoffset="60" stroke-width="12"></circle>
+</svg>
+<div class="absolute flex flex-col items-center">
+<span class="text-[42px] font-extrabold text-primary leading-tight">88</span>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase">Index Score</span>
+</div>
+</div>
+<div class="mt-lg space-y-md w-full">
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Mentor Satisfaction</span>
+<span class="font-bold text-primary">92%</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Goal Completion</span>
+<span class="font-bold text-primary">76%</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Session Attendance</span>
+<span class="font-bold text-primary">84%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- AI Assistant Section (Design System Specific) -->
+<div class="bg-[#EEF2FF] border border-dashed border-[#818CF8] p-md rounded-xl mb-md">
+<div class="flex items-center gap-2 mb-sm">
+<span class="material-symbols-outlined text-[#4F46E5]" data-icon="auto_awesome">auto_awesome</span>
+<h5 class="font-headline-sm text-headline-sm text-[#312E81]">✨ AI Suggested Actions</h5>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div class="bg-white/60 p-sm rounded-lg border border-white">
+<p class="italic font-body-md text-body-md text-[#3730A3]">"Based on the low engagement levels in the 'Lagos Manufacturing' cohort, it is suggested to schedule a group touch-base session this Thursday."</p>
+<button class="mt-sm bg-primary text-on-primary px-4 py-1.5 rounded-full text-label-md font-label-md">Create Session</button>
+</div>
+<div class="bg-white/60 p-sm rounded-lg border border-white">
+<p class="italic font-body-md text-body-md text-[#3730A3]">"Identify 12 unmatched mentees in Finance who share identical career goals with available mentors in Operations for cross-functional pairing."</p>
+<button class="mt-sm border border-primary text-primary px-4 py-1.5 rounded-full text-label-md font-label-md">View Suggestions</button>
+</div>
+</div>
+</div>
+<!-- Table Section: At-Risk Pairs -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)] border border-white overflow-hidden">
+<div class="p-md border-b border-surface-container flex justify-between items-center">
+<h4 class="font-headline-sm text-headline-sm text-primary">At-Risk Mentorship Pairs</h4>
+<button class="text-primary font-bold font-body-sm text-body-sm hover:underline">View All Critical</button>
+</div>
+<div class="overflow-x-auto custom-scrollbar">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low font-label-md text-label-md text-on-surface-variant uppercase">
+<th class="px-md py-4">Mentor / Mentee</th>
+<th class="px-md py-4">Cohort</th>
+<th class="px-md py-4">Last Activity</th>
+<th class="px-md py-4">Status</th>
+<th class="px-md py-4">Action</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm">
+<tr class="border-b border-surface-container hover:bg-surface-container-low transition-colors">
+<td class="px-md py-4">
+<div class="flex items-center gap-sm">
+<div class="flex -space-x-2">
+<img class="w-8 h-8 rounded-full ring-2 ring-white" data-alt="Corporate headshot of a middle-aged male executive in a blue suit, professional office background, high contrast, clean modern look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMYuvypwhsh7MApCLOU4qFW8Lo9Nsnd85FhQtHUo4YKz-TFVFsgtWVsmdiNqskmpFmMlLb1MUWTDwKvHLDnBpDEYLcUUS3uHm8GkryKsvJLevvM5OZ8b2ykDF4guC6YN6qWVyRRCZDk9DJh9FNqiKp2RTCHiEabsJiKoEx7J-5ASM2umGAQoiXPu9o7IyuUmbd6QsfFLwfOxajxfZ17dSWfuoKxaP49FiUFwivvVAcSfiy00w3fOO5x1iiXP9_x1xQcrz227KDU6Xz"/>
+<img class="w-8 h-8 rounded-full ring-2 ring-white" data-alt="Close-up portrait of a young female professional, smiling confidently, business casual attire, soft natural window light, corporate setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-DIJIPpy9Jj0WUdD-fVxGD_JyqQ_pUc-YN9AQfSJfRD3ETjnEFGjb8HdOkLOE-VlvklVz7U1HVB5ALX0J5nwr5aPF6dFi0-J_IXL5V8OC71xmGL34Aly1iUqbwvlnP71TcjhEGguM0dFc9BlAkLRvElaoF85j03FrFYvJIswIQtKXpke3fFAwNbaFtF_qOgSx8OsZzbirgBXmrVKLh4qr4XK5tYdCaTa0YjHtrnz2Vin1KRIkn4h3r5za89oJNacJcXRMfR0d2Q2h"/>
+</div>
+<div>
+<p class="font-bold">Chidi K. & Sarah M.</p>
+<p class="text-[12px] text-on-surface-variant">Supply Chain Optimization</p>
+</div>
+</div>
+</td>
+<td class="px-md py-4 text-on-surface-variant">Logistics 2024</td>
+<td class="px-md py-4">18 days ago</td>
+<td class="px-md py-4">
+<span class="px-3 py-1 rounded-full bg-error-container text-on-error-container font-label-md text-[11px]">DORMANT</span>
+</td>
+<td class="px-md py-4">
+<button class="text-primary material-symbols-outlined" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+<tr class="border-b border-surface-container hover:bg-surface-container-low transition-colors">
+<td class="px-md py-4">
+<div class="flex items-center gap-sm">
+<div class="flex -space-x-2">
+<img class="w-8 h-8 rounded-full ring-2 ring-white" data-alt="Portrait of an African female executive with glasses, wearing traditional modern corporate fusion attire, bright and sharp studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVDa7AfpyffNVr6_QDmgXNFICjTWJO99dtGN-R-Hv-3IJJce-GAAaIYpjuxBkKZa5g29Mp8S-ZQ3SvPq05YmGCfOZ4YjQHBt64lKp2yKRTaWsCS7k6d20XQEY7Rm_lDS00RFWbwaB3S_U30MNs-uIgtzUNaJJMitKr3zqMzi5nfWBr8s4gLD7_YC7beuNLrM5FastovjWjHTyuIoV3Wha6qAFoFkYcTgwxbzioA3AFDtofCPPPF6eKWTFimbGhLaOfm_NzQhyPv8hH"/>
+<img class="w-8 h-8 rounded-full ring-2 ring-white" data-alt="Candid-style professional portrait of a young man in a tech office, holding a laptop, warm indoor lighting, friendly atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuATrZF1PiVW7hXfzTReBmOsuyqS6S5oD2nTyf4n4NiSL5rSlqSZHY0g2W_Uv9vkgDb8MJquD1KKKRZYZCCL4V30U4v3NtPYtRdvIZ0NBbJl4TQ6bh0G5IEMps2tNZ0TnNl41JyHbz3jmfoUsVkcv-sDTGjvBjmJtWeSaac0DG5uUu02rNaxpG53l6M_wg6Qge-lBaJz1xEE-tbtTwsdzBf59PocgR2SLo7y65hWZqcSrqOCEEjRwYSLsxbSItgAEVq4TO12YHosiWqr"/>
+</div>
+<div>
+<p class="font-bold">Folake A. & David L.</p>
+<p class="text-[12px] text-on-surface-variant">Digital Transformation</p>
+</div>
+</div>
+</td>
+<td class="px-md py-4 text-on-surface-variant">IT Global</td>
+<td class="px-md py-4">12 days ago</td>
+<td class="px-md py-4">
+<span class="px-3 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-md text-[11px]">DELAYED</span>
+</td>
+<td class="px-md py-4">
+<button class="text-primary material-symbols-outlined" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+<tr class="border-b border-surface-container hover:bg-surface-container-low transition-colors">
+<td class="px-md py-4">
+<div class="flex items-center gap-sm">
+<div class="flex -space-x-2">
+<img class="w-8 h-8 rounded-full ring-2 ring-white" data-alt="Professional headshot of a mature Asian male executive, minimalist office background with clean architectural lines, sophisticated corporate style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp4Kzyf8Ox7NaStVH0w3-P-Gu8EpqWSGePuMcDkv2303-7bD59wR96r5j_P-huKr5dsE-zqDFLDNHHu04u4ZTNVZfCvJE9lECg_FeYnX3su3FJUZ3OyP7E39_65USrvoTJXrwkQhfuuJQ4ucaIswJ5wwspp1xAcnF4Lt40NL14FC0jOJP6suxagQHp1YPZDAw1KlZeQwcKsOfuMVoB2RPpR3fphqhGjFUGbTtAihTkHzloz9fL2fBYEmBsxEWogLdG5kQvvP5sXJLp"/>
+<img class="w-8 h-8 rounded-full ring-2 ring-white" data-alt="Medium shot of a professional woman in her 30s, creative office environment, vibrant teal and orange color pops in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAo30g3gZO_kZg4AztpBXCTKgoCuIZZc-9f5AR-uTZ4g89kLZrg0Zm4gWxOscxSjudLxS_-JZon_69Hikad6fR32m_YrPjcDktQkWu93cVxalOt8OckZgkP5d4QPjlBuCrr2UIb62zOEhCdOWHfsg9XIZm5QKznRg0phRGiZtttPR4qdjZmL0DRsVB3eB0ZGtvaVjmACU8-GydYcD0OpZMjOeVlNNTNbUpuFmm1PQkDiLgFfKqpss6ivARsUDB645ogxXF-xq8oXRNA"/>
+</div>
+<div>
+<p class="font-bold">Jean P. & Marie C.</p>
+<p class="text-[12px] text-on-surface-variant">Strategic Planning</p>
+</div>
+</div>
+</td>
+<td class="px-md py-4 text-on-surface-variant">Francophone 2.0</td>
+<td class="px-md py-4">22 days ago</td>
+<td class="px-md py-4">
+<span class="px-3 py-1 rounded-full bg-error-container text-on-error-container font-label-md text-[11px]">CRITICAL</span>
+</td>
+<td class="px-md py-4">
+<button class="text-primary material-symbols-outlined" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 md:hidden bg-surface dark:bg-surface-dim shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="target">target</span>
+<span class="font-label-md text-label-md">Goals</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="event_repeat">event_repeat</span>
+<span class="font-label-md text-label-md">Sessions</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+<span class="font-label-md text-label-md">Chat</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary-fixed text-on-secondary-container dark:text-on-secondary-fixed rounded-2xl px-4 py-1 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="admin_panel_settings" style="font-variation-settings: 'FILL' 1;">admin_panel_settings</span>
+<span class="font-label-md text-label-md">Admin</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for the health gauge pulse
+        setInterval(() => {
+            const circles = document.querySelectorAll('circle.text-primary');
+            circles.forEach(circle => {
+                circle.style.opacity = '0.8';
+                setTimeout(() => {
+                    circle.style.opacity = '1';
+                }, 500);
+            });
+        }, 3000);
+    </script>
+</body></html>

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dangote Mentorship | Shared Contract Space</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #f8faf9;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .journey-line-active {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #003336 0%, #2a676c 100%);
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e1e3e3;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-highest": "#e1e3e3",
+                      "surface-container-low": "#f2f4f4",
+                      "on-secondary-fixed": "#111c2d",
+                      "primary-fixed": "#b1edf2",
+                      "tertiary": "#492306",
+                      "on-secondary": "#ffffff",
+                      "on-surface-variant": "#404849",
+                      "on-error": "#ffffff",
+                      "background": "#f8faf9",
+                      "inverse-on-surface": "#eff1f1",
+                      "on-primary-fixed-variant": "#074f54",
+                      "on-error-container": "#93000a",
+                      "outline": "#707979",
+                      "on-surface": "#191c1c",
+                      "outline-variant": "#bfc8c9",
+                      "secondary-fixed": "#d8e3fb",
+                      "on-secondary-container": "#586377",
+                      "surface": "#f8faf9",
+                      "surface-variant": "#e1e3e3",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-fixed": "#321300",
+                      "tertiary-fixed": "#ffdbc8",
+                      "surface-container": "#edeeee",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-container": "#e1a27c",
+                      "error": "#ba1a1a",
+                      "surface-tint": "#2a676c",
+                      "on-secondary-fixed-variant": "#3c475a",
+                      "inverse-primary": "#96d1d6",
+                      "primary-container": "#004b50",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-fixed-dim": "#fab891",
+                      "primary": "#003336",
+                      "surface-bright": "#f8faf9",
+                      "tertiary-container": "#64381a",
+                      "on-tertiary-fixed-variant": "#683c1d",
+                      "error-container": "#ffdad6",
+                      "surface-container-high": "#e7e8e8",
+                      "on-primary-container": "#7fbabf",
+                      "secondary-container": "#d5e0f8",
+                      "on-primary-fixed": "#002022",
+                      "surface-dim": "#d9dada",
+                      "secondary": "#545f73",
+                      "primary-fixed-dim": "#96d1d6",
+                      "on-background": "#191c1c",
+                      "inverse-surface": "#2e3131",
+                      "secondary-fixed-dim": "#bcc7de"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "16px",
+                      "md": "24px",
+                      "xl": "64px",
+                      "lg": "40px",
+                      "sm": "12px",
+                      "max-width-desktop": "1280px",
+                      "gutter": "24px",
+                      "base": "8px",
+                      "xs": "4px"
+              },
+              "fontFamily": {
+                      "headline-sm": ["Public Sans"],
+                      "body-md": ["Public Sans"],
+                      "headline-xl": ["Public Sans"],
+                      "body-lg": ["Public Sans"],
+                      "body-sm": ["Public Sans"],
+                      "headline-md": ["Public Sans"],
+                      "label-md": ["Public Sans"],
+                      "headline-lg": ["Public Sans"],
+                      "headline-lg-mobile": ["Public Sans"]
+              },
+              "fontSize": {
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="w-[280px] h-screen fixed left-0 top-0 bg-surface dark:bg-surface-dim shadow-sm flex flex-col h-full py-md px-sm hidden md:flex z-40">
+<div class="mb-xl px-sm">
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">Dangote Mentorship</h1>
+<p class="text-on-surface-variant font-label-md text-label-md">Enterprise Portal</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-4 px-4 py-3 text-primary dark:text-primary-fixed-dim font-bold border-r-4 border-primary dark:border-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined">target</span>
+<span class="font-body-md text-body-md">Goals</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined">event_repeat</span>
+<span class="font-body-md text-body-md">Sessions</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined">mail</span>
+<span class="font-body-md text-body-md">Messages</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<span class="font-body-md text-body-md">Admin</span>
+</a>
+</nav>
+<div class="mt-auto px-4 py-4 flex items-center gap-3">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="A professional portrait of a senior executive in a high-end office setting, with soft natural light streaming through large windows. The style is modern corporate with a focus on leadership and confidence. The color palette features deep greens and neutral grays, reflecting a high-stakes enterprise environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFuLLAwsI1UHmWg7OUop-_9pgvZnwTspE-s3CJ__gjjhsCISvVQoDZbIZ8-5f0zIW5tyk3BSsJWnQJZZ7_kBQ5yZH6JGPj1ByiB2VaXXzDInTedYz5p1nLG1m_tA6LqqOSuoznv3smZnIC3dQvS1BFK4ePrX3FZ1FS3o0YawyqpzTOwC9drAUh7CAIfiS0o85rt2I1VeWnCpin4QGhB5XLWCIsTuS0Qy4gJciNKkRdMhNwk1U1id6bXzaQUids1JlxzvEDLcpUDuvh"/>
+<div>
+<p class="font-label-md text-label-md font-bold">Aliko Dangote</p>
+<p class="text-[10px] text-on-surface-variant">Mentor</p>
+</div>
+</div>
+</aside>
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 right-0 h-16 ml-[280px] w-full md:w-[calc(100%-280px)] bg-surface dark:bg-surface-dim shadow-sm z-30 flex justify-between items-center px-md">
+<div class="flex items-center gap-4">
+<span class="md:hidden material-symbols-outlined text-primary">menu</span>
+<div class="relative group">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined">search</span>
+</span>
+<input class="bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 text-body-sm font-body-sm w-64 focus:ring-2 focus:ring-primary/20" placeholder="Search milestones..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex gap-2 text-body-sm font-body-sm">
+<span class="text-primary font-bold underline cursor-pointer">EN</span>
+<span class="text-outline">|</span>
+<span class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer">FR</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant scale-95 active:scale-90 transition-transform">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant scale-95 active:scale-90 transition-transform">translate</button>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="pt-24 pb-24 md:pb-12 md:ml-[280px] px-md md:px-lg min-h-screen">
+<!-- Header & Pair Profile -->
+<section class="mb-md">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-md">
+<div>
+<nav class="flex gap-2 text-body-sm font-body-sm text-on-surface-variant mb-2">
+<span>Dashboard</span>
+<span>/</span>
+<span class="text-primary font-medium">Mentorship Pair: Dangote &amp; Adeyemi</span>
+</nav>
+<h2 class="font-headline-lg text-headline-lg text-primary">Mentorship Master Agreement</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">Strategic Partnership for Leadership Development in Manufacturing &amp; Industrial Scale.</p>
+</div>
+<div class="flex -space-x-4">
+<div class="w-12 h-12 rounded-full border-4 border-surface overflow-hidden shadow-sm" title="Mentor">
+<img class="w-full h-full object-cover" data-alt="A portrait of a confident senior mentor in a professional attire, set against a blurred background of a modern industrial office. The lighting is crisp and professional, with a color palette of deep teal and neutral whites. The mood is supportive and experienced." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFWK5A7Gjs8LsBRfCLqf8c2rd9poQD3WBlf1vSvCowxQQVZVz0nAP5ATKe9PutISeeWSfPPXM2FYtI__OVt_xQlDYvvFQPfWQaafd9UluCcHIPDfjwdfbYBMCMK4K3cGCOCSMVSKFdR-2KFm4ZJ059rERcwJZye_vl-Kt47tFOaWlDCIeNOEoCVRsWAMgu4ieCMeMlfAomknSM80V90WoMaII7qsMtvgF5N54QatnX6U_OcpahcV3yEN6986Hxq6vQgSZx-RRKpCPq"/>
+</div>
+<div class="w-12 h-12 rounded-full border-4 border-surface overflow-hidden shadow-sm" title="Mentee">
+<img class="w-full h-full object-cover" data-alt="A portrait of a young, ambitious professional in business casual clothing, smiling with determination. The background is a brightly lit collaborative workspace. The style is modern corporate, emphasizing potential and growth, with soft lighting and a clean aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnK0y5i9vGJ__yoM6gPU5uiuc_lAl_X4Kl9DE-yJRkURlMK10bHTHjd0TuDkYQyiV5iF3Sn0fkLXXmjK1OIqd_X8ww0z1P8_eKJ2XaBHfGiL95G5DMIj0wR5W8RPkqge1bnflR8ZoTxAE9bbK4-MnAThY5phc5dEP3_Qh5P1scHzCAFqxCyns-jgq_hyX1hL1F4mYuEmNXLkODiV_yfJsUC6R24Wmt78rd0jiRjSqyiJ7GDMo5L3baIudm64ZAG5VapGfUWEbDSq0P"/>
+</div>
+<div class="w-12 h-12 rounded-full border-4 border-surface bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-sm shadow-sm">
+                        +1
+                    </div>
+</div>
+</div>
+</section>
+<!-- Journey Rail -->
+<section class="bg-surface-container-lowest rounded-xl p-md shadow-sm mb-lg border border-outline-variant/30">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Partnership Progress</h3>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md text-label-md">Phase 2: Strategy Design</span>
+</div>
+<div class="relative py-4">
+<div class="absolute top-1/2 left-0 w-full h-[2px] bg-surface-container-highest -translate-y-1/2"></div>
+<div class="absolute top-1/2 left-0 w-[45%] h-[2px] bg-primary -translate-y-1/2 transition-all duration-1000"></div>
+<div class="relative flex justify-between">
+<!-- Step 1 Done -->
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<span class="font-label-md text-label-md mt-2 text-on-surface-variant">Alignment</span>
+</div>
+<!-- Step 2 Done -->
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<span class="font-label-md text-label-md mt-2 text-on-surface-variant">Contracting</span>
+</div>
+<!-- Step 3 Active -->
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full border-4 border-primary bg-white flex items-center justify-center z-10 animate-pulse">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+</div>
+<span class="font-label-md text-label-md mt-2 text-primary font-bold">Goals Set</span>
+</div>
+<!-- Step 4 Future -->
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full border-2 border-outline-variant bg-surface z-10"></div>
+<span class="font-label-md text-label-md mt-2 text-outline">Action Plan</span>
+</div>
+<!-- Step 5 Future -->
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full border-2 border-outline-variant bg-surface z-10"></div>
+<span class="font-label-md text-label-md mt-2 text-outline">Closure</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Grid Content -->
+<div class="bento-grid">
+<!-- Tab Navigation (Contract Home Specific) -->
+<div class="col-span-12">
+<div class="flex border-b border-outline-variant/30 gap-8 overflow-x-auto custom-scrollbar pb-1">
+<button class="pb-4 border-b-2 border-primary text-primary font-bold text-body-md whitespace-nowrap">Agreements</button>
+<button class="pb-4 border-b-2 border-transparent text-on-surface-variant hover:text-primary transition-colors text-body-md whitespace-nowrap">Goals &amp; Vision</button>
+<button class="pb-4 border-b-2 border-transparent text-on-surface-variant hover:text-primary transition-colors text-body-md whitespace-nowrap">Session Logs</button>
+<button class="pb-4 border-b-2 border-transparent text-on-surface-variant hover:text-primary transition-colors text-body-md whitespace-nowrap">Action Items</button>
+<button class="pb-4 border-b-2 border-transparent text-on-surface-variant hover:text-primary transition-colors text-body-md whitespace-nowrap">Messages</button>
+</div>
+</div>
+<!-- Left Column: Agreement & Context -->
+<div class="col-span-12 lg:col-span-8 space-y-6">
+<!-- Main Agreement Card -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-sm border border-outline-variant/10">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h4 class="font-headline-sm text-headline-sm text-primary">Current Contract: Year 1 Roadmap</h4>
+<p class="text-body-sm text-on-surface-variant">Last updated 4 days ago by A. Dangote</p>
+</div>
+<button class="bg-surface-container-low text-primary p-2 rounded-lg hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</div>
+<div class="prose prose-sm text-on-surface-variant max-w-none space-y-4">
+<p class="font-body-md">The purpose of this mentorship contract is to establish a clear framework for professional growth focused on <strong>Industrial Leadership</strong> and <strong>Operational Excellence</strong>.</p>
+<ul class="list-disc pl-5 space-y-2">
+<li><strong>Frequency:</strong> Bi-weekly sessions of 45 minutes.</li>
+<li><strong>Confidentiality:</strong> All shared strategic documents remain strictly within this portal.</li>
+<li><strong>Primary Objective:</strong> Transitioning mentee into a Senior Operations role by Q4.</li>
+</ul>
+</div>
+<div class="mt-8 pt-6 border-t border-outline-variant/20 flex flex-wrap gap-4">
+<div class="flex items-center gap-2 px-3 py-2 bg-green-50 text-green-700 rounded-lg text-body-sm font-medium">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+                            Mentor Signed
+                        </div>
+<div class="flex items-center gap-2 px-3 py-2 bg-green-50 text-green-700 rounded-lg text-body-sm font-medium">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+                            Mentee Signed
+                        </div>
+<button class="ml-auto flex items-center gap-2 text-primary font-bold text-body-sm">
+                            View Full PDF <span class="material-symbols-outlined">download</span>
+</button>
+</div>
+</div>
+<!-- Goals Snapshot -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-sm border border-outline-variant/10">
+<h5 class="font-headline-sm text-headline-sm mb-4">Top Goal</h5>
+<div class="flex items-center justify-between mb-2">
+<span class="text-body-md font-medium">Operational Scalability</span>
+<span class="text-primary font-bold">75%</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-3/4 rounded-full"></div>
+</div>
+<p class="mt-4 text-body-sm text-on-surface-variant">Focus on high-volume supply chain optimization strategies.</p>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-sm border border-outline-variant/10">
+<h5 class="font-headline-sm text-headline-sm mb-4">Recent Session</h5>
+<div class="flex items-center gap-3">
+<div class="bg-primary-container text-on-primary-container p-2 rounded-lg">
+<span class="material-symbols-outlined">videocam</span>
+</div>
+<div>
+<p class="text-body-md font-bold">Q2 Strategy Sync</p>
+<p class="text-body-sm text-on-surface-variant">May 12, 2024 • 45 min</p>
+</div>
+</div>
+<button class="mt-4 w-full py-2 bg-surface-container-low text-primary rounded-lg font-bold text-body-sm hover:bg-primary/5 transition-colors">
+                            Read Summary
+                        </button>
+</div>
+</div>
+</div>
+<!-- Right Column: Collaborative Features & AI -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<!-- AI Assistant Container -->
+<div class="bg-[#EEF2FF] rounded-xl p-md border border-dashed border-indigo-300 relative overflow-hidden">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-indigo-600">auto_awesome</span>
+<h4 class="font-headline-sm text-headline-sm text-indigo-900">✨ AI Suggested</h4>
+</div>
+<div class="bg-white/50 rounded-lg p-3">
+<p class="italic text-body-sm text-indigo-900 leading-relaxed">
+                            "Based on your recent session notes about 'Risk Management,' I recommend adding a specific milestone: <strong>'Complete Enterprise Risk Assessment Framework'</strong> to your Action Items for next month."
+                        </p>
+</div>
+<button class="mt-4 w-full bg-indigo-600 text-white py-2 rounded-lg font-bold text-body-sm hover:bg-indigo-700 transition-colors">
+                        Add to Action Items
+                    </button>
+</div>
+<!-- Shared Documents -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-sm border border-outline-variant/10">
+<h5 class="font-headline-sm text-headline-sm mb-4">Shared Library</h5>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-2 hover:bg-surface-container-low rounded-lg cursor-pointer transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-red-500">picture_as_pdf</span>
+<span class="text-body-sm font-medium">Q1 Review Report</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">more_vert</span>
+</div>
+<div class="flex items-center justify-between p-2 hover:bg-surface-container-low rounded-lg cursor-pointer transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-blue-500">description</span>
+<span class="text-body-sm font-medium">Personal Vision Board</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">more_vert</span>
+</div>
+<div class="flex items-center justify-between p-2 hover:bg-surface-container-low rounded-lg cursor-pointer transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-green-500">table_chart</span>
+<span class="text-body-sm font-medium">Metric Tracker 2024</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">more_vert</span>
+</div>
+</div>
+<button class="mt-4 w-full border-2 border-dashed border-outline-variant text-on-surface-variant py-3 rounded-xl font-bold text-body-sm flex items-center justify-center gap-2 hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">upload</span> Upload Document
+                    </button>
+</div>
+<!-- Collaborative Note -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-sm border border-outline-variant/10">
+<h5 class="font-headline-sm text-headline-sm mb-4">Sticky Notes</h5>
+<textarea class="w-full bg-amber-50 border-none rounded-lg p-3 text-body-sm font-body-md text-amber-900 focus:ring-amber-200 min-h-[120px]" placeholder="Drop a quick thought for our next meeting...">Remember to discuss the new regional expansion in the Lagos sector.</textarea>
+<div class="flex justify-between items-center mt-2">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border-2 border-white bg-primary"></div>
+<div class="w-6 h-6 rounded-full border-2 border-white bg-secondary"></div>
+</div>
+<button class="text-primary font-bold text-body-sm">Save Note</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Next Step Pill (Floating Action) -->
+<button class="fixed bottom-24 right-8 md:bottom-12 md:right-12 bg-primary text-white pl-6 pr-4 py-4 rounded-full flex items-center gap-4 shadow-xl hover:scale-105 active:scale-95 transition-all z-50">
+<span class="font-bold text-body-md">Schedule Session</span>
+<div class="bg-white/20 p-2 rounded-full">
+<span class="material-symbols-outlined">event</span>
+</div>
+</button>
+</main>
+<!-- BottomNavBar Shell (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 md:hidden bg-surface dark:bg-surface-dim shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] rounded-t-xl">
+<div class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary-fixed text-on-secondary-container dark:text-on-secondary-fixed rounded-2xl px-4 py-1">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1">
+<span class="material-symbols-outlined">target</span>
+<span class="font-label-md text-label-md">Goals</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1">
+<span class="material-symbols-outlined">event_repeat</span>
+<span class="font-label-md text-label-md">Sessions</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1">
+<span class="material-symbols-outlined">mail</span>
+<span class="font-label-md text-label-md">Chat</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<span class="font-label-md text-label-md">Admin</span>
+</div>
+</nav>
+<script>
+        // Micro-interactions
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-95');
+            });
+        });
+
+        // Tab Switching Logic (Visual only)
+        const tabButtons = document.querySelectorAll('.bento-grid button[class*="border-b-2"]');
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabButtons.forEach(b => {
+                    b.classList.remove('border-primary', 'text-primary', 'font-bold');
+                    b.classList.add('border-transparent', 'text-on-surface-variant');
+                });
+                btn.classList.add('border-primary', 'text-primary', 'font-bold');
+                btn.classList.remove('border-transparent', 'text-on-surface-variant');
+            });
+        });
+    </script>
+</body></html>

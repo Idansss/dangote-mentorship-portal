@@ -48,3 +48,6 @@ yarn-error.log*
 # editor / AI tooling
 .github/instructions/codacy.instructions.md
 .qodo
+
+# Stitch redesign — throwaway live verification screenshots (keep the design refs)
+stitch-designs/_live-*.png

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login | Dangote Mentorship</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-highest": "#e1e3e3",
+                    "surface-container-low": "#f2f4f4",
+                    "on-secondary-fixed": "#111c2d",
+                    "primary-fixed": "#b1edf2",
+                    "tertiary": "#492306",
+                    "on-secondary": "#ffffff",
+                    "on-surface-variant": "#404849",
+                    "on-error": "#ffffff",
+                    "background": "#f8faf9",
+                    "inverse-on-surface": "#eff1f1",
+                    "on-primary-fixed-variant": "#074f54",
+                    "on-error-container": "#93000a",
+                    "outline": "#707979",
+                    "on-surface": "#191c1c",
+                    "outline-variant": "#bfc8c9",
+                    "secondary-fixed": "#d8e3fb",
+                    "on-secondary-container": "#586377",
+                    "surface": "#f8faf9",
+                    "surface-variant": "#e1e3e3",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#321300",
+                    "tertiary-fixed": "#ffdbc8",
+                    "surface-container": "#edeeee",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-container": "#e1a27c",
+                    "error": "#ba1a1a",
+                    "surface-tint": "#2a676c",
+                    "on-secondary-fixed-variant": "#3c475a",
+                    "inverse-primary": "#96d1d6",
+                    "primary-container": "#004b50",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed-dim": "#fab891",
+                    "primary": "#003336",
+                    "surface-bright": "#f8faf9",
+                    "tertiary-container": "#64381a",
+                    "on-tertiary-fixed-variant": "#683c1d",
+                    "error-container": "#ffdad6",
+                    "surface-container-high": "#e7e8e8",
+                    "on-primary-container": "#7fbabf",
+                    "secondary-container": "#d5e0f8",
+                    "on-primary-fixed": "#002022",
+                    "surface-dim": "#d9dada",
+                    "secondary": "#545f73",
+                    "primary-fixed-dim": "#96d1d6",
+                    "on-background": "#191c1c",
+                    "inverse-surface": "#2e3131",
+                    "secondary-fixed-dim": "#bcc7de"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "md": "24px",
+                    "xl": "64px",
+                    "lg": "40px",
+                    "sm": "12px",
+                    "max-width-desktop": "1280px",
+                    "gutter": "24px",
+                    "base": "8px",
+                    "xs": "4px"
+            },
+            "fontFamily": {
+                    "headline-sm": ["Public Sans"],
+                    "body-md": ["Public Sans"],
+                    "headline-xl": ["Public Sans"],
+                    "body-lg": ["Public Sans"],
+                    "body-sm": ["Public Sans"],
+                    "headline-md": ["Public Sans"],
+                    "label-md": ["Public Sans"],
+                    "headline-lg": ["Public Sans"],
+                    "headline-lg-mobile": ["Public Sans"]
+            },
+            "fontSize": {
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            background-color: #f8faf9;
+            font-family: 'Public Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .login-card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+        }
+
+        .login-card:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .input-focus-effect:focus-within {
+            border-color: #2a676c;
+            box-shadow: 0 0 0 2px rgba(42, 103, 108, 0.1);
+        }
+
+        .ambient-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(177, 237, 242, 0.15) 0%, rgba(248, 250, 249, 0) 70%);
+            z-index: -1;
+            filter: blur(40px);
+        }
+
+        .bilingual-toggle .active {
+            font-weight: 700;
+            text-decoration: underline;
+            color: #003336;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface antialiased">
+<!-- Atmospheric Decorations -->
+<div class="ambient-glow -top-48 -left-48"></div>
+<div class="ambient-glow -bottom-48 -right-48"></div>
+<main class="w-full max-w-[440px] px-margin-mobile">
+<!-- Header Branding -->
+<div class="flex flex-col items-center mb-lg">
+<div class="mb-md p-xs bg-surface-container-highest rounded-xl">
+<img class="w-16 h-16 object-contain" data-alt="A clean and professional minimalist enterprise logo for Dangote Group, featuring sophisticated geometric shapes in primary teal and slate gray. The logo is displayed on a crisp white background with high-end corporate lighting, conveying a sense of heritage, reliability, and modern African industrial leadership." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAElqoPhLlKFQ0FDzT9hR4PCPP9cLzryTLBMkgv-gEcMcE0xIIHwmn46nY2558GvGsMHmQU5EnOJs6_Q6jHYTEit_OOtCyYAHGjKtF47A-ncE5HXXg63pyFDqbE6OKvQy_fiuJlOWLNNg_GRH_3wCRkDH9VEpe3kznRW4AqLtG-BBYcR2GcchuNHCGGjhpqmhR-0OyDlQFRASK_4I60Dtlmofiw_7VfvxnJP_Y0tHJdBimMOsNb3zhHuK0ECUn6NkRWkgFZl8aC_Pn3"/>
+</div>
+<h1 class="font-headline-md text-headline-md text-primary text-center">Dangote Mentorship</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Enterprise Portal</p>
+</div>
+<!-- Login Card -->
+<div class="login-card bg-surface-container-lowest p-md rounded-xl border border-outline-variant">
+<!-- Language Selection -->
+<div class="flex justify-end mb-md">
+<div class="bilingual-toggle font-label-md text-label-md flex gap-base text-outline">
+<button class="active transition-colors">EN</button>
+<span class="text-outline-variant opacity-50">|</span>
+<button class="hover:text-primary transition-colors">FR</button>
+</div>
+</div>
+<!-- SSO Section -->
+<div class="space-y-sm">
+<button class="w-full flex items-center justify-center gap-sm py-sm border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface hover:bg-surface-container-low transition-all active:scale-95">
+<img alt="Google" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaZnao6YJFnBiPN_eI_Fwk-U3pcxosr3LhBaKaOXFpHmBCh0287Mj0EoR4jnIjaq_EXJpq0Uz_ZQd4pmN3ZbZOIIv58VrsiuP03J44pH9F6bTtIVYNa-pSiptjt4-qMPYHd2ykgtOXqMvxbQ0yq4poqyzdOcw-O8r85Wp2uetPb0zw88A3pCMb08HjiNkQViHmzrgl0qwD54zH4unC2TeCKh_sVmoISHZkkRKmcRGjEWhRq56LdROONjXVS7r-leTDjceGTFwCbZ3R"/>
+                    Continue with Google Workspace
+                </button>
+<button class="w-full flex items-center justify-center gap-sm py-sm border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface hover:bg-surface-container-low transition-all active:scale-95">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">corporate_fare</span>
+                    Dangote SSO Login
+                </button>
+</div>
+<div class="relative my-lg">
+<div aria-hidden="true" class="absolute inset-0 flex items-center">
+<div class="w-full border-t border-outline-variant"></div>
+</div>
+<div class="relative flex justify-center text-label-md uppercase">
+<span class="bg-surface-container-lowest px-md text-on-surface-variant font-label-md">or use credentials</span>
+</div>
+</div>
+<!-- Standard Form -->
+<form class="space-y-md" onsubmit="return false">
+<div class="space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant ml-xs" for="email">Corporate Email</label>
+<div class="relative input-focus-effect border border-outline-variant rounded-lg transition-all">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-outline text-[20px]">mail</span>
+<input class="w-full bg-transparent border-none focus:ring-0 py-sm pl-xl pr-md font-body-md text-body-md text-on-surface placeholder:text-outline-variant" id="email" placeholder="name@dangote.com" type="email"/>
+</div>
+</div>
+<div class="space-y-xs">
+<div class="flex justify-between items-center px-xs">
+<label class="font-label-md text-label-md text-on-surface-variant" for="password">Password</label>
+<a class="font-label-md text-label-md text-surface-tint hover:underline" href="#">Forgot?</a>
+</div>
+<div class="relative input-focus-effect border border-outline-variant rounded-lg transition-all">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-outline text-[20px]">lock</span>
+<input class="w-full bg-transparent border-none focus:ring-0 py-sm pl-xl pr-md font-body-md text-body-md text-on-surface placeholder:text-outline-variant" id="password" placeholder="••••••••" type="password"/>
+<button class="absolute right-sm top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+</div>
+<div class="flex items-center gap-base ml-xs">
+<input class="w-4 h-4 rounded border-outline-variant text-surface-tint focus:ring-surface-tint" id="remember" type="checkbox"/>
+<label class="font-body-sm text-body-sm text-on-surface-variant" for="remember">Remember me for 30 days</label>
+</div>
+<button class="w-full py-sm bg-primary text-on-primary font-headline-sm text-headline-sm rounded-[10px] hover:bg-opacity-90 transition-all shadow-md active:scale-[0.98] mt-base" type="submit">
+                    Sign In
+                </button>
+</form>
+</div>
+<!-- Footer -->
+<footer class="mt-xl text-center">
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                New to the platform? 
+                <a class="text-surface-tint font-bold hover:underline" href="#">Request access</a>
+</p>
+<div class="flex justify-center gap-md mt-md opacity-60">
+<a class="font-label-md text-label-md hover:text-primary" href="#">Privacy Policy</a>
+<a class="font-label-md text-label-md hover:text-primary" href="#">Terms of Service</a>
+<a class="font-label-md text-label-md hover:text-primary" href="#">Support</a>
+</div>
+<p class="mt-md font-label-md text-label-md text-outline-variant">© 2024 Dangote Group. All rights reserved.</p>
+</footer>
+</main>
+<script>
+        // Micro-interaction for the password visibility toggle
+        const toggleBtn = document.querySelector('button .material-symbols-outlined:contains("visibility")');
+        const passwordInput = document.getElementById('password');
+
+        if (passwordInput && toggleBtn) {
+            let isVisible = false;
+            toggleBtn.parentElement.addEventListener('click', () => {
+                isVisible = !isVisible;
+                passwordInput.type = isVisible ? 'text' : 'password';
+                toggleBtn.textContent = isVisible ? 'visibility_off' : 'visibility';
+            });
+        }
+
+        // Language toggle micro-interaction
+        const langBtns = document.querySelectorAll('.bilingual-toggle button');
+        langBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                langBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        // Add a subtle parallax movement to the glow spots based on mouse position
+        document.addEventListener('mousemove', (e) => {
+            const glows = document.querySelectorAll('.ambient-glow');
+            const x = (e.clientX / window.innerWidth) * 20;
+            const y = (e.clientY / window.innerHeight) * 20;
+            
+            glows.forEach((glow, index) => {
+                const multiplier = index === 0 ? 1 : -1;
+                glow.style.transform = `translate(${x * multiplier}px, ${y * multiplier}px)`;
+            });
+        });
+    </script>
+</body></html>

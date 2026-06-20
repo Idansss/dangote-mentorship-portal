@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Data Import &amp; Validation | Dangote Mentorship</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #f8faf9;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #bfc8c9;
+            border-radius: 10px;
+        }
+        .step-pulse {
+            box-shadow: 0 0 0 0 rgba(0, 51, 54, 0.4);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 51, 54, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 51, 54, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 51, 54, 0); }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-highest": "#e1e3e3",
+                      "surface-container-low": "#f2f4f4",
+                      "on-secondary-fixed": "#111c2d",
+                      "primary-fixed": "#b1edf2",
+                      "tertiary": "#492306",
+                      "on-secondary": "#ffffff",
+                      "on-surface-variant": "#404849",
+                      "on-error": "#ffffff",
+                      "background": "#f8faf9",
+                      "inverse-on-surface": "#eff1f1",
+                      "on-primary-fixed-variant": "#074f54",
+                      "on-error-container": "#93000a",
+                      "outline": "#707979",
+                      "on-surface": "#191c1c",
+                      "outline-variant": "#bfc8c9",
+                      "secondary-fixed": "#d8e3fb",
+                      "on-secondary-container": "#586377",
+                      "surface": "#f8faf9",
+                      "surface-variant": "#e1e3e3",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-fixed": "#321300",
+                      "tertiary-fixed": "#ffdbc8",
+                      "surface-container": "#edeeee",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-container": "#e1a27c",
+                      "error": "#ba1a1a",
+                      "surface-tint": "#2a676c",
+                      "on-secondary-fixed-variant": "#3c475a",
+                      "inverse-primary": "#96d1d6",
+                      "primary-container": "#004b50",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-fixed-dim": "#fab891",
+                      "primary": "#003336",
+                      "surface-bright": "#f8faf9",
+                      "tertiary-container": "#64381a",
+                      "on-tertiary-fixed-variant": "#683c1d",
+                      "error-container": "#ffdad6",
+                      "surface-container-high": "#e7e8e8",
+                      "on-primary-container": "#7fbabf",
+                      "secondary-container": "#d5e0f8",
+                      "on-primary-fixed": "#002022",
+                      "surface-dim": "#d9dada",
+                      "secondary": "#545f73",
+                      "primary-fixed-dim": "#96d1d6",
+                      "on-background": "#191c1c",
+                      "inverse-surface": "#2e3131",
+                      "secondary-fixed-dim": "#bcc7de"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "16px",
+                      "md": "24px",
+                      "xl": "64px",
+                      "lg": "40px",
+                      "sm": "12px",
+                      "max-width-desktop": "1280px",
+                      "gutter": "24px",
+                      "base": "8px",
+                      "xs": "4px"
+              },
+              "fontFamily": {
+                      "headline-sm": ["Public Sans"],
+                      "body-md": ["Public Sans"],
+                      "headline-xl": ["Public Sans"],
+                      "body-lg": ["Public Sans"],
+                      "body-sm": ["Public Sans"],
+                      "headline-md": ["Public Sans"],
+                      "label-md": ["Public Sans"],
+                      "headline-lg": ["Public Sans"],
+                      "headline-lg-mobile": ["Public Sans"]
+              },
+              "fontSize": {
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface">
+<!-- Desktop SideNav -->
+<aside class="hidden md:flex flex-col h-screen fixed left-0 top-0 w-[280px] bg-surface shadow-sm py-md px-sm z-50">
+<div class="mb-lg px-md">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Dangote Mentorship</h1>
+<p class="font-body-sm text-on-surface-variant opacity-70">Enterprise Portal</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-md py-3 font-body-md text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-md py-3 font-body-md text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">target</span>
+                Goals
+            </a>
+<a class="flex items-center gap-3 px-md py-3 font-body-md text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">event_repeat</span>
+                Sessions
+            </a>
+<a class="flex items-center gap-3 px-md py-3 font-body-md text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">mail</span>
+                Messages
+            </a>
+<a class="flex items-center gap-3 px-md py-3 font-body-md text-primary font-bold border-r-4 border-primary bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+                Admin
+            </a>
+</nav>
+<div class="mt-auto px-md py-md border-t border-outline-variant/30 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Professional studio portrait of a corporate administrator in business attire, clean minimalist background, soft natural lighting, high-resolution photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuANRanKHSYAYP9S6mjznHc1664G6RMSr3vioMuvddIU46-X6NMRzGwJmRfUpxwxu7HG2ZCc3TEsWdaqGO57-noVn6BUQ4DcoxCGeMthe290Lrt6IwNV7QhplxDiiFypvdf_hTrUvSF2Iimr9No5UcKdZBkrACv5t_Q2Kfcn01DmKJaLJLIUQpaDnIxH3PnPacL6r_fIMfG957AAToifGyh5WQYU6fblY0TmeJlrLxyjQeDy-BoFhYPZOeo6KhE2jCk0uQ7f5FjcaT-Q"/>
+</div>
+<div>
+<p class="font-label-md text-primary font-bold">Admin Portal</p>
+<p class="font-body-sm text-on-surface-variant">Global Access</p>
+</div>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="flex justify-between items-center w-full px-md h-16 md:ml-[280px] md:w-[calc(100%-280px)] bg-surface shadow-sm fixed top-0 z-40">
+<div class="flex items-center bg-surface-container-low px-4 py-2 rounded-full w-full max-w-md group border border-transparent focus-within:border-primary-container transition-all">
+<span class="material-symbols-outlined text-on-surface-variant mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 w-full text-body-sm outline-none" placeholder="Search data imports..." type="text"/>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">translate</button>
+</div>
+<div class="font-body-md text-primary">
+<span class="font-bold underline cursor-pointer">EN</span> | <span class="text-outline cursor-pointer hover:text-on-surface transition-colors">FR</span>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="md:ml-[280px] pt-24 pb-20 px-md md:px-lg min-h-screen">
+<div class="max-w-max-width-desktop mx-auto">
+<!-- Breadcrumbs & Header -->
+<div class="mb-lg">
+<nav class="flex gap-2 text-body-sm text-on-surface-variant mb-2">
+<a class="hover:text-primary" href="#">Admin</a>
+<span>/</span>
+<a class="hover:text-primary" href="#">User Management</a>
+<span>/</span>
+<span class="text-primary font-medium">Batch Data Import</span>
+</nav>
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary mb-2">Data Import &amp; Validation</h2>
+<p class="font-body-md text-on-surface-variant max-w-2xl">Review, validate, and commit the newly uploaded mentor and mentee records. AI has pre-screened these entries for potential issues.</p>
+</div>
+<div class="flex gap-sm">
+<button class="px-md py-2 border border-outline rounded-lg font-body-md hover:bg-surface-container-low transition-colors">Export CSV</button>
+<button class="px-md py-2 bg-primary text-on-primary rounded-lg font-body-md shadow-sm hover:opacity-90 transition-opacity">Commit Import</button>
+</div>
+</div>
+</div>
+<!-- Validation Status Bar (Bento Pattern) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-md mb-lg">
+<div class="bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+<p class="font-label-md text-on-surface-variant uppercase tracking-wider mb-2">Total Rows</p>
+<div class="flex items-end gap-2">
+<span class="font-headline-md text-headline-md text-primary">1,284</span>
+<span class="font-body-sm text-outline mb-1">Entries</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+<p class="font-label-md text-on-surface-variant uppercase tracking-wider mb-2">Validated</p>
+<div class="flex items-end gap-2">
+<span class="font-headline-md text-headline-md text-on-secondary-container">1,152</span>
+<span class="text-on-secondary-container material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant/30 flex flex-col justify-between border-l-4 border-l-error">
+<p class="font-label-md text-on-surface-variant uppercase tracking-wider mb-2">AI Flags</p>
+<div class="flex items-end gap-2">
+<span class="font-headline-md text-headline-md text-error">132</span>
+<span class="text-error material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+</div>
+<div class="bg-secondary-container p-md rounded-xl shadow-sm flex flex-col justify-between">
+<p class="font-label-md text-on-secondary-container uppercase tracking-wider mb-2">System Health</p>
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-on-secondary-fixed">Optimized</span>
+<div class="w-3 h-3 bg-on-secondary-fixed rounded-full animate-pulse"></div>
+</div>
+</div>
+</div>
+<!-- Journey Rail / Import Progress -->
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-sm mb-lg">
+<div class="flex justify-between mb-4">
+<h3 class="font-headline-sm text-headline-sm text-primary">Workflow Progress</h3>
+<span class="font-body-sm text-primary font-bold">Step 3 of 5: Conflict Validation</span>
+</div>
+<div class="relative flex items-center justify-between w-full">
+<!-- Progress Line Background -->
+<div class="absolute h-0.5 bg-outline-variant w-full z-0"></div>
+<!-- Active Progress Line -->
+<div class="absolute h-0.5 bg-primary w-1/2 z-0"></div>
+<!-- Steps -->
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<span class="font-body-sm mt-2 text-primary font-bold">Upload</span>
+</div>
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<span class="font-body-sm mt-2 text-primary font-bold">Mapping</span>
+</div>
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-surface-container-lowest border-2 border-primary flex items-center justify-center text-primary step-pulse">
+<div class="w-3 h-3 bg-primary rounded-full"></div>
+</div>
+<span class="font-body-sm mt-2 text-primary font-bold">Validation</span>
+</div>
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-surface-container-lowest border-2 border-outline-variant flex items-center justify-center text-outline-variant"></div>
+<span class="font-body-sm mt-2 text-on-surface-variant">Review</span>
+</div>
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-surface-container-lowest border-2 border-outline-variant flex items-center justify-center text-outline-variant"></div>
+<span class="font-body-sm mt-2 text-on-surface-variant">Commit</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col lg:flex-row gap-lg">
+<!-- Data Table -->
+<div class="flex-grow bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden">
+<div class="p-md border-b border-outline-variant/20 flex justify-between items-center bg-surface-container-low">
+<h3 class="font-headline-sm text-headline-sm text-primary">Imported Records</h3>
+<div class="flex gap-2">
+<button class="p-2 hover:bg-surface-container-high rounded-lg transition-colors material-symbols-outlined text-on-surface-variant">filter_list</button>
+<button class="p-2 hover:bg-surface-container-high rounded-lg transition-colors material-symbols-outlined text-on-surface-variant">settings</button>
+</div>
+</div>
+<div class="overflow-x-auto custom-scrollbar">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-md py-4 font-label-md text-on-surface-variant border-b border-outline-variant/20">STATUS</th>
+<th class="px-md py-4 font-label-md text-on-surface-variant border-b border-outline-variant/20">FULL NAME</th>
+<th class="px-md py-4 font-label-md text-on-surface-variant border-b border-outline-variant/20">ROLE</th>
+<th class="px-md py-4 font-label-md text-on-surface-variant border-b border-outline-variant/20">EMAIL</th>
+<th class="px-md py-4 font-label-md text-on-surface-variant border-b border-outline-variant/20">ISSUES</th>
+<th class="px-md py-4 font-label-md text-on-surface-variant border-b border-outline-variant/20">ACTION</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Row 1: Issue -->
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-md py-4">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">error</span>
+</td>
+<td class="px-md py-4">
+<p class="font-body-md text-primary font-bold">Kojo Afriyie</p>
+<p class="font-body-sm text-on-surface-variant">Engineering</p>
+</td>
+<td class="px-md py-4">
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-label-md rounded-full font-bold">MENTEE</span>
+</td>
+<td class="px-md py-4 font-body-sm">k.afriyie@dangote.com</td>
+<td class="px-md py-4">
+<div class="flex items-center gap-2 text-error font-body-sm font-medium">
+<span class="material-symbols-outlined text-[16px]">info</span>
+                                            Incomplete profile
+                                        </div>
+</td>
+<td class="px-md py-4">
+<button class="text-primary hover:underline font-body-sm font-bold">Edit</button>
+</td>
+</tr>
+<!-- Row 2: Conflict -->
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-md py-4">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">warning</span>
+</td>
+<td class="px-md py-4">
+<p class="font-body-md text-primary font-bold">Fatima Al-Hassan</p>
+<p class="font-body-sm text-on-surface-variant">Logistics</p>
+</td>
+<td class="px-md py-4">
+<span class="px-3 py-1 bg-primary-container text-on-primary-container text-label-md rounded-full font-bold">MENTOR</span>
+</td>
+<td class="px-md py-4 font-body-sm">f.alhassan@dangote.com</td>
+<td class="px-md py-4">
+<div class="flex items-center gap-2 text-tertiary font-body-sm font-medium">
+<span class="material-symbols-outlined text-[16px]">groups</span>
+                                            Conflict of interest
+                                        </div>
+</td>
+<td class="px-md py-4">
+<button class="text-primary hover:underline font-body-sm font-bold">Edit</button>
+</td>
+</tr>
+<!-- Row 3: Valid -->
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-md py-4">
+<span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</td>
+<td class="px-md py-4">
+<p class="font-body-md text-primary font-bold">Samuel Adebayo</p>
+<p class="font-body-sm text-on-surface-variant">Operations</p>
+</td>
+<td class="px-md py-4">
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-label-md rounded-full font-bold">MENTEE</span>
+</td>
+<td class="px-md py-4 font-body-sm">s.adebayo@dangote.com</td>
+<td class="px-md py-4">
+<span class="text-on-surface-variant font-body-sm opacity-50">—</span>
+</td>
+<td class="px-md py-4">
+<button class="text-primary hover:underline font-body-sm font-bold">Edit</button>
+</td>
+</tr>
+<!-- Row 4: Duplicate -->
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-md py-4">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">content_copy</span>
+</td>
+<td class="px-md py-4">
+<p class="font-body-md text-primary font-bold">Nneka Obi</p>
+<p class="font-body-sm text-on-surface-variant">Finance</p>
+</td>
+<td class="px-md py-4">
+<span class="px-3 py-1 bg-primary-container text-on-primary-container text-label-md rounded-full font-bold">MENTOR</span>
+</td>
+<td class="px-md py-4 font-body-sm">n.obi@dangote.com</td>
+<td class="px-md py-4">
+<div class="flex items-center gap-2 text-error font-body-sm font-medium">
+<span class="material-symbols-outlined text-[16px]">person_off</span>
+                                            Duplicate ID
+                                        </div>
+</td>
+<td class="px-md py-4">
+<button class="text-primary hover:underline font-body-sm font-bold">Edit</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-md flex justify-between items-center bg-surface-container-low/20">
+<span class="font-body-sm text-on-surface-variant">Showing 1-10 of 1,284 records</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-on-primary font-body-sm">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface-container-low font-body-sm">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface-container-low font-body-sm">3</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- AI Insights Sidebar -->
+<aside class="w-full lg:w-80 shrink-0">
+<div class="bg-[#EEF2FF] border border-dashed border-[#C7D2FE] rounded-xl p-md shadow-sm sticky top-24">
+<div class="flex items-center gap-2 text-[#4338CA] mb-4">
+<span class="material-symbols-outlined">auto_awesome</span>
+<h4 class="font-headline-sm text-headline-sm">AI Assistant</h4>
+</div>
+<p class="font-body-sm italic text-[#3730A3] mb-md leading-relaxed">
+                            "I've identified several potential matching conflicts in the logistics department. Some mentors are currently overseeing 4+ mentees, which exceeds the recommended 1:3 ratio."
+                        </p>
+<div class="space-y-md">
+<div class="bg-white/50 p-sm rounded-lg border border-[#C7D2FE]">
+<p class="font-label-md text-[#4338CA] uppercase mb-1">Critical Insight</p>
+<p class="font-body-sm text-[#1E1B4B]">32 users have mismatched region codes that don't align with corporate HR data.</p>
+<button class="mt-2 text-body-sm text-[#4338CA] font-bold hover:underline">Auto-Fix Regional Data</button>
+</div>
+<div class="bg-white/50 p-sm rounded-lg border border-[#C7D2FE]">
+<p class="font-label-md text-[#4338CA] uppercase mb-1">Action Required</p>
+<p class="font-body-sm text-[#1E1B4B]">Mentorship contracts for 15 mentors are nearing expiry (within 30 days).</p>
+<button class="mt-2 text-body-sm text-[#4338CA] font-bold hover:underline">Notify Legal Dept</button>
+</div>
+</div>
+<button class="w-full mt-lg py-3 bg-white text-[#4338CA] rounded-lg font-body-md font-bold shadow-sm border border-[#C7D2FE] hover:bg-indigo-50 transition-colors">
+                            Generate Full Audit Report
+                        </button>
+</div>
+</aside>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] rounded-t-xl">
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1">
+<span class="material-symbols-outlined">target</span>
+<span class="font-label-md text-label-md">Goals</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1">
+<span class="material-symbols-outlined">event_repeat</span>
+<span class="font-label-md text-label-md">Sessions</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1">
+<span class="material-symbols-outlined">mail</span>
+<span class="font-label-md text-label-md">Chat</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-2xl px-4 py-1">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<span class="font-label-md text-label-md">Admin</span>
+</button>
+</nav>
+<script>
+        // Simple micro-interactions for table rows
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('click', () => {
+                row.classList.toggle('bg-surface-container-high/40');
+            });
+        });
+
+        // Search bar focus effect
+        const searchInput = document.querySelector('input[type="text"]');
+        const searchContainer = searchInput.parentElement;
+        searchInput.addEventListener('focus', () => {
+            searchContainer.classList.add('shadow-md');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchContainer.classList.remove('shadow-md');
+        });
+    </script>
+</body></html>

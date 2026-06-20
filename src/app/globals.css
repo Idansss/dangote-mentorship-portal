@@ -13,34 +13,34 @@
  */
 @layer base {
   :root {
-    /* ── Palette (§1) — "fresh light green" / PulseHR-style depth ──
-     * The canvas is inverted from a flat white page: the PAGE is a light
-     * grey-green and SURFACES (cards, sidebar) are pure white, so white cards
-     * "float" above the canvas with the soft layered shadow (§3). */
-    --bg: 244 247 245; /* #F4F7F5 page canvas (light grey-green) */
-    --surface: 255 255 255; /* #FFFFFF cards, sidebar, raised panels */
-    --surface-2: 238 243 239; /* #EEF3EF nested panels, table headers, hovers */
-    --border: 231 237 232; /* #E7EDE8 hairlines, dividers, input borders */
-    --ink: 20 32 26; /* #14201A primary text */
-    --ink-2: 74 90 80; /* #4A5A50 secondary text, labels */
-    --ink-3: 138 152 143; /* #8A988F muted text, placeholders */
+    /* ── Palette — STITCH REDESIGN (docs/stitch-redesign.md) ──
+     * Deep corporate teal Material-3 system replacing the original green. The
+     * token NAMES are kept (so the whole app cascades without a refactor); only
+     * the VALUES changed green → teal. The PAGE is a light cool grey-green and
+     * SURFACES (cards, sidebar) are pure white, so white cards "float" above the
+     * canvas with the soft layered shadow (§3). Stored as RGB channels. */
+    --bg: 248 250 249; /* #F8FAF9 page canvas (M3 surface/background) */
+    --surface: 255 255 255; /* #FFFFFF cards, sidebar, raised panels (container-lowest) */
+    --surface-2: 242 244 244; /* #F2F4F4 nested panels, table headers, hovers (container-low) */
+    --border: 226 232 240; /* #E2E8F0 hairlines, dividers, input borders */
+    --ink: 25 28 28; /* #191C1C primary text (on-surface) */
+    --ink-2: 64 72 73; /* #404849 secondary text, labels (on-surface-variant) */
+    --ink-3: 112 121 121; /* #707979 muted text, placeholders (outline) */
 
-    /* Two-step green: a fresh, light brand green for accents (icons, links,
-     * active states, charts, focus rings) and a deeper same-hue tint for any
-     * surface carrying WHITE text (buttons, filled pills, badges) so it clears
-     * WCAG AA. #34A853 → white = 3.06 (AA for icons/large); #288544 → white =
-     * 4.64 (AA for body text). */
-    --green-light: 52 168 83; /* #34A853 brand light — accents, links, active icon */
-    --green: 40 133 68; /* #288544 PRIMARY — buttons, filled pills (white text, AA) */
-    --green-strong: 31 115 56; /* #1F7338 hover/pressed */
-    --green-soft: 230 244 234; /* #E6F4EA selected rows, soft fills, chips */
-    --gold: 181 134 42; /* #B5862A recognition / certificates ONLY */
+    /* Two-step teal: a brighter teal accent for icons/links/charts/focus, and
+     * the deep primary-container teal for any surface carrying WHITE text
+     * (buttons, filled pills, badges). #004B50 → white = 8.9:1 (AAA). */
+    --green-light: 42 103 108; /* #2A676C brand accent — icons, links, charts (surface-tint) */
+    --green: 0 75 80; /* #004B50 PRIMARY — buttons, filled pills, active nav (white text) */
+    --green-strong: 0 51 54; /* #003336 hover/pressed, active nav text (M3 primary) */
+    --green-soft: 217 235 236; /* #D9EBEC selected rows, soft fills, chips */
+    --gold: 100 56 26; /* #64381A recognition / weekly-tip / certificates (M3 tertiary) */
 
     /* Status — functional, not decorative (§1) */
-    --ok: 40 133 68; /* #288544 healthy / completed */
-    --warn: 199 122 18; /* #C77A12 needs attention / due soon */
-    --risk: 192 57 43; /* #C0392B at risk / overdue / blocked */
-    --info: 44 110 143; /* #2C6E8F informational / AI suggestions */
+    --ok: 30 122 70; /* #1E7A46 healthy / completed (success emerald) */
+    --warn: 199 122 18; /* #C77A12 needs attention / due soon (amber) */
+    --risk: 186 26 26; /* #BA1A1A at risk / overdue / blocked (M3 error) */
+    --info: 79 70 229; /* #4F46E5 AI suggestions (indigo-600) */
 
     /* ── shadcn semantic aliases → palette tokens ── */
     --background: var(--bg);
@@ -136,8 +136,8 @@
   input[type='month']::-webkit-calendar-picker-indicator,
   input[type='week']::-webkit-calendar-picker-indicator {
     cursor: pointer;
-    filter: invert(40%) sepia(64%) saturate(489%) hue-rotate(93deg) brightness(92%)
-      contrast(88%);
+    filter: invert(22%) sepia(38%) saturate(1400%) hue-rotate(140deg) brightness(94%)
+      contrast(92%);
   }
 }
 

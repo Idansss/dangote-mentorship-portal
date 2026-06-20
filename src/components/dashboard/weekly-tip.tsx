@@ -1,8 +1,10 @@
 import { getTranslations } from 'next-intl/server';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Lightbulb } from 'lucide-react';
 
-// A quiet weekly tip on the mentee dashboard (experience-layer.md §1.1). Rotates
-// through a small bilingual set by ISO week so it changes without any storage.
+// Weekly tip (experience-layer.md §1.1 / Stitch redesign). Rotates through a small
+// bilingual set by ISO week so it changes without any storage. Styled as the
+// Stitch "Weekly Tip" recognition card — warm tertiary (gold/brown) surface with
+// a lightbulb, the one warm accent in the otherwise teal system.
 const TIP_COUNT = 4;
 
 function weekIndex(date: Date, count: number): number {
@@ -10,15 +12,21 @@ function weekIndex(date: Date, count: number): number {
   return Math.floor(days / 7) % count;
 }
 
-export async function WeeklyTip() {
+export async function WeeklyTip({ className }: { className?: string }) {
   const t = await getTranslations('dashboardCards');
   const i = weekIndex(new Date(), TIP_COUNT) + 1;
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-h3">{t('weeklyTip')}</CardTitle>
-      </CardHeader>
-      <CardContent className="text-small text-ink-2">{t(`tips.tip${i}`)}</CardContent>
-    </Card>
+    <div
+      className={
+        'flex h-full flex-col rounded-lg bg-gold p-6 text-white shadow-elevation ' +
+        (className ?? '')
+      }
+    >
+      <div className="mb-3 flex items-center gap-2">
+        <Lightbulb className="size-5" aria-hidden />
+        <h3 className="text-micro font-bold uppercase tracking-widest">{t('weeklyTip')}</h3>
+      </div>
+      <p className="text-body leading-relaxed text-white/95">{t(`tips.tip${i}`)}</p>
+    </div>
   );
 }
