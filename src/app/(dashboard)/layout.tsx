@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import { RoleName } from '@prisma/client';
 import { getCurrentUser, hasAnyRole } from '@/lib/auth/rbac';
 import { ADMIN_ROLES } from '@/lib/auth/roles';
+import { isMaintenanceMode } from '@/features/settings/maintenance';
 import { getUnreadCount, getUserNotifications } from '@/lib/notifications/data';
 import { AppShell, type AppShellLabels } from '@/components/shell/app-shell';
 import { buildAdminNavSections, buildParticipantNavSections } from '@/lib/nav/sections';
@@ -53,6 +54,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const user = await getCurrentUser();
   if (!user) redirect('/login');
 
+  // Maintenance mode (admin-toggled) locks the authenticated participant area;
+  // admins keep access so they can work during the window (CLAUDE.md §4).
+  if (!hasAnyRole(user, ADMIN_ROLES) && (await isMaintenanceMode())) {
+    redirect('/maintenance');
+  }
+
   const [tNav, tShell, tCommon, unread, recentRows] = await Promise.all([
     getTranslations('nav'),
     getTranslations('shell'),
@@ -65,7 +72,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   // live in this group) too — give them their admin nav so they don't lose it on
   // the way in. Participants get the mentor/mentee nav.
   const sections = hasAnyRole(user, ADMIN_ROLES)
-    ? await buildAdminNavSections(unread)
+    ? await buildAdminNavSections(unread, user.roles)
     : await buildParticipantNavSections(user.roles, unread);
 
   const labels: AppShellLabels = {

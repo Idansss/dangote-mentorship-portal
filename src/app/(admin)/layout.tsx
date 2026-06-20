@@ -36,7 +36,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     getUserNotifications(user.id, 6),
   ]);
 
-  const sections = await buildAdminNavSections(unread);
+  const sections = await buildAdminNavSections(unread, user.roles);
 
   const labels: AppShellLabels = {
     brand: tCommon('appShortName'),

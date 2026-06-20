@@ -9,8 +9,11 @@ import { defaultDashboardPath } from '@/lib/auth/roles';
 // the SAME nav for a given user. Without this, an admin who clicks the bell lands
 // in the participant shell and loses their admin nav (every item filtered out).
 
-export async function buildAdminNavSections(unread: number): Promise<NavSection[]> {
-  const [t, tImports, tMatching, tPeople, tInvites, tSupport, tForms, tLists, tInsights, tNav, tShell] =
+export async function buildAdminNavSections(
+  unread: number,
+  roles: RoleName[] = [],
+): Promise<NavSection[]> {
+  const [t, tImports, tMatching, tPeople, tInvites, tSupport, tForms, tLists, tInsights, tSettings, tNav, tShell] =
     await Promise.all([
       getTranslations('admin'),
       getTranslations('imports'),
@@ -21,9 +24,14 @@ export async function buildAdminNavSections(unread: number): Promise<NavSection[
       getTranslations('forms'),
       getTranslations('adminLists'),
       getTranslations('insights'),
+      getTranslations('settings'),
       getTranslations('nav'),
       getTranslations('shell'),
     ]);
+
+  // Platform settings are Super-Admin only (CLAUDE.md §4); hide the link from
+  // Programme Admins, who would only be bounced off the page.
+  const isSuperAdmin = roles.includes(RoleName.SUPER_ADMIN);
 
   return [
     {
@@ -49,6 +57,14 @@ export async function buildAdminNavSections(unread: number): Promise<NavSection[
         { href: '/admin/invites', label: tInvites('title'), icon: 'invites' },
       ],
     },
+    ...(isSuperAdmin
+      ? [
+          {
+            label: tShell('navPlatform'),
+            items: [{ href: '/admin/settings', label: tSettings('title'), icon: 'settings' as const }],
+          },
+        ]
+      : []),
     {
       label: tShell('navHelp'),
       items: [

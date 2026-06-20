@@ -60,7 +60,8 @@
     "navHelp": "Aide",
     "navManage": "Gérer",
     "navPeople": "Personnes",
-    "enterprisePortal": "Portail Entreprise"
+    "enterprisePortal": "Portail Entreprise",
+    "navPlatform": "Plateforme"
   },
   "home": {
     "eyebrow": "Programme de mentorat Dangote 2026",
@@ -1433,5 +1434,24 @@
     "approved": "Approuvés",
     "goalCompleted": "Terminés",
     "empty": "Aucune donnée pour le moment."
+  },
+  "settings": {
+    "title": "Paramètres",
+    "subtitle": "Configuration du portail à l’échelle de la plateforme.",
+    "maintenanceTitle": "Mode maintenance",
+    "maintenanceDescription": "Lorsqu’il est activé, seuls les administrateurs peuvent accéder au portail. Les mentors, mentorés, formateurs et évaluateurs voient une page de maintenance jusqu’à sa désactivation.",
+    "maintenanceStatus": "Statut",
+    "statusOn": "Activé",
+    "statusOff": "Désactivé",
+    "maintenanceActiveWarning": "Le mode maintenance est actif. Les utilisateurs non administrateurs sont actuellement bloqués hors du portail.",
+    "enableButton": "Activer le mode maintenance",
+    "disableButton": "Désactiver le mode maintenance",
+    "confirmEnable": "Cela bloquera immédiatement tous les mentors, mentorés, formateurs et évaluateurs. Les administrateurs conservent l’accès. Continuer ?",
+    "confirmEnableButton": "Oui, activer"
+  },
+  "maintenance": {
+    "title": "Mode maintenance",
+    "body": "Le portail est temporairement indisponible pendant une maintenance planifiée. Merci de revenir dans quelques instants.",
+    "signOut": "Se déconnecter"
   }
 }

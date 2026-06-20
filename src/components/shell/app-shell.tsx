@@ -26,6 +26,7 @@ import {
   GraduationCap,
   Mail,
   BarChart3,
+  Settings,
   Menu,
   X,
   ChevronLeft,
@@ -69,7 +70,8 @@ export type IconKey =
   | 'mentees'
   | 'invites'
   | 'training'
-  | 'insights';
+  | 'insights'
+  | 'settings';
 
 const ICONS: Record<IconKey, LucideIcon> = {
   dashboard: LayoutDashboard,
@@ -96,6 +98,7 @@ const ICONS: Record<IconKey, LucideIcon> = {
   invites: Mail,
   training: Award,
   insights: BarChart3,
+  settings: Settings,
 };
 
 export interface NavItem {

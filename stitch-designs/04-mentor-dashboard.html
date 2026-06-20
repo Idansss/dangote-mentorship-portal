@@ -117,6 +117,17 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #bfc8c9; border-radius: 10px; }
     </style>
+<style id="portal-themed-scrollbar">
+/* Themed scrollbar — matches the Dangote portal design system (src/app/globals.css):
+   transparent track, slim neutral thumb (--ink-3), teal on hover (--green), no native arrows. */
+html { scrollbar-width: thin; scrollbar-color: rgba(112,121,121,0.35) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background-color: rgba(112,121,121,0.35); border-radius: 999px; border: 3px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background-color: rgba(0,75,80,0.7); }
+::-webkit-scrollbar-button, ::-webkit-scrollbar-button:single-button, ::-webkit-scrollbar-button:start, ::-webkit-scrollbar-button:end { display: none; width: 0; height: 0; }
+::-webkit-scrollbar-corner { background: transparent; }
+</style>
 </head>
 <body class="bg-background text-on-surface font-body-md selection:bg-primary-fixed-dim">
 <!-- SideNavBar -->

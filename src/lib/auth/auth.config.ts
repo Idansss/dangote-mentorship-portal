@@ -20,6 +20,7 @@ const PUBLIC_PREFIXES = ['/about', '/faq', '/programme', '/mentor-guide', '/ment
 function isPublicPath(pathname: string): boolean {
   if (pathname === '/' || pathname === '/login' || pathname === '/signup') return true;
   if (pathname.startsWith('/invite')) return true; // invite acceptance is public
+  if (pathname === '/maintenance') return true; // maintenance holding page (gated server-side)
   // Password recovery is public (the token is the credential).
   if (pathname === '/forgot-password' || pathname.startsWith('/reset-password')) return true;
   if (pathname.startsWith('/api/auth')) return true;

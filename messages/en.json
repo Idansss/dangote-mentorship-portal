@@ -60,7 +60,8 @@
     "navHelp": "Help",
     "navManage": "Manage",
     "navPeople": "People",
-    "enterprisePortal": "Enterprise Portal"
+    "enterprisePortal": "Enterprise Portal",
+    "navPlatform": "Platform"
   },
   "home": {
     "eyebrow": "Dangote Mentorship Programme 2026",
@@ -1433,5 +1434,24 @@
     "approved": "Approved",
     "goalCompleted": "Completed",
     "empty": "No data yet."
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Platform-wide configuration for the portal.",
+    "maintenanceTitle": "Maintenance mode",
+    "maintenanceDescription": "When on, only administrators can access the portal. Mentors, mentees, trainers and reviewers see a maintenance page until you turn it off.",
+    "maintenanceStatus": "Status",
+    "statusOn": "On",
+    "statusOff": "Off",
+    "maintenanceActiveWarning": "Maintenance mode is active. Non-admin users are currently locked out of the portal.",
+    "enableButton": "Turn on maintenance mode",
+    "disableButton": "Turn off maintenance mode",
+    "confirmEnable": "This will immediately lock out all mentors, mentees, trainers and reviewers. Admins keep access. Continue?",
+    "confirmEnableButton": "Yes, turn it on"
+  },
+  "maintenance": {
+    "title": "Maintenance mode",
+    "body": "The portal is temporarily unavailable while we carry out scheduled maintenance. Please check back shortly.",
+    "signOut": "Sign out"
   }
 }

@@ -211,3 +211,9 @@ The first slice of the screen sweep, on the spec's hero screens (the rest follow
 ## Fix — navigation no longer flashes a blank white page
 
 - **Added per-route-group `loading.tsx` boundaries so async pages keep their chrome while loading.** Only a root `app/loading.tsx` existed, and its Suspense boundary sits *outside* the `(dashboard)`/`(admin)` layouts — so opening any async server page (Notifications, Profile, admin lists, …) replaced the entire AppShell (sidebar + top bar) with a bare skeleton on a white canvas before content appeared. New group-scoped `loading.tsx` files for `(dashboard)`, `(admin)`, `(public)`, and `(auth)` put the fallback *inside* each layout, so the shell/header/footer/auth-frame stay on screen and only the content region shows a skeleton (§19 §9: skeletons, not blank pages; §16: language-agnostic).
+
+## Feature — Super Admin maintenance mode
+
+- **Super Admin can put the portal into maintenance mode** from a new **Admin → Settings** page (`/admin/settings`, Super-Admin-only; the nav link is hidden from other roles). Turning it on requires an explicit confirm step.
+- While on, non-admin participants (mentors, mentees) are redirected to a bilingual `/maintenance` holding page by the `(dashboard)` layout; **admins keep full access** so they can work during the window. The holding page re-derives state, so it self-clears when the flag is turned off or an admin lands on it.
+- Backed by the existing `feature_flags` table as a single global flag (`maintenance_mode`, `cohort_id = null`); no migration. Reads default to off when the row is absent. The toggle is Super-Admin-only, Zod-validated, and **audited** (`maintenance.enabled` / `maintenance.disabled`). Avoids `upsert` on the nullable `[key, cohort_id]` unique (Postgres treats NULLs as distinct) by finding the global row explicitly. EN/FR throughout; schema unit test added.
