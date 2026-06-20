@@ -38,8 +38,7 @@ export async function getNextActionContext(user: SessionUser): Promise<NextActio
 
   const isMentee = user.roles.includes(RoleName.MENTEE);
   const isMentor = user.roles.includes(RoleName.MENTOR);
-  const isAdmin =
-    user.roles.includes(RoleName.SUPER_ADMIN) || user.roles.includes(RoleName.PROGRAMME_ADMIN);
+  const isAdmin = user.roles.includes(RoleName.SUPER_ADMIN);
 
   // Overdue action items assigned to this user (applies to mentor and mentee).
   if (isMentee || isMentor) {

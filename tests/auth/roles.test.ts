@@ -5,9 +5,6 @@ import { ADMIN_ROLES, defaultDashboardPath, isAdminRole } from '@/lib/auth/roles
 describe('role helpers', () => {
   it('routes each role to its dashboard', () => {
     expect(defaultDashboardPath([RoleName.SUPER_ADMIN])).toBe('/admin');
-    expect(defaultDashboardPath([RoleName.PROGRAMME_ADMIN])).toBe('/admin');
-    expect(defaultDashboardPath([RoleName.REVIEWER])).toBe('/dashboard/reviewer');
-    expect(defaultDashboardPath([RoleName.TRAINER])).toBe('/dashboard/trainer');
     expect(defaultDashboardPath([RoleName.MENTOR])).toBe('/dashboard/mentor');
     expect(defaultDashboardPath([RoleName.MENTEE])).toBe('/dashboard/mentee');
   });
@@ -23,6 +20,6 @@ describe('role helpers', () => {
   it('identifies admin roles', () => {
     expect(isAdminRole(RoleName.SUPER_ADMIN)).toBe(true);
     expect(isAdminRole(RoleName.MENTOR)).toBe(false);
-    expect(ADMIN_ROLES).toContain(RoleName.PROGRAMME_ADMIN);
+    expect(ADMIN_ROLES).toContain(RoleName.SUPER_ADMIN);
   });
 });

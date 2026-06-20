@@ -26,7 +26,7 @@ import {
   type Finding,
 } from './validation';
 
-const ADMIN: RoleName[] = [RoleName.SUPER_ADMIN, RoleName.PROGRAMME_ADMIN];
+const ADMIN: RoleName[] = [RoleName.SUPER_ADMIN];
 
 const uploadSchema = z.object({
   cohortId: z.string().cuid(),

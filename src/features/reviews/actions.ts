@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { Prisma, ReviewStatus, ReviewType, RoleName } from '@prisma/client';
+import { Prisma, ReviewStatus, ReviewType } from '@prisma/client';
 import { prisma } from '@/lib/db/prisma';
 import { requireUser, requireRole } from '@/lib/auth/rbac';
 import { ADMIN_ROLES } from '@/lib/auth/roles';
@@ -152,8 +152,8 @@ export async function submitReviewResponseForm(
 // ── AI Review Assistant (CLAUDE.md §9.4) ────────────────────────────────────
 // Drafts a programme review report from the real cohort roll-up. Advisory: it
 // returns an editable draft and never writes — a human persists the summary via
-// saveReviewSummary. Reviewers (programme-wide reporting) and admins may run it.
-const REPORT_ROLES = [...ADMIN_ROLES, RoleName.REVIEWER];
+// saveReviewSummary. Super Admins (programme-wide reporting) may run it.
+const REPORT_ROLES = [...ADMIN_ROLES];
 
 /** Pairs without a completed review of this type → "Mentor · Mentee" labels. */
 function pairsMissing(

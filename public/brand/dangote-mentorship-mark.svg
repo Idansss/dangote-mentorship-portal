@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-labelledby="title desc">
+  <title id="title">Dangote Mentorship Portal</title>
+  <desc id="desc">A letter D containing a rising mentorship journey between two connected points.</desc>
+  <rect x="2" y="2" width="44" height="44" rx="14" fill="#288544" />
+  <path d="M15 34V14h8.2C31.4 14 37 18.1 37 24s-5.6 10-13.8 10H15Z" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="m18.5 29.5 5.2-5.2 4.4 2.4 2.4-6.2" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+  <circle cx="18.5" cy="29.5" r="2.1" fill="#fff" />
+  <circle cx="30.5" cy="20.5" r="2.1" fill="#fff" />
+</svg>

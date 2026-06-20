@@ -16,7 +16,7 @@ import {
 } from './engine';
 import { loadMentorsForMatching, loadMenteesForMatching, COMMITTED_STATUSES } from './data';
 
-const ADMIN: RoleName[] = [RoleName.SUPER_ADMIN, RoleName.PROGRAMME_ADMIN];
+const ADMIN: RoleName[] = [RoleName.SUPER_ADMIN];
 
 /** Suggestions kept per mentee on each run. */
 const TOP_N = 3;

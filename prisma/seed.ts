@@ -1,6 +1,6 @@
 /**
  * Seed a realistic bilingual demo cohort (CLAUDE.md §3).
- *  - the six roles + a Super Admin, Programme Admin, Trainer, Reviewer
+ *  - the three roles (Super Admin, Mentor, Mentee) + a Super Admin account
  *  - Programme "Dangote Mentorship Programme 2026" + an active 2026 cohort
  *  - default matching criteria + a bilingual competency taxonomy
  *  - 15 mentors and 30 mentees, mixed EN/FR, varied departments/competencies
@@ -220,31 +220,6 @@ async function main() {
     });
     competencyIds[`T:${name}`] = c.id;
   }
-
-  // --- Staff demo accounts -------------------------------------------------
-  const progAdmin = await ensureUser({
-    email: 'prog.admin@dangote.com',
-    name: 'Programme Admin',
-    locale: Language.EN,
-    passwordHash,
-  });
-  await grantRole(progAdmin.id, roles.PROGRAMME_ADMIN, cohort.id);
-
-  const trainer = await ensureUser({
-    email: 'trainer@dangote.com',
-    name: 'Training Facilitator',
-    locale: Language.EN,
-    passwordHash,
-  });
-  await grantRole(trainer.id, roles.TRAINER, cohort.id);
-
-  const reviewer = await ensureUser({
-    email: 'reviewer@dangote.com',
-    name: 'HR L&D Reviewer',
-    locale: Language.EN,
-    passwordHash,
-  });
-  await grantRole(reviewer.id, roles.REVIEWER, cohort.id);
 
   // --- Training batch so attendance/training-status are demoable -----------
   const batch =

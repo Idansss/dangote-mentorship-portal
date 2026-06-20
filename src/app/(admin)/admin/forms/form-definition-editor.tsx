@@ -215,7 +215,6 @@ export function FormDefinitionEditor({
               <SelectItem value={ALL_ROLES}>{t('allRoles')}</SelectItem>
               <SelectItem value={RoleName.MENTOR}>{t('roleMentor')}</SelectItem>
               <SelectItem value={RoleName.MENTEE}>{t('roleMentee')}</SelectItem>
-              <SelectItem value={RoleName.REVIEWER}>{t('roleReviewer')}</SelectItem>
             </SelectContent>
           </Select>
         </div>

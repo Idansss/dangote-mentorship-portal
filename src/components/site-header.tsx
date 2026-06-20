@@ -4,7 +4,7 @@ import { getCurrentUser } from '@/lib/auth/rbac';
 import { defaultDashboardPath } from '@/lib/auth/roles';
 import { signOutAction } from '@/lib/auth/actions';
 import { LocaleSwitcher } from '@/components/locale-switcher';
-import { Wordmark } from '@/components/wordmark';
+import { BrandLogo } from '@/components/brand-logo';
 import { Button } from '@/components/ui/button';
 
 // Public marketing header — wordmark + locale switcher + auth CTAs. Secondary nav
@@ -18,8 +18,12 @@ export async function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-bg/80 backdrop-blur">
       <div className="container flex h-16 items-center justify-between gap-4">
-        <Link href="/" className="font-display text-h3 font-bold text-ink">
-          <Wordmark name={t('common.appName')} />
+        <Link href="/" className="text-ink" aria-label={t('common.appName')}>
+          <BrandLogo
+            name={t('common.appName')}
+            markClassName="size-8"
+            wordmarkClassName="hidden sm:inline"
+          />
         </Link>
 
         <nav className="flex items-center gap-2 text-small sm:gap-3">

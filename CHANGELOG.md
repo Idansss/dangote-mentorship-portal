@@ -197,3 +197,9 @@ The first slice of the screen sweep, on the spec's hero screens (the rest follow
 ## Profile detail — overflow fixes
 
 - **Stat tiles and contact fields no longer overflow/overlap.** `StatTile` now breaks long single-word values (status enums like `UNMATCHED`/`COMPLETED` were spilling past the card edge) and accepts a `valueClassName`; the mentor/mentee status tiles use the smaller `text-h1` size so the word fits one line. Contact `Field`s gained `min-w-0` + `break-words` so a long email wraps instead of running into the phone column.
+
+## Role model simplified to three roles
+
+- **Removed the Programme Admin, Trainer/Facilitator, and Reviewer roles** (`RoleName` enum is now `SUPER_ADMIN | MENTOR | MENTEE`). Their programme-staff capabilities fold into **Super Admin**: `ADMIN_ROLES` is now Super-Admin-only, so import/matching/forms/calendar/reports authz and the AI Review report all resolve to Super Admin. Mentors and Mentees are unchanged.
+- Deleted the `/dashboard/trainer` and `/dashboard/reviewer` screens; `defaultDashboardPath` no longer routes to them. The Forms Builder no longer offers a Reviewer target audience.
+- Seed drops the three staff demo accounts. Migration `20260620120000_remove_staff_roles` reassigns existing grants/invites for the removed roles to Super Admin, nulls the role target on affected form definitions, and recreates the `RoleName` enum without the three values.

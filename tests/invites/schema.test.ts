@@ -14,7 +14,7 @@ describe('invite schemas', () => {
   });
 
   it('treats an empty cohort selection as a global grant', () => {
-    const parsed = createInviteSchema.parse({ email: 'a@b.com', roleName: 'REVIEWER', cohortId: '' });
+    const parsed = createInviteSchema.parse({ email: 'a@b.com', roleName: 'MENTEE', cohortId: '' });
     expect(parsed.cohortId).toBeNull();
   });
 

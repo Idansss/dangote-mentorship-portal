@@ -9,7 +9,7 @@ import MicrosoftEntraID from 'next-auth/providers/microsoft-entra-id';
 //
 // Admin role names are duplicated here as string literals to avoid pulling the
 // Prisma client into the edge bundle; the canonical list lives in roles.ts.
-const ADMIN_ROLE_NAMES = new Set(['SUPER_ADMIN', 'PROGRAMME_ADMIN']);
+const ADMIN_ROLE_NAMES = new Set(['SUPER_ADMIN']);
 
 // `/design` is the Design System component preview (§19) — a dev/demo gallery,
 // no real data. Public so it can be reviewed without a session; gate or remove

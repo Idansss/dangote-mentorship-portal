@@ -5,7 +5,7 @@ Storage. Identity stays **Auth.js + Entra** — Supabase Auth is not used.
 
 ## Prerequisites (one-time, already done for the current project)
 
-- Supabase project `Dangote Mentorship` (ref `owkgqglwvjlaizsfpuir`, region
+- Supabase project `Dangote Mentorship` (ref `whgzjjjiruhluqxjjacy`, region
   `eu-central-1` / Frankfurt).
 - Database migrated + seeded:
   ```

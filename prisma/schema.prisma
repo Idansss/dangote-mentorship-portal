@@ -22,11 +22,8 @@ datasource db {
 
 enum RoleName {
   SUPER_ADMIN
-  PROGRAMME_ADMIN
   MENTOR
   MENTEE
-  TRAINER
-  REVIEWER
 }
 
 enum Language {

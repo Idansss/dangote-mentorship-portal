@@ -17,8 +17,7 @@ interface MilestoneLabels {
 /** Cohort ids relevant to the user: their profile cohort + matched cohorts, or
  *  all active cohorts for admins (so the programme calendar is visible). */
 async function relevantCohortIds(user: SessionUser): Promise<string[]> {
-  const isAdmin =
-    user.roles.includes(RoleName.SUPER_ADMIN) || user.roles.includes(RoleName.PROGRAMME_ADMIN);
+  const isAdmin = user.roles.includes(RoleName.SUPER_ADMIN);
   if (isAdmin) {
     const cohorts = await prisma.cohort.findMany({
       where: { deletedAt: null, status: CohortStatus.ACTIVE },
