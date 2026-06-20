@@ -3,7 +3,8 @@
 import { headers } from 'next/headers';
 import { z } from 'zod';
 import { prisma } from '@/lib/db/prisma';
-import { clientIpFromHeaders, rateLimit } from '@/lib/auth/rate-limit';
+import { clientIpFromHeaders } from '@/lib/auth/rate-limit';
+import { checkRateLimit } from '@/lib/auth/rate-limit-shared';
 import { generateToken, passwordResetExpiry, PASSWORD_RESET_TTL_MINUTES } from '@/lib/auth/token';
 import { sendEmail } from '@/lib/mail';
 import { writeAuditLog } from '@/lib/audit/audit';
@@ -38,7 +39,7 @@ export async function requestPasswordReset(
   const email = parsed.data.email.toLowerCase();
   const h = await headers();
   const ip = clientIpFromHeaders(h.get('x-forwarded-for'), h.get('x-real-ip'));
-  if (!rateLimit(`forgot-password:${ip}:${email}`, REQUEST_LIMIT, REQUEST_WINDOW_MS).ok) {
+  if (!(await checkRateLimit(`forgot-password:${ip}:${email}`, REQUEST_LIMIT, REQUEST_WINDOW_MS)).ok) {
     return { status: 'rate_limited' };
   }
 

@@ -10,6 +10,7 @@ import { writeAuditLog } from '@/lib/audit/audit';
 import { notify } from '@/lib/notifications/notify';
 import { getStorageProvider } from '@/lib/storage';
 import { mapActionError, ok, fail, type ActionResult } from '@/lib/actions/result';
+import { checkRateLimit } from '@/lib/auth/rate-limit-shared';
 import { getMenteePairing, isMentorOfGoal } from './data';
 import { menteeAdvanceTransition, reviewTransition, type ReviewDecision } from './stage';
 import { coachGoal, type CoachResult } from './coach';
@@ -51,6 +52,10 @@ export async function requestGoalCoach(
   try {
     const user = await requireUser();
     const fields = coachSchema.parse(input);
+    // Throttle the AI endpoint per user (production-readiness-report.md M1).
+    if (!(await checkRateLimit(`ai:goal-coach:${user.id}`, 10, 60_000)).ok) {
+      return fail({ code: 'CONFLICT', message: 'Too many AI requests. Please wait a moment.' });
+    }
     const lang = user.locale === 'FR' ? 'FR' : 'EN';
     const result = await coachGoal(fields, lang);
     return ok(result);

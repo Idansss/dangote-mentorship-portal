@@ -9,6 +9,7 @@ import { ADMIN_ROLES } from '@/lib/auth/roles';
 import { writeAuditLog } from '@/lib/audit/audit';
 import { getAiAdapter } from '@/lib/ai';
 import { fail, mapActionError, ok, type ActionResult } from '@/lib/actions/result';
+import { checkRateLimit } from '@/lib/auth/rate-limit-shared';
 import { getFormDefinition } from '@/features/forms/data';
 import { ensureReviewCycle, resolveReviewParticipant } from './data';
 import {
@@ -186,6 +187,10 @@ export async function requestReviewReport(input: {
 
     const adapter = getAiAdapter();
     if (!adapter.enabled) return ok({ enabled: false, report: null });
+    // Throttle the AI endpoint per user (production-readiness-report.md M1).
+    if (!(await checkRateLimit(`ai:review-report:${user.id}`, 10, 60_000)).ok) {
+      return fail({ code: 'CONFLICT', message: 'Too many AI requests. Please wait a moment.' });
+    }
 
     const rollup = await getReviewRollup(cohortId);
     const summary: ReviewTypeSummary = type === ReviewType.MIDTERM ? rollup.midterm : rollup.final;

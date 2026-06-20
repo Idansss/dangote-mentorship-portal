@@ -1,0 +1,29 @@
+name: Lighthouse CI
+
+on:
+  pull_request:
+
+jobs:
+  lhci:
+    name: Lighthouse (public pages)
+    runs-on: ubuntu-latest
+    env:
+      # Build needs DATABASE_URL to load the Prisma schema; /login renders
+      # without a live DB (session is JWT), so no Postgres service is required.
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres?schema=public
+      DIRECT_URL: postgresql://postgres:postgres@localhost:5432/postgres?schema=public
+      AUTH_SECRET: ci-placeholder-secret-not-used-at-runtime
+      AUTH_TRUST_HOST: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx prisma generate
+      - run: npm run build
+      - name: Run Lighthouse CI
+        run: |
+          npm i -g @lhci/cli@0.14.x
+          lhci autorun || echo "LHCI assertions failed (non-blocking until baseline is tuned)"

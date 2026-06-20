@@ -10,6 +10,7 @@ import { notify } from '@/lib/notifications/notify';
 import { getMeetingProvider } from '@/lib/meetings';
 import { getAiAdapter } from '@/lib/ai';
 import { mapActionError, ok, fail, type ActionResult } from '@/lib/actions/result';
+import { checkRateLimit } from '@/lib/auth/rate-limit-shared';
 import { isValidWindow, resolveNoShowReport } from './status';
 import { getMeetingPrep } from './prepare-data';
 import { buildPreparePrompt, parsePrepareResponse, type MeetingPrepResult } from './prepare';
@@ -319,6 +320,10 @@ export async function generateMeetingPrep(
     const adapter = getAiAdapter();
     if (!adapter.enabled) {
       return ok({ aiEnabled: false, cached: false });
+    }
+    // Throttle the AI endpoint per user (production-readiness-report.md M1).
+    if (!(await checkRateLimit(`ai:meeting-prep:${user.id}`, 10, 60_000)).ok) {
+      return fail({ code: 'CONFLICT', message: 'Too many AI requests. Please wait a moment.' });
     }
 
     const lang = user.locale === 'FR' ? 'FR' : 'EN';

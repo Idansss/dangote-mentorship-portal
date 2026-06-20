@@ -3,7 +3,8 @@
 import { headers } from 'next/headers';
 import { AuthError } from 'next-auth';
 import { signIn } from '@/lib/auth/auth';
-import { clientIpFromHeaders, rateLimit } from '@/lib/auth/rate-limit';
+import { clientIpFromHeaders } from '@/lib/auth/rate-limit';
+import { checkRateLimit } from '@/lib/auth/rate-limit-shared';
 
 export type LoginState = { error?: 'invalid' | 'rate_limited' };
 
@@ -21,7 +22,7 @@ export async function login(_prev: LoginState, formData: FormData): Promise<Logi
 
   const h = await headers();
   const ip = clientIpFromHeaders(h.get('x-forwarded-for'), h.get('x-real-ip'));
-  const limit = rateLimit(`login:${ip}:${email}`, LOGIN_LIMIT, LOGIN_WINDOW_MS);
+  const limit = await checkRateLimit(`login:${ip}:${email}`, LOGIN_LIMIT, LOGIN_WINDOW_MS);
   if (!limit.ok) return { error: 'rate_limited' };
 
   try {

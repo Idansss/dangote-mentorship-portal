@@ -5,7 +5,9 @@ See [CLAUDE.md](./CLAUDE.md) for the full product specification and milestone pl
 
 ## Status
 
-**M0 — Foundations** complete. See [CHANGELOG.md](./CHANGELOG.md).
+**M0–M2 + Experience-Layer Tier 1** complete (pilot-ready MVP). See
+[CHANGELOG.md](./CHANGELOG.md). Production-readiness remediation is tracked in
+[docs/production-readiness-fixes.md](./docs/production-readiness-fixes.md).
 
 ## Stack
 

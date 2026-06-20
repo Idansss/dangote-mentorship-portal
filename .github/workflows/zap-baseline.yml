@@ -1,0 +1,28 @@
+name: ZAP Baseline
+
+# Manual, on-demand passive scan against a deployed preview/staging URL.
+# Baseline = passive only (spider + observe); it does NOT attack, so it is safe
+# to run against a Vercel preview. Set repo variable STAGING_URL first.
+# Do NOT point this at the production database. For authenticated coverage,
+# graduate to the ZAP full scan with an auth context later.
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'URL to scan (defaults to the STAGING_URL repo variable)'
+        required: false
+
+jobs:
+  zap:
+    name: ZAP baseline
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          target: ${{ github.event.inputs.target || vars.STAGING_URL }}
+          # Passive baseline: surface alerts (e.g. missing headers) without
+          # hard-failing the run until the alert baseline is triaged.
+          fail_action: false
+          cmd_options: '-a'

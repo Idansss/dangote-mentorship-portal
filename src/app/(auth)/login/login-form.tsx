@@ -83,7 +83,10 @@ export function LoginForm({ entraEnabled }: { entraEnabled: boolean }) {
             <label htmlFor="password" className="text-micro uppercase tracking-wider text-ink-2">
               {t('password')}
             </label>
-            <Link href="/forgot-password" className="text-micro text-green-light hover:underline">
+            <Link
+              href="/forgot-password"
+              className="inline-flex min-h-6 items-center text-micro text-green-light hover:underline"
+            >
               {t('forgotShort')}
             </Link>
           </div>
@@ -102,7 +105,7 @@ export function LoginForm({ entraEnabled }: { entraEnabled: boolean }) {
               type="button"
               onClick={() => setShowPassword((s) => !s)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
-              className="absolute right-3 text-ink-3 transition-colors hover:text-green-strong"
+              className="absolute right-1.5 flex size-8 items-center justify-center text-ink-3 transition-colors hover:text-green-strong"
             >
               {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
             </button>

@@ -1,4 +1,5 @@
 import { runScheduledNotifications } from '@/lib/notifications/cron';
+import { reportError } from '@/lib/observability/report';
 
 // Machine-to-machine entry point for the scheduled notification emitters + daily
 // digest (experience-layer.md §1.10). This route is OUTSIDE the auth middleware
@@ -21,8 +22,15 @@ async function handle(request: Request): Promise<Response> {
     return new Response('Unauthorized', { status: 401 });
   }
 
-  const result = await runScheduledNotifications();
-  return Response.json({ ok: true, ...result });
+  try {
+    const result = await runScheduledNotifications();
+    return Response.json({ ok: true, ...result });
+  } catch (error) {
+    // Report and fail with 500 so the scheduler retries on its next tick (the
+    // work is idempotent). Never leak internals to the caller.
+    reportError(error, { job: 'cron/notifications' });
+    return new Response('Job failed', { status: 500 });
+  }
 }
 
 // Vercel Cron issues GET; allow POST too for manual/other schedulers.

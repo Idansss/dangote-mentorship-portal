@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from 'next-intl/server';
 import { requireUser } from '@/lib/auth/rbac';
 import { getAiAdapter } from '@/lib/ai';
 import { mapActionError, ok, type ActionResult } from '@/lib/actions/result';
+import { checkRateLimit } from '@/lib/auth/rate-limit-shared';
 import { getNextActionContext } from './data';
 import {
   buildNextActionPrompt,
@@ -48,6 +49,11 @@ export async function getNextBestAction(): Promise<ActionResult<NextAction & { s
     const adapter = getAiAdapter();
     if (!adapter.enabled || candidates.length === 0) {
       cache.set(key, { at: Date.now(), value: baseline });
+      return ok({ ...baseline, source: 'fallback' });
+    }
+    // Throttle the AI endpoint per user (production-readiness-report.md M1);
+    // degrade to the deterministic baseline rather than erroring this widget.
+    if (!(await checkRateLimit(`ai:next-action:${user.id}`, 10, 60_000)).ok) {
       return ok({ ...baseline, source: 'fallback' });
     }
 

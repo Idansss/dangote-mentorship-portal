@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 
-export default function GlobalError({
+export default function RouteError({
   error,
   reset,
 }: {
@@ -14,7 +14,8 @@ export default function GlobalError({
   const t = useTranslations('common');
 
   useEffect(() => {
-    // Report to the console; a real reporter is wired in M5 (observability).
+    // Server-side errors are captured by Sentry via src/instrumentation.ts;
+    // client capture is a follow-up via Sentry's withSentryConfig (H2).
     console.error(error);
   }, [error]);
 

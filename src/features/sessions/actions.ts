@@ -8,6 +8,7 @@ import { requireUser } from '@/lib/auth/rbac';
 import { writeAuditLog } from '@/lib/audit/audit';
 import { notify } from '@/lib/notifications/notify';
 import { mapActionError, ok, fail, type ActionResult } from '@/lib/actions/result';
+import { checkRateLimit } from '@/lib/auth/rate-limit-shared';
 import { getPairGoalTitles } from './data';
 import { summarizeSession, type SessionSummaryOutcome } from './summary';
 
@@ -54,6 +55,10 @@ export async function requestSessionAssistant(
     const cohortId = await mentorPairCohort(user.id, menteeId);
     if (!cohortId) {
       return fail({ code: 'FORBIDDEN', message: 'You are not paired with this mentee.' });
+    }
+    // Throttle the AI endpoint per user (production-readiness-report.md M1).
+    if (!(await checkRateLimit(`ai:session-assistant:${user.id}`, 10, 60_000)).ok) {
+      return fail({ code: 'CONFLICT', message: 'Too many AI requests. Please wait a moment.' });
     }
 
     const [goalTitles, mentee] = await Promise.all([

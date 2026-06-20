@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { getTranslations } from 'next-intl/server';
 import { requireUser } from '@/lib/auth/rbac';
 import { getAiAdapter } from '@/lib/ai';
-import { rateLimit } from '@/lib/auth/rate-limit';
+import { checkRateLimit } from '@/lib/auth/rate-limit-shared';
 import { ok, fail, mapActionError, type ActionResult } from '@/lib/actions/result';
 
 // Atlas — the portal's AI copilot (CLAUDE.md §9: all AI server-side, advisory
@@ -58,7 +58,7 @@ export async function askAtlas(input: {
     const { history } = askSchema.parse(input);
 
     // Rate-limit the AI endpoint per user (CLAUDE.md §14): 20 messages/minute.
-    const limit = rateLimit(`atlas:${user.id}`, 20, 60_000);
+    const limit = await checkRateLimit(`atlas:${user.id}`, 20, 60_000);
     if (!limit.ok) {
       const t = await getTranslations('copilot');
       return fail({ code: 'CONFLICT', message: t('rateLimited') });

@@ -1,0 +1,20 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: '/'
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      # Batch low-risk updates so they don't flood the PR queue.
+      minor-and-patch:
+        update-types: ['minor', 'patch']
+    # SheetJS (xlsx) is installed from the SheetJS CDN tarball, not npm — exclude
+    # it so Dependabot doesn't try (and fail) to track it against the registry.
+    ignore:
+      - dependency-name: 'xlsx'
+
+  - package-ecosystem: github-actions
+    directory: '/'
+    schedule:
+      interval: weekly

@@ -72,3 +72,43 @@ it explicitly with `STORAGE_PROVIDER=supabase` if needed.
 Rotate secrets that have been exposed: DB password (Supabase → Settings →
 Database → Reset; update `DATABASE_URL`/`DIRECT_URL` in Vercel + local `.env`)
 and `AUTH_SECRET` (`npx auth secret`; rotating invalidates existing sessions).
+
+## Database migrations (gated release step) — M8
+
+`next build` does NOT run migrations (see note above). Treat schema changes as a
+deliberate, gated step so drift can't reach prod silently:
+
+1. Open a PR with the new `prisma/migrations/*` directory; CI typecheck/test must pass.
+2. After merge, before (or as part of) the production deploy, run:
+   ```bash
+   npm run prisma:deploy   # prisma migrate deploy — idempotent, applies pending only
+   ```
+   Run it from a trusted environment with `DIRECT_URL` set to the Supabase session
+   pooler. To automate, set the Vercel **Build Command** to
+   `prisma migrate deploy && next build` (accept that a failed migration then fails
+   the deploy — usually what you want).
+3. Never edit an already-applied migration; add a new one. Never run
+   `prisma db push` against production.
+
+## Backups, restore & retention — M7
+
+**Backups.** Supabase takes automated daily backups; on Pro+, enable **Point-in-Time
+Recovery (PITR)** for the production project (Dashboard → Database → Backups).
+Confirm the retention window matches the cohort data-retention policy below.
+
+**Restore drill (run at least once before launch, then quarterly).**
+1. Create a throwaway Supabase project (or branch).
+2. Restore the latest backup / PITR snapshot into it.
+3. Point a local `.env` `DIRECT_URL` at the restored DB and run
+   `npx prisma migrate status` — expect "Database schema is up to date".
+4. Spot-check row counts for `users`, `cohorts`, `matches`, `messages`.
+5. Record the wall-clock restore time (your effective RTO) in the launch checklist.
+
+**Data retention / right-to-delete (CLAUDE.md §14).** All primary entities are
+soft-deleted (`deletedAt`) — content is never hard-deleted in-app. Define per
+cohort, at programme close:
+- how long soft-deleted rows and confidential records (agreements, messages) are
+  kept before a scheduled hard purge;
+- the right-to-export / right-to-delete process for an individual on request.
+Document the chosen windows here once Dangote confirms its policy; until then the
+default is "retain for the programme lifetime, purge on explicit admin request".

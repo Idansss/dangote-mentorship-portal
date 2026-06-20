@@ -7,7 +7,8 @@ import { prisma } from '@/lib/db/prisma';
 import { signIn } from '@/lib/auth/auth';
 import { hashPassword } from '@/lib/auth/password';
 import { hashToken } from '@/lib/auth/token';
-import { clientIpFromHeaders, rateLimit } from '@/lib/auth/rate-limit';
+import { clientIpFromHeaders } from '@/lib/auth/rate-limit';
+import { checkRateLimit } from '@/lib/auth/rate-limit-shared';
 import { writeAuditLog } from '@/lib/audit/audit';
 
 const resetSchema = z.object({ password: z.string().min(8).max(200) });
@@ -27,7 +28,7 @@ export async function resetPassword(
 ): Promise<ResetPasswordState> {
   const h = await headers();
   const ip = clientIpFromHeaders(h.get('x-forwarded-for'), h.get('x-real-ip'));
-  if (!rateLimit(`reset-password:${ip}`, RESET_LIMIT, RESET_WINDOW_MS).ok) {
+  if (!(await checkRateLimit(`reset-password:${ip}`, RESET_LIMIT, RESET_WINDOW_MS)).ok) {
     return { error: 'rate_limited' };
   }
 

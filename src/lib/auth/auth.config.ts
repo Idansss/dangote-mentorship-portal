@@ -12,10 +12,13 @@ import { isEntraConfigured } from './entra';
 // Prisma client into the edge bundle; the canonical list lives in roles.ts.
 const ADMIN_ROLE_NAMES = new Set(['SUPER_ADMIN']);
 
-// `/design` is the Design System component preview (§19) — a dev/demo gallery,
-// no real data. Public so it can be reviewed without a session; gate or remove
-// before production.
-const PUBLIC_PREFIXES = ['/about', '/faq', '/programme', '/mentor-guide', '/mentee-guide', '/design'];
+// `/design` is the Design System component preview (§19) — a dev/demo gallery.
+// It is public ONLY outside production (production-readiness-report.md B3); in
+// production it requires a session like any other authenticated route.
+const PUBLIC_PREFIXES = ['/about', '/faq', '/programme', '/mentor-guide', '/mentee-guide'];
+if (process.env.NODE_ENV !== 'production') {
+  PUBLIC_PREFIXES.push('/design');
+}
 
 function isPublicPath(pathname: string): boolean {
   if (pathname === '/' || pathname === '/login' || pathname === '/signup') return true;
@@ -46,7 +49,9 @@ const entraProvider = MicrosoftEntraID({
 });
 
 export const authConfig = {
-  session: { strategy: 'jwt' },
+  // Explicit session lifetime (production-readiness-report.md L1): an internal
+  // tool shouldn't keep JWT sessions valid for the 30-day Auth.js default.
+  session: { strategy: 'jwt', maxAge: 12 * 60 * 60 }, // 12 hours
   pages: { signIn: '/login' },
   // Primary SSO provider (CLAUDE.md §2), registered only when fully configured.
   providers: isEntraConfigured() ? [entraProvider] : [],

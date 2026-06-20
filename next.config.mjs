@@ -8,9 +8,51 @@ const projectRoot = dirname(fileURLToPath(import.meta.url));
 // so middleware stays dedicated to auth/RBAC. See src/i18n/request.ts.
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
+// Supabase origin (Storage + M4 Realtime websockets) must be allowed in
+// connect-src; it's the only cross-origin the browser talks to directly.
+const supabaseOrigin = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
+const supabaseWs = supabaseOrigin.replace(/^https/, 'wss');
+
+// Hardened response headers (production-readiness-report.md B1). CSP is a
+// pragmatic starting policy: 'unsafe-inline' on script/style is still required
+// by Next's inlined runtime + Tailwind; tighten to a nonce-based policy as the
+// L3 follow-up. frame-ancestors 'none' + X-Frame-Options block clickjacking;
+// HSTS pins TLS; nosniff blocks MIME confusion.
+const contentSecurityPolicy = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "font-src 'self'",
+  `connect-src 'self' ${supabaseOrigin} ${supabaseWs}`.trim(),
+  "frame-ancestors 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "object-src 'none'",
+]
+  .join('; ')
+  .replace(/\s+/g, ' ')
+  .trim();
+
+const securityHeaders = [
+  { key: 'X-Frame-Options', value: 'DENY' },
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+  {
+    key: 'Strict-Transport-Security',
+    value: 'max-age=63072000; includeSubDomains; preload',
+  },
+  // Internal, auth-gated portal: never index it (production-readiness-report.md M5).
+  { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+  { key: 'Content-Security-Policy', value: contentSecurityPolicy },
+];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Don't advertise the framework (production-readiness-report.md M3).
+  poweredByHeader: false,
   // Pin the workspace root; an unrelated lockfile higher up the tree would
   // otherwise be inferred as the root.
   outputFileTracingRoot: projectRoot,
@@ -20,6 +62,9 @@ const nextConfig = {
     serverActions: {
       bodySizeLimit: '5mb',
     },
+  },
+  async headers() {
+    return [{ source: '/:path*', headers: securityHeaders }];
   },
 };
 

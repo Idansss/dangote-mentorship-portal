@@ -50,18 +50,29 @@ export default async function LoginPage() {
             {t('requestAccess')}
           </Link>
         </p>
-        <div className="mt-4 flex justify-center gap-6 opacity-70">
-          <Link href="/faq" className="text-micro text-ink-2 hover:text-green-strong">
+        {/* No opacity here: it dropped link contrast below WCAG AA. Each link is
+            an inline-flex with min-h-6 to meet the 24px target size (M4). */}
+        <div className="mt-4 flex justify-center gap-6">
+          <Link
+            href="/faq"
+            className="inline-flex min-h-6 items-center text-micro text-ink-2 hover:text-green-strong"
+          >
             {t('privacyPolicy')}
           </Link>
-          <Link href="/faq" className="text-micro text-ink-2 hover:text-green-strong">
+          <Link
+            href="/faq"
+            className="inline-flex min-h-6 items-center text-micro text-ink-2 hover:text-green-strong"
+          >
             {t('termsOfService')}
           </Link>
-          <Link href="/support" className="text-micro text-ink-2 hover:text-green-strong">
+          <Link
+            href="/support"
+            className="inline-flex min-h-6 items-center text-micro text-ink-2 hover:text-green-strong"
+          >
             {t('supportLink')}
           </Link>
         </div>
-        <p className="mt-4 text-micro text-ink-3">{t('copyright')}</p>
+        <p className="mt-4 text-micro text-ink-2">{t('copyright')}</p>
         <Link
           href="/"
           className="mt-4 inline-flex items-center gap-1 text-small font-medium text-ink-2 hover:text-green-strong"

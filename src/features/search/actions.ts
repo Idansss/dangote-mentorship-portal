@@ -5,7 +5,7 @@ import { GoalStatus, MeetingStatus } from '@prisma/client';
 import { prisma } from '@/lib/db/prisma';
 import { requireUser, hasAnyRole } from '@/lib/auth/rbac';
 import { ADMIN_ROLES } from '@/lib/auth/roles';
-import { rateLimit } from '@/lib/auth/rate-limit';
+import { checkRateLimit } from '@/lib/auth/rate-limit-shared';
 import { ok, fail, mapActionError, type ActionResult } from '@/lib/actions/result';
 
 // Global search (CLAUDE.md §13 search). Server-side and RBAC-scoped: the
@@ -37,7 +37,7 @@ export async function searchPortal(input: {
     const q = parsed.data.query;
 
     // Light per-user throttle (§14) — search fires on keystroke (debounced).
-    if (!rateLimit(`search:${user.id}`, 60, 60_000).ok) {
+    if (!(await checkRateLimit(`search:${user.id}`, 60, 60_000)).ok) {
       return fail({ code: 'CONFLICT', message: 'Too many searches. Please slow down.' });
     }
 
