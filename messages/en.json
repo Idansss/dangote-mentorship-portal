@@ -374,7 +374,16 @@
     "competencies": "Competencies (comma-separated)",
     "careerGoals": "Career goals",
     "statusLabel": "Status",
-    "blockedHint": "Rows with blocking errors must be fixed before they can be accepted."
+    "blockedHint": "Rows with blocking errors must be fixed before they can be accepted.",
+    "totalRows": "Total rows",
+    "valid": "Valid",
+    "flaggedCount": "Flagged",
+    "workflow": "Workflow progress",
+    "stepUpload": "Upload",
+    "stepMapping": "Mapping",
+    "stepValidation": "Validation",
+    "stepReview": "Review",
+    "stepCommit": "Commit"
   },
   "matching": {
     "title": "Matching engine",

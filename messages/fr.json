@@ -374,7 +374,16 @@
     "competencies": "Compétences (séparées par des virgules)",
     "careerGoals": "Objectifs de carrière",
     "statusLabel": "Statut",
-    "blockedHint": "Les lignes comportant des erreurs bloquantes doivent être corrigées avant d’être acceptées."
+    "blockedHint": "Les lignes comportant des erreurs bloquantes doivent être corrigées avant d’être acceptées.",
+    "totalRows": "Lignes totales",
+    "valid": "Valides",
+    "flaggedCount": "Signalées",
+    "workflow": "Progression du flux",
+    "stepUpload": "Import",
+    "stepMapping": "Mappage",
+    "stepValidation": "Validation",
+    "stepReview": "Revue",
+    "stepCommit": "Validation finale"
   },
   "matching": {
     "title": "Moteur de jumelage",

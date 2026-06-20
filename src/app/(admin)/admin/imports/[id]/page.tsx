@@ -16,6 +16,47 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { StatTile } from '@/components/ui/stat-tile';
+import { cn } from '@/lib/utils';
+import { Check } from 'lucide-react';
+
+// Workflow stepper (Stitch import "Workflow Progress"). The data is committed
+// once the admin clicks Commit, so before then we're at Review; everything up to
+// Validation already ran during ingest.
+function WorkflowProgress({ committed, labels }: { committed: boolean; labels: string[] }) {
+  const currentIndex = committed ? 4 : 3; // 0..4 → Upload Mapping Validation Review Commit
+  return (
+    <div className="relative rounded-lg border border-border bg-surface p-6 shadow-elevation">
+      <div className="absolute left-10 right-10 top-[2.6rem] h-0.5 bg-surface-2" aria-hidden />
+      <div
+        className="absolute left-10 top-[2.6rem] h-0.5 rounded-full bg-green transition-[width]"
+        style={{ width: `calc((100% - 5rem) * ${labels.length > 1 ? currentIndex / (labels.length - 1) : 0})` }}
+        aria-hidden
+      />
+      <ol className="relative flex justify-between">
+        {labels.map((label, i) => {
+          const done = i < currentIndex;
+          const current = i === currentIndex;
+          return (
+            <li key={label} className="flex flex-col items-center gap-2">
+              <span
+                className={cn(
+                  'flex size-8 items-center justify-center rounded-full border-2 bg-surface text-small font-bold',
+                  done ? 'border-green bg-green text-white' : current ? 'border-green text-green' : 'border-border text-ink-3',
+                )}
+              >
+                {done ? <Check className="size-4" /> : i + 1}
+              </span>
+              <span className={cn('text-micro uppercase tracking-wider', done || current ? 'font-bold text-green-strong' : 'text-ink-3')}>
+                {label}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+  );
+}
 
 function statusVariant(status: ImportRowStatus): 'default' | 'secondary' | 'destructive' | 'outline' {
   switch (status) {
@@ -47,12 +88,21 @@ export default async function ImportReviewPage({ params }: { params: Promise<{ i
 
   const isCommitted = imported.status === ImportStatus.COMMITTED;
 
+  // Real validation summary for the stat band.
+  const total = imported.rows.length;
+  const flaggedCount = imported.rows.filter(
+    (r) =>
+      hasBlockingErrors((r.validation ?? []) as unknown as Finding[]) ||
+      r.status === ImportRowStatus.FLAGGED,
+  ).length;
+  const validCount = total - flaggedCount;
+
   return (
     <section className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold">{t('reviewTitle')}</h1>
-          <p className="text-muted-foreground">
+        <div className="space-y-1">
+          <h1 className="font-display text-h1 font-bold text-ink">{t('reviewTitle')}</h1>
+          <p className="text-body text-ink-2">
             {imported.fileName} · {imported.cohort.name} ·{' '}
             {imported.targetRole === 'MENTOR' ? t('mentors') : t('mentees')}
           </p>
@@ -67,7 +117,19 @@ export default async function ImportReviewPage({ params }: { params: Promise<{ i
         )}
       </div>
 
-      <p className="text-sm text-muted-foreground">{t('blockedHint')}</p>
+      {/* Summary + workflow stepper (Stitch import overview) */}
+      <div className="grid gap-4 sm:grid-cols-3">
+        <StatTile label={t('totalRows')} value={total} />
+        <StatTile label={t('valid')} value={validCount} tone="ok" />
+        <StatTile label={t('flaggedCount')} value={flaggedCount} tone={flaggedCount > 0 ? 'warn' : 'default'} />
+      </div>
+
+      <WorkflowProgress
+        committed={isCommitted}
+        labels={[t('stepUpload'), t('stepMapping'), t('stepValidation'), t('stepReview'), t('stepCommit')]}
+      />
+
+      <p className="text-small text-ink-2">{t('blockedHint')}</p>
 
       <div className="space-y-4">
         {imported.rows.map((row) => {
