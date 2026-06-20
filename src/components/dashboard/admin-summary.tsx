@@ -1,15 +1,5 @@
 import Link from 'next/link';
-import { getTranslations } from 'next-intl/server';
-import {
-  Users,
-  GraduationCap,
-  UserPlus,
-  LifeBuoy,
-  Target,
-  CheckCircle2,
-  Video,
-  Award,
-} from 'lucide-react';
+import { AlertTriangle, GraduationCap, ShieldCheck, Users } from 'lucide-react';
 import type { AdminDashboard } from '@/features/dashboard/data';
 import { StatTile, type StatTileProps } from '@/components/ui/stat-tile';
 
@@ -27,63 +17,38 @@ function Tile({ href, ...props }: StatTileProps & { href?: string }) {
 }
 
 export async function AdminSummary({ data }: { data: AdminDashboard }) {
-  const t = await getTranslations('dashboardCards');
-  const trained = data.mentorsTrained + data.menteesTrained;
+  const participants = data.activePairs * 2 + data.unmatchedMentees + data.unmatchedMentors;
+  const matchRate = Math.round((data.activePairs / Math.max(1, data.activePairs + data.unmatchedMentees)) * 100);
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <Tile
         href="/admin/matching"
-        label={t('activePairs')}
-        value={data.activePairs}
+        label="Total participants"
+        value={participants}
         tone="ok"
         icon={<Users className="size-5" />}
       />
       <Tile
         href="/admin/mentees"
-        label={t('unmatchedMentees')}
-        value={data.unmatchedMentees}
+        label="Unmatched"
+        value={data.unmatchedMentees + data.unmatchedMentors}
         tone={data.unmatchedMentees > 0 ? 'warn' : 'default'}
         icon={<GraduationCap className="size-5" />}
       />
       <Tile
         href="/admin/mentors"
-        label={t('unmatchedMentors')}
-        value={data.unmatchedMentors}
-        tone={data.unmatchedMentors > 0 ? 'warn' : 'default'}
-        icon={<UserPlus className="size-5" />}
-      />
-      <Tile
-        href="/admin/support"
-        label={t('openSupport')}
+        label="AI flags"
         value={data.openSupport}
         tone={data.openSupport > 0 ? 'risk' : 'default'}
-        icon={<LifeBuoy className="size-5" />}
+        icon={<AlertTriangle className="size-5" />}
       />
       <Tile
-        href="/admin/goals"
-        label={t('goalsSubmitted')}
-        value={data.goalsSubmitted}
-        icon={<Target className="size-5" />}
-      />
-      <Tile
-        href="/admin/goals"
-        label={t('goalsApproved')}
-        value={data.goalsApproved}
+        href="/admin/insights"
+        label="System health"
+        value={`${matchRate}%`}
         tone="ok"
-        icon={<CheckCircle2 className="size-5" />}
-      />
-      <Tile
-        href="/admin/meetings"
-        label={t('upcomingMeetings')}
-        value={data.upcomingMeetings}
-        icon={<Video className="size-5" />}
-      />
-      <Tile
-        href="/admin/training"
-        label={t('trainingCompleted')}
-        value={trained}
-        icon={<Award className="size-5" />}
+        icon={<ShieldCheck className="size-5" />}
       />
     </div>
   );

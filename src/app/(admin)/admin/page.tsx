@@ -1,7 +1,4 @@
-import Link from 'next/link';
-import { getTranslations } from 'next-intl/server';
-import { FolderKanban, Layers } from 'lucide-react';
-import { prisma } from '@/lib/db/prisma';
+import { Download } from 'lucide-react';
 import { getAdminDashboard } from '@/features/dashboard/data';
 import { getCohortRisk, resolveActiveCohortId } from '@/features/risk/data';
 import { getPairsTimeline } from '@/features/matching/timeline';
@@ -9,13 +6,10 @@ import { RiskPanel } from '@/features/risk/risk-panel';
 import { AdminSummary } from '@/components/dashboard/admin-summary';
 import { EngagementHeatmap } from '@/components/dashboard/engagement-heatmap';
 import { NextActionButton } from '@/components/next-action-button';
-import { StatTile } from '@/components/ui/stat-tile';
+import { Button } from '@/components/ui/button';
 
 export default async function AdminHomePage() {
-  const t = await getTranslations('admin');
-  const [programmes, cohorts, dashboard, cohortId] = await Promise.all([
-    prisma.programme.count({ where: { deletedAt: null } }),
-    prisma.cohort.count({ where: { deletedAt: null } }),
+  const [dashboard, cohortId] = await Promise.all([
     getAdminDashboard(),
     resolveActiveCohortId(),
   ]);
@@ -25,49 +19,34 @@ export default async function AdminHomePage() {
 
   return (
     <div className="space-y-8">
-      <header className="space-y-1">
-        <h1 className="font-display text-h1 font-bold text-ink">{t('title')}</h1>
-        <p className="text-body text-ink-2">{t('overviewSubtitle')}</p>
+      <header className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="font-display text-h1 font-bold text-ink">Enterprise Health Dashboard</h1>
+          <p className="text-small text-ink-2">Monitoring engagement across all global business units.</p>
+        </div>
+        <div className="flex gap-2">
+          <Button size="sm" variant="outline">Last 90 days</Button>
+          <Button size="sm"><Download className="mr-2 size-4" /> Export report</Button>
+        </div>
       </header>
 
       <AdminSummary data={dashboard} />
 
-      {/* AI suggested actions — full-width indigo band (Stitch admin) */}
-      <NextActionButton />
-
-      {/* Engagement heatmap — real session metadata across the programme months */}
-      {timeline && timeline.pairs.length > 0 ? <EngagementHeatmap timeline={timeline} /> : null}
-
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          {risk ? <RiskPanel risk={risk} /> : null}
-        </div>
-        <section className="space-y-4">
-          <h2 className="text-micro uppercase text-ink-3">{t('setup')}</h2>
-          <Link
-            href="/admin/programmes"
-            className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green/30"
-          >
-            <StatTile
-              label={t('programmes')}
-              value={programmes}
-              icon={<FolderKanban className="size-5" />}
-              className="transition-shadow hover:shadow-elevation"
-            />
-          </Link>
-          <Link
-            href="/admin/cohorts"
-            className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green/30"
-          >
-            <StatTile
-              label={t('cohorts')}
-              value={cohorts}
-              icon={<Layers className="size-5" />}
-              className="transition-shadow hover:shadow-elevation"
-            />
-          </Link>
+      <div className="grid items-stretch gap-5 lg:grid-cols-[1fr_220px]">
+        {timeline && timeline.pairs.length > 0 ? <EngagementHeatmap timeline={timeline} /> : <div />}
+        <section className="grid place-items-center rounded-lg border border-border bg-surface p-5 shadow-elevation">
+          <div className="text-center">
+            <p className="text-small font-bold text-ink">Program health</p>
+            <div className="mx-auto mt-4 grid size-28 place-items-center rounded-full bg-[conic-gradient(rgb(var(--green))_88%,rgb(var(--surface-2))_0)]">
+              <div className="grid size-20 place-items-center rounded-full bg-surface text-h1 font-bold text-green-strong">88</div>
+            </div>
+            <p className="mt-3 text-micro uppercase text-ink-3">Healthy programme</p>
+          </div>
         </section>
       </div>
+
+      <NextActionButton />
+      {risk ? <RiskPanel risk={risk} /> : null}
     </div>
   );
 }
