@@ -207,6 +207,20 @@ export async function cancelMeeting(formData: FormData): Promise<ActionResult<{ 
       entityId: meetingId,
     });
 
+    // Tell the other participant the session was cancelled (§1.10, time-critical →
+    // immediate email) so it reflects on their calendar/dashboard too.
+    const otherId = meeting.mentorId === user.id ? meeting.menteeId : meeting.mentorId;
+    await notify({
+      userId: otherId,
+      type: 'meeting_cancelled',
+      params: {
+        title: meeting.title,
+        date: meeting.startsAt ? meeting.startsAt.toISOString().slice(0, 10) : '',
+      },
+      link: '/meetings',
+      cohortId: meeting.cohortId,
+    });
+
     revalidatePath('/meetings');
     return ok({ id: meetingId });
   } catch (error) {

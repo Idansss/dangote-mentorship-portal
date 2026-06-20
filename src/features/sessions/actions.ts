@@ -6,6 +6,7 @@ import { ActionItemStatus, MeetingType } from '@prisma/client';
 import { prisma } from '@/lib/db/prisma';
 import { requireUser } from '@/lib/auth/rbac';
 import { writeAuditLog } from '@/lib/audit/audit';
+import { notify } from '@/lib/notifications/notify';
 import { mapActionError, ok, fail, type ActionResult } from '@/lib/actions/result';
 import { getPairGoalTitles } from './data';
 import { summarizeSession, type SessionSummaryOutcome } from './summary';
@@ -208,6 +209,17 @@ export async function saveSessionLog(formData: FormData): Promise<ActionResult<{
       entityType: 'SessionLog',
       entityId: log.id,
       metadata: { menteeId: data.menteeId, actionItems: items.length, aiSummary: Boolean(fields.aiSummary) },
+    });
+
+    // Tell the mentee a session log was added so it reflects on their side and
+    // prompts their reflection (§1.10). Mentor private notes stay private — the
+    // notification only signals that the shared log exists.
+    await notify({
+      userId: data.menteeId,
+      type: 'session_logged',
+      params: { mentorName: user.name ?? '' },
+      link: '/sessions',
+      cohortId,
     });
 
     revalidatePath('/sessions');

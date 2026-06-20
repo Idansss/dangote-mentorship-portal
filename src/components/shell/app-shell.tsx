@@ -146,6 +146,7 @@ export interface AppShellUser {
   name: string;
   roleLabel: string;
   initials: string;
+  imageUrl?: string | null;
 }
 
 export interface AppShellProps {
@@ -313,10 +314,15 @@ export function AppShell({ sections, user, unread, recent, labels, children }: A
           >
             <Link
               href="/profile"
-              className="flex size-8 shrink-0 items-center justify-center rounded-full bg-green-soft text-micro font-bold text-green-strong"
+              className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-green-soft text-micro font-bold text-green-strong"
               title={user.name}
             >
-              {user.initials}
+              {user.imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={user.imageUrl} alt="" className="size-full object-cover" />
+              ) : (
+                user.initials
+              )}
             </Link>
             {!collapsed && (
               <Link href="/profile" className="min-w-0 flex-1 leading-tight">
@@ -453,9 +459,14 @@ export function AppShell({ sections, user, unread, recent, labels, children }: A
             <Link
               href="/profile"
               aria-label={user.name}
-              className="ml-1 flex size-9 items-center justify-center rounded-full border border-border bg-green-soft text-small font-bold text-green-strong transition-colors hover:border-green-light"
+              className="ml-1 flex size-9 items-center justify-center overflow-hidden rounded-full border border-border bg-green-soft text-small font-bold text-green-strong transition-colors hover:border-green-light"
             >
-              {user.initials}
+              {user.imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={user.imageUrl} alt="" className="size-full object-cover" />
+              ) : (
+                user.initials
+              )}
             </Link>
           </div>
         </header>

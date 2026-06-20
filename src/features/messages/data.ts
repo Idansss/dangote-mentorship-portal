@@ -109,6 +109,21 @@ export async function listConversations(userId: string): Promise<ConversationSum
   return summaries;
 }
 
+/** Total unread messages across all of the user's conversations (nav badge). */
+export async function countUnreadMessages(userId: string): Promise<number> {
+  return prisma.message.count({
+    where: {
+      deletedAt: null,
+      senderId: { not: userId },
+      reads: { none: { userId } },
+      conversation: {
+        deletedAt: null,
+        participants: { some: { userId, deletedAt: null } },
+      },
+    },
+  });
+}
+
 /** A conversation the user participates in, or null (also covers authz). */
 export async function getThread(conversationId: string, userId: string): Promise<Thread | null> {
   const convo = await prisma.conversation.findFirst({

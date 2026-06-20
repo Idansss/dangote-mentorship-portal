@@ -466,6 +466,9 @@
     "uiLanguageHint": "Change your interface language with the switcher in the top bar.",
     "saveAccount": "Save account",
     "mentorshipProfileTitle": "Mentorship profile",
+    "uploadPhoto": "Upload photo",
+    "removePhoto": "Remove photo",
+    "photoHint": "PNG, JPEG, or WebP, up to 5 MB.",
     "roleSuperAdmin": "Super Admin",
     "roleMentor": "Mentor",
     "roleMentee": "Mentee",
@@ -1304,15 +1307,30 @@
         "title": "You've been matched",
         "body": "Open your dashboard to meet your match and get started."
       },
+      "match_accepted": {
+        "label": "Match confirmed",
+        "title": "Your pairing is active",
+        "body": "{name} accepted the match — you're now paired. Say hello."
+      },
       "goal_commented": {
         "label": "Goal feedback",
         "title": "Goal feedback from {mentorName}",
         "body": "{mentorName} reviewed your goal “{goalTitle}”."
       },
+      "goal_submitted": {
+        "label": "Goal submitted",
+        "title": "A goal is awaiting your review",
+        "body": "{menteeName} submitted “{goalTitle}” for your approval."
+      },
       "meeting_scheduled": {
         "label": "Meeting scheduled",
         "title": "New session scheduled",
         "body": "{organizerName} scheduled “{title}” for {date}."
+      },
+      "meeting_cancelled": {
+        "label": "Meeting cancelled",
+        "title": "Session cancelled",
+        "body": "“{title}” on {date} was cancelled."
       },
       "meeting_reminder": {
         "label": "Meeting reminder",
@@ -1323,6 +1341,21 @@
         "label": "Session log due",
         "title": "Session log due",
         "body": "Add a log for your recent session so progress stays on record."
+      },
+      "session_logged": {
+        "label": "Session logged",
+        "title": "New session log",
+        "body": "{mentorName} logged your recent session. Add your reflection."
+      },
+      "agreement_signed": {
+        "label": "Agreement signed",
+        "title": "Your pair signed an agreement",
+        "body": "{name} signed an agreement. Open Agreements to review and sign yours."
+      },
+      "message_received": {
+        "label": "New message",
+        "title": "New message from {senderName}",
+        "body": "{senderName} sent you a message."
       },
       "review_due": {
         "label": "Review due",

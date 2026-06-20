@@ -6,6 +6,7 @@ import { AgreementType, Language, MatchStatus, Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db/prisma';
 import { requireUser } from '@/lib/auth/rbac';
 import { writeAuditLog } from '@/lib/audit/audit';
+import { notify } from '@/lib/notifications/notify';
 import { getStorageProvider } from '@/lib/storage';
 import { mapActionError, ok, fail, type ActionResult } from '@/lib/actions/result';
 import { getAgreementTemplate } from './content';
@@ -117,6 +118,17 @@ export async function signAgreement(formData: FormData): Promise<ActionResult<{ 
       entityType: 'Agreement',
       entityId: agreement.id,
       metadata: { type, role: match.mentorId === user.id ? 'mentor' : 'mentee' },
+    });
+
+    // Tell the counterpart their pair signed so it reflects on their side and
+    // prompts them to sign theirs (§1.10).
+    const counterpartId = match.mentorId === user.id ? match.mentee.id : match.mentor.id;
+    await notify({
+      userId: counterpartId,
+      type: 'agreement_signed',
+      params: { name: typedName },
+      link: '/agreements',
+      cohortId,
     });
 
     revalidatePath('/agreements');

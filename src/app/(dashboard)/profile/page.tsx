@@ -12,6 +12,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { AvatarUploader } from './avatar-uploader';
+
+function initialsOf(name: string | null, email: string): string {
+  const source = (name?.trim() || email).trim();
+  const parts = source.split(/\s+/).filter(Boolean);
+  const [a, b] = parts;
+  if (a && b) return (a.charAt(0) + b.charAt(0)).toUpperCase();
+  return source.slice(0, 2).toUpperCase();
+}
 
 function Field({
   id,
@@ -47,7 +56,7 @@ export default async function ProfilePage() {
   const [account, mentorProfile, menteeProfile] = await Promise.all([
     prisma.user.findUniqueOrThrow({
       where: { id: sessionUser.id },
-      select: { id: true, name: true, email: true, timezone: true, locale: true },
+      select: { id: true, name: true, email: true, timezone: true, locale: true, image: true },
     }),
     prisma.mentorProfile.findUnique({
       where: { userId: sessionUser.id },
@@ -79,7 +88,11 @@ export default async function ProfilePage() {
             ))}
           </p>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-6">
+          <AvatarUploader
+            imageUrl={account.image ? `/api/avatar/${account.id}` : null}
+            initials={initialsOf(account.name, account.email)}
+          />
           <form action={updateOwnAccountForm} className="grid gap-4 sm:grid-cols-2">
             <Field id="acct-name" label={t('name')} name="name" defaultValue={account.name} />
             <div className="space-y-1">

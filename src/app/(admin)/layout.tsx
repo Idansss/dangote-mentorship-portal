@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { getCurrentUser, hasAnyRole } from '@/lib/auth/rbac';
+import { prisma } from '@/lib/db/prisma';
 import { ADMIN_ROLES } from '@/lib/auth/roles';
 import { getUnreadCount, getUserNotifications } from '@/lib/notifications/data';
 import { AppShell, type AppShellLabels } from '@/components/shell/app-shell';
@@ -28,12 +29,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (!user) redirect('/login');
   if (!hasAnyRole(user, ADMIN_ROLES)) redirect('/dashboard');
 
-  const [tNav, tShell, tCommon, unread, recentRows] = await Promise.all([
+  const [tNav, tShell, tCommon, unread, recentRows, account] = await Promise.all([
     getTranslations('nav'),
     getTranslations('shell'),
     getTranslations('common'),
     getUnreadCount(user.id),
     getUserNotifications(user.id, 6),
+    prisma.user.findUnique({ where: { id: user.id }, select: { image: true } }),
   ]);
 
   const sections = await buildAdminNavSections(unread, user.roles);
@@ -71,6 +73,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         name: user.name ?? user.email,
         roleLabel: user.roles.map(roleLabelOf).join(' · '),
         initials: initialsOf(user.name, user.email),
+        imageUrl: account?.image ? `/api/avatar/${user.id}` : null,
       }}
       labels={labels}
     >

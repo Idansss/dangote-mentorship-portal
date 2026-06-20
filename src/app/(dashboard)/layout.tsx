@@ -2,9 +2,11 @@ import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { RoleName } from '@prisma/client';
 import { getCurrentUser, hasAnyRole } from '@/lib/auth/rbac';
+import { prisma } from '@/lib/db/prisma';
 import { ADMIN_ROLES } from '@/lib/auth/roles';
 import { isMaintenanceMode } from '@/features/settings/maintenance';
 import { getUnreadCount, getUserNotifications } from '@/lib/notifications/data';
+import { countUnreadMessages } from '@/features/messages/data';
 import { AppShell, type AppShellLabels } from '@/components/shell/app-shell';
 import { buildAdminNavSections, buildParticipantNavSections } from '@/lib/nav/sections';
 import { QuickActions, type QuickActionItem } from '@/components/quick-actions';
@@ -60,20 +62,24 @@ export default async function DashboardLayout({ children }: { children: React.Re
     redirect('/maintenance');
   }
 
-  const [tNav, tShell, tCommon, unread, recentRows] = await Promise.all([
+  const isAdmin = hasAnyRole(user, ADMIN_ROLES);
+  const [tNav, tShell, tCommon, unread, recentRows, account, unreadMessages] = await Promise.all([
     getTranslations('nav'),
     getTranslations('shell'),
     getTranslations('common'),
     getUnreadCount(user.id),
     getUserNotifications(user.id, 6),
+    prisma.user.findUnique({ where: { id: user.id }, select: { image: true } }),
+    // Admins are never DM participants (§10), so they have no message badge.
+    isAdmin ? Promise.resolve(0) : countUnreadMessages(user.id),
   ]);
 
   // Admins reach the shared Notifications / Support / Help / Profile pages (which
   // live in this group) too — give them their admin nav so they don't lose it on
   // the way in. Participants get the mentor/mentee nav.
-  const sections = hasAnyRole(user, ADMIN_ROLES)
+  const sections = isAdmin
     ? await buildAdminNavSections(unread, user.roles)
-    : await buildParticipantNavSections(user.roles, unread);
+    : await buildParticipantNavSections(user.roles, unread, unreadMessages);
 
   const labels: AppShellLabels = {
     brand: tCommon('appShortName'),
@@ -108,6 +114,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         name: user.name ?? user.email,
         roleLabel: user.roles.map(roleLabelOf).join(' · '),
         initials: initialsOf(user.name, user.email),
+        imageUrl: account?.image ? `/api/avatar/${user.id}` : null,
       }}
       labels={labels}
     >

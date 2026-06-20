@@ -192,6 +192,19 @@ export async function submitGoal(formData: FormData): Promise<ActionResult<{ id:
       entityId: goalId,
     });
 
+    // Tell the paired mentor a goal is awaiting their approval so it reflects on
+    // their side (§1.10). Best-effort: an unpaired mentee simply has no mentor yet.
+    const pairing = await getMenteePairing(user.id);
+    if (pairing) {
+      await notify({
+        userId: pairing.mentorId,
+        type: 'goal_submitted',
+        params: { menteeName: user.name ?? '', goalTitle: goal.title },
+        link: '/goals',
+        cohortId: goal.cohortId,
+      });
+    }
+
     revalidatePath('/goals');
     return ok({ id: goalId });
   } catch (error) {

@@ -466,6 +466,9 @@
     "uiLanguageHint": "Changez la langue de l’interface avec le sélecteur dans la barre supérieure.",
     "saveAccount": "Enregistrer le compte",
     "mentorshipProfileTitle": "Profil de mentorat",
+    "uploadPhoto": "Téléverser une photo",
+    "removePhoto": "Supprimer la photo",
+    "photoHint": "PNG, JPEG ou WebP, jusqu’à 5 Mo.",
     "roleSuperAdmin": "Super administrateur",
     "roleMentor": "Mentor",
     "roleMentee": "Mentoré",
@@ -1304,15 +1307,30 @@
         "title": "Vous avez été jumelé",
         "body": "Ouvrez votre tableau de bord pour découvrir votre jumelage et commencer."
       },
+      "match_accepted": {
+        "label": "Jumelage confirmé",
+        "title": "Votre jumelage est actif",
+        "body": "{name} a accepté le jumelage — vous êtes maintenant jumelés. Dites bonjour."
+      },
       "goal_commented": {
         "label": "Retour sur objectif",
         "title": "Retour de {mentorName} sur un objectif",
         "body": "{mentorName} a examiné votre objectif « {goalTitle} »."
       },
+      "goal_submitted": {
+        "label": "Objectif soumis",
+        "title": "Un objectif attend votre validation",
+        "body": "{menteeName} a soumis « {goalTitle} » pour votre approbation."
+      },
       "meeting_scheduled": {
         "label": "Séance planifiée",
         "title": "Nouvelle séance planifiée",
         "body": "{organizerName} a planifié « {title} » pour le {date}."
+      },
+      "meeting_cancelled": {
+        "label": "Séance annulée",
+        "title": "Séance annulée",
+        "body": "« {title} » du {date} a été annulée."
       },
       "meeting_reminder": {
         "label": "Rappel de séance",
@@ -1323,6 +1341,21 @@
         "label": "Compte rendu attendu",
         "title": "Compte rendu de séance attendu",
         "body": "Ajoutez un compte rendu de votre récente séance pour garder une trace des progrès."
+      },
+      "session_logged": {
+        "label": "Séance consignée",
+        "title": "Nouveau compte rendu de séance",
+        "body": "{mentorName} a consigné votre séance récente. Ajoutez votre réflexion."
+      },
+      "agreement_signed": {
+        "label": "Accord signé",
+        "title": "Votre binôme a signé un accord",
+        "body": "{name} a signé un accord. Ouvrez Accords pour consulter et signer le vôtre."
+      },
+      "message_received": {
+        "label": "Nouveau message",
+        "title": "Nouveau message de {senderName}",
+        "body": "{senderName} vous a envoyé un message."
       },
       "review_due": {
         "label": "Évaluation attendue",

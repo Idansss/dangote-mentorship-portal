@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { Language } from '@prisma/client';
 import { prisma } from '@/lib/db/prisma';
 import { requireUser } from '@/lib/auth/rbac';
+import { notifyMany } from '@/lib/notifications/notify';
 import { ok, fail, mapActionError, type ActionResult } from '@/lib/actions/result';
 
 // Send a direct message (CLAUDE.md §10). Authorizes that the sender is a
@@ -24,12 +25,17 @@ export async function sendMessage(input: {
     const user = await requireUser();
     const { conversationId, body } = sendSchema.parse(input);
 
-    // Authorization: only a participant may post.
-    const participant = await prisma.conversationParticipant.findFirst({
-      where: { conversationId, userId: user.id, deletedAt: null },
-      select: { id: true },
+    // Authorization: only a participant may post. Load the conversation with its
+    // participants so we can both authorize and notify the recipients afterwards.
+    const conversation = await prisma.conversation.findFirst({
+      where: { id: conversationId, deletedAt: null },
+      select: {
+        cohortId: true,
+        participants: { where: { deletedAt: null }, select: { userId: true } },
+      },
     });
-    if (!participant) {
+    const isParticipant = conversation?.participants.some((p) => p.userId === user.id) ?? false;
+    if (!conversation || !isParticipant) {
       return fail({ code: 'FORBIDDEN', message: 'You are not part of this conversation.' });
     }
 
@@ -47,6 +53,20 @@ export async function sendMessage(input: {
     await prisma.conversation.update({
       where: { id: conversationId },
       data: { updatedAt: new Date() },
+    });
+
+    // Notify every other participant so the message reaches them even when they
+    // aren't on the thread (the realtime nudge only reaches an open thread). The
+    // notification carries no content — only that a message arrived (§10
+    // confidentiality: admins are never participants, so they're never notified).
+    const recipientIds = conversation.participants
+      .map((p) => p.userId)
+      .filter((id) => id !== user.id);
+    await notifyMany(recipientIds, {
+      type: 'message_received',
+      params: { senderName: user.name ?? '' },
+      link: `/messages/${conversationId}`,
+      cohortId: conversation.cohortId,
     });
 
     revalidatePath('/messages');

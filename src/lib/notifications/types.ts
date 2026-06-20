@@ -6,10 +6,16 @@
 export const NOTIFICATION_TYPES = [
   'profile_incomplete',
   'match_ready',
+  'match_accepted',
   'goal_commented',
+  'goal_submitted',
   'meeting_scheduled',
+  'meeting_cancelled',
   'meeting_reminder',
   'session_log_due',
+  'session_logged',
+  'agreement_signed',
+  'message_received',
   'review_due',
   'clinic_tomorrow',
   'support_received',
@@ -22,6 +28,7 @@ export type NotificationType = (typeof NOTIFICATION_TYPES)[number];
 // immediately rather than waiting for the daily digest (§1.10 batching rule).
 const TIME_CRITICAL: ReadonlySet<NotificationType> = new Set([
   'meeting_reminder',
+  'meeting_cancelled',
   'session_log_due',
   'review_due',
   'clinic_tomorrow',

@@ -1,11 +1,15 @@
 'use server';
 
+import { randomUUID } from 'node:crypto';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { prisma } from '@/lib/db/prisma';
 import { requireUser } from '@/lib/auth/rbac';
 import { writeAuditLog } from '@/lib/audit/audit';
+import { getStorageProvider } from '@/lib/storage';
 import { mapActionError, ok, fail, type ActionResult } from '@/lib/actions/result';
+
+export type ProfileActionState = ActionResult<{ id: string }> | null;
 
 // Own-profile editing only: identity comes from the session, never the form.
 // Admin-side profile management stays in the import/commit pipeline for M1.
@@ -165,6 +169,88 @@ export async function updateOwnMenteeProfile(
 
     revalidatePath('/profile');
     return ok({ id: profile.id });
+  } catch (error) {
+    return mapActionError(error);
+  }
+}
+
+// ── Profile photo (avatar) ──────────────────────────────────────────────────
+// Available to every user. The image is stored behind the storage seam and
+// served only through the authorized /api/avatar route (never a public URL);
+// User.image holds the opaque storage key.
+
+const MAX_AVATAR_BYTES = 5 * 1024 * 1024; // 5 MB
+const ALLOWED_AVATAR_TYPES: Record<string, string> = {
+  'image/png': '.png',
+  'image/jpeg': '.jpg',
+  'image/webp': '.webp',
+};
+
+function avatarKey(userId: string, ext: string): string {
+  return `avatars/${userId}/${randomUUID()}${ext}`;
+}
+
+export async function uploadOwnAvatar(
+  _prev: ProfileActionState,
+  formData: FormData,
+): Promise<ProfileActionState> {
+  try {
+    const user = await requireUser();
+
+    const file = formData.get('file');
+    if (!(file instanceof File) || file.size === 0) {
+      return fail({ code: 'VALIDATION', message: 'Choose an image to upload.' });
+    }
+    if (file.size > MAX_AVATAR_BYTES) {
+      return fail({ code: 'VALIDATION', message: 'Image is too large (max 5 MB).' });
+    }
+    const ext = ALLOWED_AVATAR_TYPES[file.type];
+    if (!ext) {
+      return fail({ code: 'VALIDATION', message: 'Unsupported image type. Use PNG, JPEG, or WebP.' });
+    }
+
+    const key = avatarKey(user.id, ext);
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    await getStorageProvider().put({ key, bytes, contentType: file.type });
+
+    await prisma.user.update({ where: { id: user.id }, data: { image: key } });
+
+    await writeAuditLog({
+      actorId: user.id,
+      action: 'profile.avatar_updated',
+      entityType: 'User',
+      entityId: user.id,
+    });
+
+    // Avatar appears in the shell (top bar + sidebar) across every page.
+    revalidatePath('/profile');
+    revalidatePath('/', 'layout');
+    return ok({ id: user.id });
+  } catch (error) {
+    return mapActionError(error);
+  }
+}
+
+export async function removeOwnAvatar(
+  _prev: ProfileActionState,
+  _formData: FormData,
+): Promise<ProfileActionState> {
+  try {
+    const user = await requireUser();
+    // Soft-clear the reference; the stored object is left for scheduled purge so
+    // we never hard-delete user content inline (CLAUDE.md §16).
+    await prisma.user.update({ where: { id: user.id }, data: { image: null } });
+
+    await writeAuditLog({
+      actorId: user.id,
+      action: 'profile.avatar_removed',
+      entityType: 'User',
+      entityId: user.id,
+    });
+
+    revalidatePath('/profile');
+    revalidatePath('/', 'layout');
+    return ok({ id: user.id });
   } catch (error) {
     return mapActionError(error);
   }

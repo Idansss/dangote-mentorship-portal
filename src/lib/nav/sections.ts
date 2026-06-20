@@ -78,6 +78,7 @@ export async function buildAdminNavSections(
 export async function buildParticipantNavSections(
   roles: RoleName[],
   unread: number,
+  unreadMessages = 0,
 ): Promise<NavSection[]> {
   const [tNav, tShell] = await Promise.all([getTranslations('nav'), getTranslations('shell')]);
   const isPair = roles.includes(RoleName.MENTOR) || roles.includes(RoleName.MENTEE);
@@ -87,7 +88,7 @@ export async function buildParticipantNavSections(
         { href: '/pair', label: tNav('pair'), icon: 'pair', primary: true },
         { href: '/goals', label: tNav('goals'), icon: 'goals', primary: true },
         { href: '/sessions', label: tNav('sessions'), icon: 'sessions', primary: true },
-        { href: '/messages', label: tNav('messages'), icon: 'messages' },
+        { href: '/messages', label: tNav('messages'), icon: 'messages', badge: unreadMessages || undefined },
         { href: '/meetings', label: tNav('meetings'), icon: 'meetings' },
         { href: '/calendar', label: tNav('calendar'), icon: 'calendar' },
         { href: '/journal', label: tNav('journal'), icon: 'journal' },

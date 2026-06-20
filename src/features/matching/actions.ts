@@ -6,7 +6,7 @@ import { MatchStatus, MatchingStatus, Prisma, RoleName } from '@prisma/client';
 import { prisma } from '@/lib/db/prisma';
 import { requireRole, requireUser } from '@/lib/auth/rbac';
 import { writeAuditLog } from '@/lib/audit/audit';
-import { notifyMany } from '@/lib/notifications/notify';
+import { notify, notifyMany } from '@/lib/notifications/notify';
 import { mapActionError, ok, fail, type ActionResult } from '@/lib/actions/result';
 import {
   scoreMatch,
@@ -353,6 +353,19 @@ export async function respondToMatch(formData: FormData): Promise<ActionResult<{
       entityId: matchId,
       metadata: { role: match.mentorId === user.id ? 'mentor' : 'mentee' },
     });
+
+    // Tell the other party the pairing is now active so it reflects on both
+    // dashboards (a rejection is handled by the admin, who sees it in the engine).
+    if (decision === 'accept') {
+      const otherId = match.mentorId === user.id ? match.menteeId : match.mentorId;
+      await notify({
+        userId: otherId,
+        type: 'match_accepted',
+        params: { name: user.name ?? '' },
+        link: '/pair',
+        cohortId: match.cohortId,
+      });
+    }
 
     revalidatePath('/dashboard/mentor');
     revalidatePath('/dashboard/mentee');

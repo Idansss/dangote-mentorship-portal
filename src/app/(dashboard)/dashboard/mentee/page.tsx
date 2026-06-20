@@ -3,6 +3,7 @@ import { RoleName } from '@/lib/auth/roles';
 import { MenteeSummary } from '@/components/dashboard/mentee-summary';
 import { JourneyRail } from '@/components/journey-rail';
 import { NextActionButton } from '@/components/next-action-button';
+import { MatchPanel } from '@/features/matching/match-panel';
 import { getJourney } from '@/features/journey/data';
 import { getMenteeDashboard } from '@/features/dashboard/data';
 
@@ -16,6 +17,9 @@ export default async function MenteeDashboardPage() {
     <div className="space-y-6">
       <JourneyRail result={journey} />
       <NextActionButton />
+      {/* Pending/accepted pairings with accept/confirm (CLAUDE.md §4: mentees
+          accept/confirm their own). */}
+      <MatchPanel userId={user.id} role="mentee" />
       <MenteeSummary data={dashboard} />
     </div>
   );
