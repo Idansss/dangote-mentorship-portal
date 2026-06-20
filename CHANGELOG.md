@@ -207,3 +207,7 @@ The first slice of the screen sweep, on the spec's hero screens (the rest follow
 ## Fix — Entra SSO no longer crashes all sign-in
 
 - **The Microsoft Entra ID provider is now registered only when `isEntraConfigured()` is true.** It was registered unconditionally, so a mis-configured tenant (present-but-invalid `AUTH_MICROSOFT_ENTRA_ID_*` on the host) made Auth.js run OIDC discovery against an invalid issuer; discovery threw `TypeError: …reading 'replace'` (`json.issuer` undefined) and surfaced as `error=Configuration`, crashing **every** sign-in — including the email/password fallback. The login page already gated the SSO *button* on the same check; the provider now matches it. When Entra is unconfigured, credentials login works.
+
+## Fix — navigation no longer flashes a blank white page
+
+- **Added per-route-group `loading.tsx` boundaries so async pages keep their chrome while loading.** Only a root `app/loading.tsx` existed, and its Suspense boundary sits *outside* the `(dashboard)`/`(admin)` layouts — so opening any async server page (Notifications, Profile, admin lists, …) replaced the entire AppShell (sidebar + top bar) with a bare skeleton on a white canvas before content appeared. New group-scoped `loading.tsx` files for `(dashboard)`, `(admin)`, `(public)`, and `(auth)` put the fallback *inside* each layout, so the shell/header/footer/auth-frame stay on screen and only the content region shows a skeleton (§19 §9: skeletons, not blank pages; §16: language-agnostic).
