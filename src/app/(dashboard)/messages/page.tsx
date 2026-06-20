@@ -1,4 +1,5 @@
 import { getTranslations } from 'next-intl/server';
+import { redirect } from 'next/navigation';
 import { requireUser } from '@/lib/auth/rbac';
 import { ensureDirectConversations, listConversations } from '@/features/messages/data';
 import { ConversationList } from '@/features/messages/conversation-list';
@@ -12,6 +13,8 @@ export default async function MessagesPage() {
 
   await ensureDirectConversations(user.id);
   const conversations = await listConversations(user.id);
+  const firstConversation = conversations[0];
+  if (firstConversation) redirect(`/messages/${firstConversation.id}`);
 
   return (
     <section className="grid gap-4 lg:grid-cols-[20rem_1fr]">

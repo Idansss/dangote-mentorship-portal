@@ -113,7 +113,7 @@ export function MessageThread({
   }
 
   return (
-    <section className="flex h-[70vh] flex-col overflow-hidden rounded-2xl border border-border bg-surface">
+    <section className="flex h-full min-h-[34rem] flex-col overflow-hidden bg-surface">
       {/* Header */}
       <div className="flex items-center gap-3 border-b border-border px-4 py-3">
         <Link href="/messages" className="rounded-md p-1.5 text-ink-2 hover:bg-surface-2 lg:hidden" aria-label={labels.back}>

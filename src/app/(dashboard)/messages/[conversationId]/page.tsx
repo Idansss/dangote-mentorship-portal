@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
-import { Users, Target } from 'lucide-react';
+import { FileText, Target, Users, Video } from 'lucide-react';
 import { requireUser } from '@/lib/auth/rbac';
 import {
   ensureDirectConversations,
@@ -39,12 +39,12 @@ export default async function ConversationPage({
   const conversations = await listConversations(user.id);
 
   return (
-    <section className="grid gap-4 lg:grid-cols-[18rem_1fr] xl:grid-cols-[18rem_1fr_16rem]">
+    <section className="grid min-h-[calc(100vh-6.5rem)] overflow-hidden rounded-lg border border-border bg-surface shadow-elevation lg:grid-cols-[17rem_1fr] xl:grid-cols-[17rem_1fr_15rem]">
       <div className="hidden lg:block">
         <ConversationList
           items={conversations}
           activeId={conversationId}
-          labels={{ title: t('title'), empty: t('empty'), emptyHint: t('emptyHint') }}
+          labels={{ title: 'Discussions', empty: t('empty'), emptyHint: t('emptyHint') }}
         />
       </div>
       <MessageThread
@@ -63,28 +63,42 @@ export default async function ConversationPage({
           participant + a link into the shared pair workspace where their full
           profile, goals and agreements live. Attachments ("shared assets") are
           deferred, so that section is intentionally omitted. */}
-      <aside className="hidden self-start rounded-2xl border border-border bg-surface p-5 text-center shadow-elevation xl:block">
+      <aside className="hidden h-full border-l border-border bg-surface p-5 text-center xl:block">
         <span className="mx-auto flex size-16 items-center justify-center rounded-full bg-green-soft text-h2 font-bold text-green-strong">
           {initialsOf(thread.otherName)}
         </span>
         <p className="mt-3 font-bold text-ink">{thread.otherName ?? '—'}</p>
         <p className="text-small text-ink-2">{t('participantSubtitle')}</p>
 
-        <div className="mt-5 space-y-2 text-left">
+        <div className="mt-5 grid grid-cols-2 gap-2">
           <Link
             href="/pair"
-            className="flex items-center gap-2 rounded-md border border-border px-3 py-2 text-small font-medium text-ink transition-colors hover:bg-surface-2"
+            className="flex items-center justify-center gap-1.5 rounded-md border border-border px-2 py-2 text-micro font-medium text-ink transition-colors hover:bg-surface-2"
           >
-            <Users className="size-4 text-green-light" />
+            <Users className="size-3.5 text-green-light" />
             {t('viewPair')}
           </Link>
           <Link
             href="/goals"
-            className="flex items-center gap-2 rounded-md border border-border px-3 py-2 text-small font-medium text-ink transition-colors hover:bg-surface-2"
+            className="flex items-center justify-center gap-1.5 rounded-md bg-green px-2 py-2 text-micro font-medium text-white transition-colors hover:bg-green-strong"
           >
-            <Target className="size-4 text-green-light" />
+            <Target className="size-3.5" />
             {t('viewGoals')}
           </Link>
+        </div>
+        <div className="mt-6 border-t border-border pt-5 text-left">
+          <p className="text-micro font-bold uppercase tracking-wider text-ink-3">Mentorship focus</p>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            <span className="rounded-full bg-green-soft px-2 py-1 text-micro text-green-strong">Strategy</span>
+            <span className="rounded-full bg-green-soft px-2 py-1 text-micro text-green-strong">Leadership</span>
+          </div>
+        </div>
+        <div className="mt-6 border-t border-border pt-5 text-left">
+          <p className="text-micro font-bold uppercase tracking-wider text-ink-3">Shared assets</p>
+          <div className="mt-3 space-y-2">
+            <Link href="/agreements" className="flex items-center gap-2 rounded-md bg-surface-2 p-2 text-micro text-ink-2"><FileText className="size-4 text-info" /> Agreement.pdf</Link>
+            <Link href="/sessions" className="flex items-center gap-2 rounded-md bg-surface-2 p-2 text-micro text-ink-2"><Video className="size-4 text-green-light" /> Session notes</Link>
+          </div>
         </div>
       </aside>
     </section>

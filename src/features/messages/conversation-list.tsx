@@ -16,9 +16,10 @@ export function ConversationList({
   className?: string;
 }) {
   return (
-    <aside className={cn('flex flex-col overflow-hidden rounded-2xl border border-border bg-surface', className)}>
-      <div className="border-b border-border px-4 py-3">
+    <aside className={cn('flex h-full flex-col overflow-hidden border-r border-border bg-surface', className)}>
+      <div className="border-b border-border px-4 py-4">
         <h2 className="font-display text-h3 font-semibold text-ink">{labels.title}</h2>
+        <p className="mt-0.5 text-micro text-ink-3">{items.length} active conversations</p>
       </div>
       {items.length === 0 ? (
         <div className="px-4 py-10 text-center">
@@ -35,7 +36,7 @@ export function ConversationList({
                   href={`/messages/${c.id}`}
                   className={cn(
                     'flex items-center gap-3 px-4 py-3 transition-colors hover:bg-surface-2',
-                    active && 'bg-green-soft/50',
+                    active && 'border-l-2 border-green bg-green-soft/50',
                   )}
                 >
                   <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-green-soft text-small font-semibold text-green-strong">
