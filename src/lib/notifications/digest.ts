@@ -2,6 +2,7 @@ import 'server-only';
 import { createTranslator } from 'next-intl';
 import { prisma } from '@/lib/db/prisma';
 import { sendEmail } from '@/lib/mail';
+import type enMessages from '../../../messages/en.json';
 
 // Daily digest sender (experience-layer.md §1.10 batching). Collects every
 // notification still owed an email (`emailPending`), groups by recipient, sends a
@@ -10,9 +11,11 @@ import { sendEmail } from '@/lib/mail';
 // and tested independently. In-app delivery already happened at emit time.
 
 type LocaleCode = 'en' | 'fr';
-const messageCache: Partial<Record<LocaleCode, Record<string, unknown>>> = {};
+// Typed so next-intl 4 can resolve translator keys (see notify.ts).
+type Messages = typeof enMessages;
+const messageCache: Partial<Record<LocaleCode, Messages>> = {};
 
-async function loadMessages(locale: LocaleCode): Promise<Record<string, unknown>> {
+async function loadMessages(locale: LocaleCode): Promise<Messages> {
   if (!messageCache[locale]) {
     messageCache[locale] = (await import(`../../../messages/${locale}.json`)).default;
   }

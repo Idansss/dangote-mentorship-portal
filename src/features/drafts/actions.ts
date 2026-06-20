@@ -16,7 +16,8 @@ const saveSchema = z.object({
   cohortId: z.string().cuid().optional(),
   // Arbitrary JSON-serializable form values; validated by the real form's Zod
   // schema at submit time, not here.
-  data: z.record(z.unknown()),
+  // Zod 4 requires an explicit key schema for z.record.
+  data: z.record(z.string(), z.unknown()),
 });
 
 export type SaveDraftInput = z.infer<typeof saveSchema>;

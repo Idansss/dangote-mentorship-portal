@@ -17,7 +17,8 @@ const signSchema = z.object({
   type: z.nativeEnum(AgreementType),
   // The typed name IS the e-signature; require something deliberate.
   typedName: z.string().trim().min(2).max(120),
-  consent: z.literal('on', { errorMap: () => ({ message: 'You must accept the terms to sign.' }) }),
+  // Zod 4 replaced `errorMap` with `error`.
+  consent: z.literal('on', { error: 'You must accept the terms to sign.' }),
 });
 
 function languageFor(locale: string): Language {

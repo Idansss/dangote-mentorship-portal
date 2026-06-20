@@ -8,6 +8,7 @@ import {
   DEFAULT_PREFS,
   type NotificationType,
 } from './types';
+import type enMessages from '../../../messages/en.json';
 
 // The notification emit seam (experience-layer.md §1.10). Features call notify()
 // after a mutation; it renders the message in the *recipient's* language (not the
@@ -27,9 +28,14 @@ export interface NotifyInput {
 
 type LocaleCode = 'en' | 'fr';
 
-const messageCache: Partial<Record<LocaleCode, Record<string, unknown>>> = {};
+// Type the loaded messages so next-intl 4's createTranslator can resolve keys
+// (v4 infers the translator's key type from `messages`; an untyped record makes
+// every key `never`). Both locales share the EN shape (parity is unit-tested).
+type Messages = typeof enMessages;
 
-async function loadMessages(locale: LocaleCode): Promise<Record<string, unknown>> {
+const messageCache: Partial<Record<LocaleCode, Messages>> = {};
+
+async function loadMessages(locale: LocaleCode): Promise<Messages> {
   if (!messageCache[locale]) {
     messageCache[locale] = (await import(`../../../messages/${locale}.json`)).default;
   }
