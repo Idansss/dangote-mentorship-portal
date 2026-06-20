@@ -30,7 +30,7 @@ export default async function GoalsPage() {
     isMentee && pairing ? await getDraft<GoalDraftFields>(user.id, 'goal:new') : null;
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-6">
       <div className="space-y-1">
         <h1 className="font-display text-h1 font-bold text-ink">{t('title')}</h1>
         <p className="text-body text-ink-2">{t('subtitle')}</p>
@@ -41,7 +41,7 @@ export default async function GoalsPage() {
         !pairing ? (
           <p className="text-ink-3">{t('notEligible')}</p>
         ) : (
-          <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+          <div className="grid items-start gap-5 lg:grid-cols-[1.1fr_.9fr]">
             <Card className="self-start">
               <CardHeader>
                 <CardTitle className="text-h2">{t('newGoal')}</CardTitle>
