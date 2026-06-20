@@ -38,6 +38,14 @@ function emptyToNull(value: string | undefined): string | null {
   return value ? value : null;
 }
 
+// Account-level fields every user has, regardless of mentorship role. Email is
+// the sign-in identity and is never edited here; preferred language is owned by
+// the header locale switcher (see src/i18n/actions.ts).
+const accountSchema = z.object({
+  name: z.string().trim().min(1).max(120),
+  timezone: z.string().trim().min(1).max(60),
+});
+
 // Void wrappers for plain RSC <form action> usage (which requires
 // void-returning actions). The typed variants stay the canonical API.
 export async function updateOwnMentorProfileForm(formData: FormData): Promise<void> {
@@ -46,6 +54,37 @@ export async function updateOwnMentorProfileForm(formData: FormData): Promise<vo
 
 export async function updateOwnMenteeProfileForm(formData: FormData): Promise<void> {
   await updateOwnMenteeProfile(formData);
+}
+
+export async function updateOwnAccountForm(formData: FormData): Promise<void> {
+  await updateOwnAccount(formData);
+}
+
+// Editable for ALL users (admins included), so everyone has a profile section.
+export async function updateOwnAccount(
+  formData: FormData,
+): Promise<ActionResult<{ id: string }>> {
+  try {
+    const user = await requireUser();
+    const data = accountSchema.parse(Object.fromEntries(formData));
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { name: data.name, timezone: data.timezone },
+    });
+
+    await writeAuditLog({
+      actorId: user.id,
+      action: 'profile.account_updated',
+      entityType: 'User',
+      entityId: user.id,
+    });
+
+    revalidatePath('/profile');
+    return ok({ id: user.id });
+  } catch (error) {
+    return mapActionError(error);
+  }
 }
 
 export async function updateOwnMentorProfile(

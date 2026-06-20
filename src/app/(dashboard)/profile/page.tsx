@@ -1,12 +1,17 @@
 import { getTranslations } from 'next-intl/server';
+import { RoleName } from '@prisma/client';
 import { prisma } from '@/lib/db/prisma';
 import { requireUser } from '@/lib/auth/rbac';
-import { updateOwnMenteeProfileForm, updateOwnMentorProfileForm } from '@/features/profiles/actions';
+import {
+  updateOwnAccountForm,
+  updateOwnMenteeProfileForm,
+  updateOwnMentorProfileForm,
+} from '@/features/profiles/actions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 function Field({
   id,
@@ -29,33 +34,88 @@ function Field({
   );
 }
 
+const ROLE_LABEL_KEY: Record<RoleName, string> = {
+  [RoleName.SUPER_ADMIN]: 'roleSuperAdmin',
+  [RoleName.MENTOR]: 'roleMentor',
+  [RoleName.MENTEE]: 'roleMentee',
+};
+
 export default async function ProfilePage() {
-  const user = await requireUser();
+  const sessionUser = await requireUser();
   const t = await getTranslations('profile');
 
-  const [mentorProfile, menteeProfile] = await Promise.all([
+  const [account, mentorProfile, menteeProfile] = await Promise.all([
+    prisma.user.findUniqueOrThrow({
+      where: { id: sessionUser.id },
+      select: { id: true, name: true, email: true, timezone: true, locale: true },
+    }),
     prisma.mentorProfile.findUnique({
-      where: { userId: user.id },
+      where: { userId: sessionUser.id },
       include: { competencies: { include: { competency: true } } },
     }),
     prisma.menteeProfile.findUnique({
-      where: { userId: user.id },
+      where: { userId: sessionUser.id },
       include: { competencies: { include: { competency: true } } },
     }),
   ]);
 
-  if (!mentorProfile && !menteeProfile) {
-    return (
-      <section className="space-y-4">
-        <h1 className="text-2xl font-bold">{t('title')}</h1>
-        <p className="text-muted-foreground">{t('noProfile')}</p>
-      </section>
-    );
-  }
+  const tc = await getTranslations('common');
+  const languageLabel = account.locale === 'FR' ? tc('french') : tc('english');
 
   return (
     <section className="space-y-6">
       <h1 className="text-2xl font-bold">{t('title')}</h1>
+
+      {/* Account — shown to every user, regardless of mentorship role. */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">{t('accountTitle')}</CardTitle>
+          <CardDescription>{t('accountDescription')}</CardDescription>
+          <p className="flex flex-wrap gap-1 pt-1">
+            {sessionUser.roles.map((role) => (
+              <Badge key={role} variant="secondary">
+                {t(ROLE_LABEL_KEY[role])}
+              </Badge>
+            ))}
+          </p>
+        </CardHeader>
+        <CardContent>
+          <form action={updateOwnAccountForm} className="grid gap-4 sm:grid-cols-2">
+            <Field id="acct-name" label={t('name')} name="name" defaultValue={account.name} />
+            <div className="space-y-1">
+              <Label htmlFor="acct-email">{t('email')}</Label>
+              <Input id="acct-email" type="email" defaultValue={account.email} disabled readOnly />
+              <p className="text-xs text-muted-foreground">{t('emailHint')}</p>
+            </div>
+            <div className="space-y-1">
+              <Field
+                id="acct-timezone"
+                label={t('timezone')}
+                name="timezone"
+                defaultValue={account.timezone}
+              />
+              <p className="text-xs text-muted-foreground">{t('timezoneHint')}</p>
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="acct-language">{t('preferredLanguage')}</Label>
+              <Input id="acct-language" defaultValue={languageLabel} disabled readOnly />
+              <p className="text-xs text-muted-foreground">{t('uiLanguageHint')}</p>
+            </div>
+            <div className="sm:col-span-2">
+              <Button type="submit">{t('saveAccount')}</Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+
+      {!mentorProfile && !menteeProfile ? (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">{t('mentorshipProfileTitle')}</CardTitle>
+            <CardDescription>{t('noProfile')}</CardDescription>
+          </CardHeader>
+        </Card>
+      ) : null}
 
       {mentorProfile ? (
         <Card>
