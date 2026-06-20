@@ -217,13 +217,13 @@ export function AppShell({ sections, user, unread, recent, labels, children }: A
               collapsed && 'lg:hidden', // narrow rail shows only the collapse chevron
             )}
           >
-            <BrandMark className="size-7 shrink-0" />
+            <BrandMark className="size-7 shrink-0 lg:hidden" />
             {!collapsed && (
               <span className="min-w-0 leading-tight">
-                <span className="block truncate font-display text-small font-bold text-green-strong">
+                <span className="block max-w-[7.5rem] whitespace-normal font-display text-[0.72rem] font-bold leading-tight text-green-strong">
                   {labels.brand}
                 </span>
-                <span className="block truncate text-micro text-ink-3">{labels.subtitle}</span>
+                <span className="mt-0.5 block text-[0.58rem] text-ink-3">{labels.subtitle}</span>
               </span>
             )}
           </Link>

@@ -16,6 +16,9 @@ export default async function AdminHomePage() {
   const [risk, timeline] = cohortId
     ? await Promise.all([getCohortRisk(cohortId), getPairsTimeline(cohortId)])
     : [null, null];
+  const programHealth = Math.round(
+    (dashboard.activePairs / Math.max(1, dashboard.activePairs + dashboard.unmatchedMentees)) * 100,
+  );
 
   return (
     <div className="space-y-8">
@@ -37,8 +40,11 @@ export default async function AdminHomePage() {
         <section className="grid place-items-center rounded-lg border border-border bg-surface p-5 shadow-elevation">
           <div className="text-center">
             <p className="text-small font-bold text-ink">Program health</p>
-            <div className="mx-auto mt-4 grid size-28 place-items-center rounded-full bg-[conic-gradient(rgb(var(--green))_88%,rgb(var(--surface-2))_0)]">
-              <div className="grid size-20 place-items-center rounded-full bg-surface text-h1 font-bold text-green-strong">88</div>
+            <div
+              className="mx-auto mt-4 grid size-28 place-items-center rounded-full"
+              style={{ background: `conic-gradient(rgb(var(--green)) ${programHealth}%, rgb(var(--surface-2)) 0)` }}
+            >
+              <div className="grid size-20 place-items-center rounded-full bg-surface text-h1 font-bold text-green-strong">{programHealth}</div>
             </div>
             <p className="mt-3 text-micro uppercase text-ink-3">Healthy programme</p>
           </div>
