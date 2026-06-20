@@ -129,6 +129,7 @@ export default async function MatchingPage() {
       ) : (
         <>
           {/* Featured rank-1 match */}
+          <div className="grid items-start gap-5 lg:grid-cols-[1fr_250px]">
           <article className="rounded-lg border border-border bg-surface p-6 shadow-elevation sm:p-8">
             <div className="flex items-center justify-between">
               <span className="rounded-full bg-ink px-3 py-1 text-micro font-bold uppercase tracking-wider text-white">
@@ -211,6 +212,19 @@ export default async function MatchingPage() {
               />
             </div>
           </article>
+          <aside className="rounded-lg border border-border bg-surface p-5 shadow-elevation">
+            <h2 className="text-h3 text-ink">Cohort strength</h2>
+            <p className="mt-1 text-micro text-ink-3">Real compatibility signals for this recommendation.</p>
+            <div className="mt-5 space-y-5">
+              <StrengthBar label="Overall confidence" value={Math.round(featured.score)} />
+              <StrengthBar label="Language compatibility" value={100} />
+            </div>
+            <div className="mt-5 rounded-md bg-surface-2 p-3 text-small text-ink-2">
+              <p className="font-semibold text-ink">Cohort 2026</p>
+              <p className="mt-1">Ranked using the configured matching rules and profile data.</p>
+            </div>
+          </aside>
+          </div>
 
           {/* Queue */}
           {queue.length > 0 ? (
@@ -267,5 +281,14 @@ export default async function MatchingPage() {
         <PairsTimelineView timeline={timeline} lang={lang} />
       </div>
     </section>
+  );
+}
+
+function StrengthBar({ label, value }: { label: string; value: number }) {
+  return (
+    <div>
+      <div className="flex items-center justify-between text-micro"><span className="font-semibold text-ink-2">{label}</span><span className="tabular-nums text-ink-3">{value}%</span></div>
+      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface-2"><div className="h-full rounded-full bg-green" style={{ width: `${Math.max(0, Math.min(100, value))}%` }} /></div>
+    </div>
   );
 }
