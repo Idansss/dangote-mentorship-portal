@@ -18,8 +18,7 @@ export default async function SignupPage() {
   const t = await getTranslations('signup');
   // Demo default: the seeded super-admin address. Swap for a real support inbox
   // (or a routed contact form) before the pilot.
-  const requestHref =
-    'mailto:admin@dangote.com?subject=Mentorship%20programme%20access%20request';
+  const requestHref = 'mailto:admin@blakmoh.com?subject=Mentorship%20programme%20access%20request';
 
   return (
     <Card className="w-full max-w-md rounded-[1.5rem] shadow-elevation-lg">

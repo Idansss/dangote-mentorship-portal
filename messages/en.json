@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Dangote Mentorship Portal",
+    "appName": "BLAK MOH",
     "loading": "Loading…",
     "save": "Save",
     "cancel": "Cancel",
@@ -21,7 +21,7 @@
     "no": "No",
     "errorTitle": "Something went wrong",
     "errorBody": "Please try again. If the problem persists, contact an administrator.",
-    "appShortName": "Dangote Mentorship"
+    "appShortName": "BLAK MOH"
   },
   "nav": {
     "home": "Home",
@@ -64,11 +64,11 @@
     "navPlatform": "Platform"
   },
   "home": {
-    "eyebrow": "Dangote Mentorship Programme 2026",
+    "eyebrow": "BLAK MOH 2026",
     "title": "An intelligent, bilingual mentorship operating system",
     "heroTitleLead": "Bilingual mentorship that",
     "heroTitleAccent": "moves people forward",
-    "subtitle": "From manual, document-based mentorship to a measurable, AI-assisted programme for Dangote Group.",
+    "subtitle": "A measurable, AI-assisted mentorship programme built around learning and optimal wellbeing.",
     "cta": "Sign in to continue",
     "aboutCta": "Learn about the programme",
     "preview": {
@@ -151,19 +151,19 @@
     "closing": {
       "eyebrow": "Get started",
       "title": "Ready to continue your journey?",
-      "subtitle": "Sign in with your Dangote account to pick up exactly where you left off.",
+      "subtitle": "Sign in to pick up exactly where you left off.",
       "cta": "Sign in",
       "micro": "Bilingual · Secure by design · AI-assisted, human-approved"
     },
     "footer": {
-      "tagline": "The operating system for Dangote's bilingual mentorship programme.",
+      "tagline": "Learning and optimal wellbeing through guided mentorship.",
       "privacy": "Confidential by design — direct messages stay private to participants."
     },
     "heroBadge": "Enterprise excellence",
     "heroLine1": "Empowering the",
     "heroAccent": "next generation",
     "heroLine2": "of leaders",
-    "heroSubtitle": "A professional mentorship ecosystem designed to bridge knowledge gaps and accelerate careers within the Dangote Group and beyond.",
+    "heroSubtitle": "A professional mentorship ecosystem designed to bridge knowledge gaps, support wellbeing, and accelerate careers.",
     "getStarted": "Get started",
     "showcaseTitle": "The 9-step excellence journey",
     "showcaseSubtitle": "A structured path that takes every mentorship from first profile to final certificate.",
@@ -186,7 +186,7 @@
   "about": {
     "eyebrow": "The programme",
     "title": "About the programme",
-    "body": "A 9-month bilingual mentorship programme that takes Dangote from manual mentorship management to an intelligent, measurable system: pre-training and matching, training, goal setting, mentorship sessions, reviews, clinics, reporting, and completion.",
+    "body": "A 9-month bilingual mentorship programme powered by an intelligent, measurable system: pre-training and matching, training, goal setting, mentorship sessions, reviews, clinics, reporting, and completion.",
     "pillarsTitle": "What makes it different",
     "ctaTitle": "Ready to get started?",
     "ctaBody": "Sign in to your account, or request access to join the programme.",
@@ -207,7 +207,7 @@
   },
   "auth": {
     "loginTitle": "Sign in",
-    "loginSubtitle": "Use your Dangote account or email and password.",
+    "loginSubtitle": "Use your BLAK MOH account or email and password.",
     "entra": "Sign in with Microsoft",
     "or": "or",
     "email": "Email",
@@ -238,12 +238,12 @@
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms of Service",
     "supportLink": "Support",
-    "copyright": "© 2026 Dangote Group. All rights reserved.",
+    "copyright": "© 2026 BLAK MOH. All rights reserved.",
     "corporateEmail": "Corporate email",
-    "emailPlaceholder": "name@dangote.com",
+    "emailPlaceholder": "name@blakmoh.com",
     "forgotShort": "Forgot?",
     "rememberMe": "Remember me for 30 days",
-    "dangoteSso": "Dangote SSO login",
+    "dangoteSso": "BLAK MOH SSO login",
     "orCredentials": "Or use credentials"
   },
   "signup": {

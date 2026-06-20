@@ -19,8 +19,8 @@ const publicSans = Public_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'Dangote Mentorship Portal',
-  description: 'An intelligent, bilingual mentorship operating system for Dangote Group.',
+  title: 'BLAK MOH',
+  description: 'Learning and optimal wellbeing through intelligent, bilingual mentorship.',
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

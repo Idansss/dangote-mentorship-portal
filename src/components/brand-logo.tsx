@@ -10,37 +10,23 @@ export function BrandMark({
 }) {
   return (
     <svg
-      viewBox="0 0 48 48"
+      viewBox="0 0 64 64"
       aria-hidden="true"
-      className={cn('size-9 shrink-0', inverse ? 'text-white' : 'text-green', className)}
+      className={cn('size-9 shrink-0', inverse ? 'text-white' : 'text-[#10b91f]', className)}
     >
-      <rect
-        x="2"
-        y="2"
-        width="44"
-        height="44"
-        rx="14"
+      <path
+        d="M4 2h25c18 0 29 8 29 22 0 8-4 14-11 18 9 3 14 9 14 19H4V2Z"
         fill="currentColor"
-        opacity={inverse ? 0.16 : 1}
+        opacity={inverse ? 0.2 : 1}
       />
       <path
-        d="M15 34V14h8.2C31.4 14 37 18.1 37 24s-5.6 10-13.8 10H15Z"
+        d="M14 57 23 13l-1 37c0 5 2 6 5 1l10-18c3-5 7-3 6 3l-3 18c-1 5 2 7 6 3l7-8"
         fill="none"
-        stroke="white"
-        strokeWidth="3"
+        stroke={inverse ? '#10b91f' : 'white'}
+        strokeWidth="4.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <path
-        d="m18.5 29.5 5.2-5.2 4.4 2.4 2.4-6.2"
-        fill="none"
-        stroke="white"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx="18.5" cy="29.5" r="2.1" fill="white" />
-      <circle cx="30.5" cy="20.5" r="2.1" fill="white" />
     </svg>
   );
 }

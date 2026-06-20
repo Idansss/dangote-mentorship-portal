@@ -1,7 +1,7 @@
 /**
  * Seed a realistic bilingual demo cohort (CLAUDE.md §3).
  *  - the three roles (Super Admin, Mentor, Mentee) + a Super Admin account
- *  - Programme "Dangote Mentorship Programme 2026" + an active 2026 cohort
+ *  - Programme "BLAK MOH 2026" + an active 2026 cohort
  *  - default matching criteria + a bilingual competency taxonomy
  *  - 15 mentors and 30 mentees, mixed EN/FR, varied departments/competencies
  *  - one mentor import with a few intentionally messy rows for M1's validator
@@ -148,14 +148,14 @@ async function main() {
 
   // --- Programme + cohort --------------------------------------------------
   const existingProgramme = await prisma.programme.findFirst({
-    where: { name: 'Dangote Mentorship Programme 2026', deletedAt: null },
+    where: { name: 'BLAK MOH 2026', deletedAt: null },
   });
   const programme =
     existingProgramme ??
     (await prisma.programme.create({
       data: {
-        name: 'Dangote Mentorship Programme 2026',
-        description: 'The 2026 bilingual (EN/FR) mentorship cohort for Dangote Group.',
+        name: 'BLAK MOH 2026',
+        description: 'The 2026 BLAK MOH bilingual (EN/FR) mentorship cohort.',
         status: ProgrammeStatus.ACTIVE,
       },
     }));

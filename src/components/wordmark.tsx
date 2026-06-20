@@ -1,30 +1,24 @@
-// Two-tone brand wordmark (Atlas "Atlas HR" style): the brand token "Dangote" is
-// rendered in an accent colour, the rest inherits the surrounding text colour.
-// Splitting on the token keeps it locale-safe — it works wherever "Dangote"
-// sits in the translated app name (EN "Dangote Mentorship Portal" / FR "Portail
-// de mentorat Dangote"). Presentational only (no hooks), so it can be used from
-// both server and client components.
+// BLAK MOH wordmark: BLAK inherits the surrounding ink colour while MOH uses
+// the brand green and a gold stop, matching the supplied identity.
 export function Wordmark({
   name,
   className,
-  accentClassName = 'text-green-light',
+  accentClassName = 'text-[#10b91f]',
 }: {
   name: string;
   className?: string;
   accentClassName?: string;
 }) {
-  const parts = name.split(/(Dangote)/i);
-  return (
-    <span className={className}>
-      {parts.map((part, i) =>
-        /^dangote$/i.test(part) ? (
-          <span key={i} className={accentClassName}>
-            {part}
-          </span>
-        ) : (
-          <span key={i}>{part}</span>
-        ),
-      )}
-    </span>
-  );
+  const isBrandName = /^BLAK\s+MOH\.?$/i.test(name.trim());
+
+  if (isBrandName) {
+    return (
+      <span className={className} aria-label="BLAK MOH">
+        <span>BLAK</span> <span className={accentClassName}>MOH</span>
+        <span className="text-[#d39b2b]">.</span>
+      </span>
+    );
+  }
+
+  return <span className={className}>{name}</span>;
 }

@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Portail de mentorat Dangote",
+    "appName": "BLAK MOH",
     "loading": "Chargement…",
     "save": "Enregistrer",
     "cancel": "Annuler",
@@ -21,7 +21,7 @@
     "no": "Non",
     "errorTitle": "Une erreur est survenue",
     "errorBody": "Veuillez réessayer. Si le problème persiste, contactez un administrateur.",
-    "appShortName": "Dangote Mentorship"
+    "appShortName": "BLAK MOH"
   },
   "nav": {
     "home": "Accueil",
@@ -64,11 +64,11 @@
     "navPlatform": "Plateforme"
   },
   "home": {
-    "eyebrow": "Programme de mentorat Dangote 2026",
+    "eyebrow": "BLAK MOH 2026",
     "title": "Un système de mentorat intelligent et bilingue",
     "heroTitleLead": "Un mentorat bilingue qui",
     "heroTitleAccent": "fait avancer les talents",
-    "subtitle": "D’une gestion manuelle et documentaire à un programme mesurable et assisté par l’IA pour le groupe Dangote.",
+    "subtitle": "Un programme de mentorat mesurable et assisté par l’IA, axé sur l’apprentissage et le bien-être optimal.",
     "cta": "Connectez-vous pour continuer",
     "aboutCta": "Découvrir le programme",
     "preview": {
@@ -151,19 +151,19 @@
     "closing": {
       "eyebrow": "Commencer",
       "title": "Prêt à poursuivre votre parcours ?",
-      "subtitle": "Connectez-vous avec votre compte Dangote pour reprendre exactement là où vous en étiez.",
+      "subtitle": "Connectez-vous pour reprendre exactement là où vous en étiez.",
       "cta": "Se connecter",
       "micro": "Bilingue · Sécurisé par conception · Assisté par l’IA, validé par l’humain"
     },
     "footer": {
-      "tagline": "Le système d’exploitation du programme de mentorat bilingue de Dangote.",
+      "tagline": "Apprentissage et bien-être optimal grâce à un mentorat guidé.",
       "privacy": "Confidentiel par conception — les messages directs restent privés entre les participants."
     },
     "heroBadge": "Excellence d’entreprise",
     "heroLine1": "Former la",
     "heroAccent": "prochaine génération",
     "heroLine2": "de leaders",
-    "heroSubtitle": "Un écosystème de mentorat professionnel conçu pour combler les écarts de connaissances et accélérer les carrières au sein du Groupe Dangote et au-delà.",
+    "heroSubtitle": "Un écosystème de mentorat professionnel conçu pour combler les écarts de connaissances, soutenir le bien-être et accélérer les carrières.",
     "getStarted": "Commencer",
     "showcaseTitle": "Le parcours d’excellence en 9 étapes",
     "showcaseSubtitle": "Un parcours structuré qui mène chaque mentorat du premier profil au certificat final.",
@@ -186,7 +186,7 @@
   "about": {
     "eyebrow": "Le programme",
     "title": "À propos du programme",
-    "body": "Un programme de mentorat bilingue de 9 mois qui fait passer Dangote d’une gestion manuelle du mentorat à un système intelligent et mesurable : pré-formation et jumelage, formation, définition des objectifs, séances de mentorat, évaluations, cliniques, rapports et clôture.",
+    "body": "Un programme de mentorat bilingue de 9 mois soutenu par un système intelligent et mesurable : pré-formation et jumelage, formation, définition des objectifs, séances de mentorat, évaluations, cliniques, rapports et clôture.",
     "pillarsTitle": "Ce qui fait la différence",
     "ctaTitle": "Prêt à commencer ?",
     "ctaBody": "Connectez-vous à votre compte ou demandez l’accès pour rejoindre le programme.",
@@ -207,7 +207,7 @@
   },
   "auth": {
     "loginTitle": "Connexion",
-    "loginSubtitle": "Utilisez votre compte Dangote ou votre e-mail et mot de passe.",
+    "loginSubtitle": "Utilisez votre compte BLAK MOH ou votre e-mail et mot de passe.",
     "entra": "Se connecter avec Microsoft",
     "or": "ou",
     "email": "E-mail",
@@ -238,12 +238,12 @@
     "privacyPolicy": "Confidentialité",
     "termsOfService": "Conditions d’utilisation",
     "supportLink": "Assistance",
-    "copyright": "© 2026 Dangote Group. Tous droits réservés.",
+    "copyright": "© 2026 BLAK MOH. Tous droits réservés.",
     "corporateEmail": "E-mail professionnel",
-    "emailPlaceholder": "nom@dangote.com",
+    "emailPlaceholder": "nom@blakmoh.com",
     "forgotShort": "Oublié ?",
     "rememberMe": "Se souvenir de moi pendant 30 jours",
-    "dangoteSso": "Connexion SSO Dangote",
+    "dangoteSso": "Connexion SSO BLAK MOH",
     "orCredentials": "Ou utiliser les identifiants"
   },
   "signup": {

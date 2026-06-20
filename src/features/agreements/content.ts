@@ -26,7 +26,7 @@ const TEMPLATES: TemplateMap = {
       version: AGREEMENT_VERSION,
       title: 'Mentoring Agreement',
       intro: [
-        'This agreement sets out how we will work together during the 9-month Dangote Mentorship Programme. It is a shared commitment between mentor and mentee, entered into freely by both.',
+        'This agreement sets out how we will work together during the 9-month BLAK MOH mentorship programme. It is a shared commitment between mentor and mentee, entered into freely by both.',
       ],
       commitments: [
         'We will meet regularly — at least once a month — and give each other reasonable notice when a session must be rescheduled.',
@@ -35,24 +35,22 @@ const TEMPLATES: TemplateMap = {
         'We will log our sessions in the portal and complete the mid-term and final reviews.',
         'Either of us may raise concerns with a programme administrator at any time, including a request to end or change the pairing.',
       ],
-      consent:
-        'I have read and understood this Mentoring Agreement and I agree to its terms.',
+      consent: 'I have read and understood this Mentoring Agreement and I agree to its terms.',
     },
     [Language.FR]: {
       version: AGREEMENT_VERSION,
       title: 'Accord de mentorat',
       intro: [
-        "Cet accord définit la manière dont nous travaillerons ensemble pendant les 9 mois du programme de mentorat Dangote. Il s'agit d'un engagement partagé entre le mentor et le mentoré, conclu librement par les deux parties.",
+        "Cet accord définit la manière dont nous travaillerons ensemble pendant les 9 mois du programme de mentorat BLAK MOH. Il s'agit d'un engagement partagé entre le mentor et le mentoré, conclu librement par les deux parties.",
       ],
       commitments: [
         'Nous nous rencontrerons régulièrement — au moins une fois par mois — et nous nous préviendrons raisonnablement à l’avance lorsqu’une séance doit être reportée.',
         'Nous fixerons des objectifs clairs et mesurables et examinerons les progrès ensemble à chaque séance.',
         'Nous serons honnêtes, respectueux et préparés, et nous garderons confidentiel ce que nous partageons.',
         'Nous consignerons nos séances dans le portail et compléterons les évaluations de mi-parcours et finale.',
-        "Chacun de nous peut à tout moment faire part de ses préoccupations à un administrateur du programme, y compris une demande de fin ou de modification du jumelage.",
+        'Chacun de nous peut à tout moment faire part de ses préoccupations à un administrateur du programme, y compris une demande de fin ou de modification du jumelage.',
       ],
-      consent:
-        "J'ai lu et compris cet accord de mentorat et j'en accepte les conditions.",
+      consent: "J'ai lu et compris cet accord de mentorat et j'en accepte les conditions.",
     },
   },
   [AgreementType.CONFIDENTIALITY]: {
@@ -83,8 +81,7 @@ const TEMPLATES: TemplateMap = {
         'Les administrateurs du programme peuvent voir l’activité d’engagement (par exemple la fréquence de nos rencontres) mais pas le contenu de nos messages ou notes privés.',
         'Ces obligations se poursuivent après la fin du programme.',
       ],
-      consent:
-        "J'ai lu et compris cet accord de confidentialité et j'en accepte les conditions.",
+      consent: "J'ai lu et compris cet accord de confidentialité et j'en accepte les conditions.",
     },
   },
 };

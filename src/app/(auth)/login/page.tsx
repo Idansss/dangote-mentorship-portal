@@ -5,6 +5,7 @@ import { getCurrentUser } from '@/lib/auth/rbac';
 import { defaultDashboardPath } from '@/lib/auth/roles';
 import { isEntraConfigured } from '@/lib/auth/entra';
 import { BrandMark } from '@/components/brand-logo';
+import { Wordmark } from '@/components/wordmark';
 import { LoginForm } from './login-form';
 
 // Login (Stitch redesign — docs/stitch-redesign.md). Centered brand header → SSO
@@ -26,7 +27,9 @@ export default async function LoginPage() {
         <div className="mb-4 rounded-2xl bg-surface-2 p-3 shadow-elevation">
           <BrandMark className="size-14" />
         </div>
-        <h1 className="text-center font-display text-h1 text-green-strong">{tc('appShortName')}</h1>
+        <h1 className="text-center font-display text-h1 font-bold text-ink">
+          <Wordmark name={tc('appShortName')} />
+        </h1>
         <p className="mt-1 text-small text-ink-2">{t('enterprisePortal')}</p>
       </div>
 
