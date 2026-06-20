@@ -2,7 +2,6 @@ import { requireRole } from '@/lib/auth/rbac';
 import { RoleName } from '@/lib/auth/roles';
 import { DashboardHeader } from '@/components/dashboard/dashboard-header';
 import { MenteeSummary } from '@/components/dashboard/mentee-summary';
-import { WeeklyTip } from '@/components/dashboard/weekly-tip';
 import { JourneyRail } from '@/components/journey-rail';
 import { NextActionButton } from '@/components/next-action-button';
 import { OnboardingTour } from '@/components/onboarding-tour';
@@ -24,7 +23,6 @@ export default async function MenteeDashboardPage() {
       <NextActionButton />
       <MatchPanel userId={user.id} role="mentee" />
       <MenteeSummary data={dashboard} />
-      <WeeklyTip />
     </div>
   );
 }

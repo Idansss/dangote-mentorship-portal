@@ -29,7 +29,7 @@ export default async function AboutPage() {
   ];
 
   return (
-    <div className="mx-auto max-w-5xl space-y-16 pb-8">
+    <div className="mx-auto max-w-5xl space-y-16 px-4 py-12 pb-8 sm:px-6">
       {/* Hero */}
       <section className="relative overflow-hidden rounded-[2rem] border border-border bg-gradient-to-br from-green-soft/60 via-surface to-bg p-8 shadow-elevation sm:p-12">
         <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-green-light/10 blur-3xl" />

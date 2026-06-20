@@ -31,36 +31,35 @@ export default async function GoalsPage() {
 
   return (
     <div className="space-y-10">
-      <div>
-        <h1 className="text-2xl font-bold">{t('title')}</h1>
-        <p className="text-muted-foreground">{t('subtitle')}</p>
+      <div className="space-y-1">
+        <h1 className="font-display text-h1 font-bold text-ink">{t('title')}</h1>
+        <p className="text-body text-ink-2">{t('subtitle')}</p>
       </div>
 
-      {/* Mentee view */}
+      {/* Mentee view — Stitch 2-column: create card left, active goals right */}
       {isMentee ? (
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold">{t('myGoals')}</h2>
+        !pairing ? (
+          <p className="text-ink-3">{t('notEligible')}</p>
+        ) : (
+          <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+            <Card className="self-start">
+              <CardHeader>
+                <CardTitle className="text-h2">{t('newGoal')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <GoalForm
+                  mode="create"
+                  cohortId={pairing.cohortId}
+                  initial={newGoalDraft ?? undefined}
+                  enableDraft
+                />
+              </CardContent>
+            </Card>
 
-          {!pairing ? (
-            <p className="text-muted-foreground">{t('notEligible')}</p>
-          ) : (
-            <>
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">{t('newGoal')}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <GoalForm
-                    mode="create"
-                    cohortId={pairing.cohortId}
-                    initial={newGoalDraft ?? undefined}
-                    enableDraft
-                  />
-                </CardContent>
-              </Card>
-
+            <section className="space-y-4">
+              <h2 className="font-display text-h2 text-ink">{t('myGoals')}</h2>
               {menteeGoals.length === 0 ? (
-                <p className="text-muted-foreground">{t('noGoalsMentee')}</p>
+                <p className="text-ink-3">{t('noGoalsMentee')}</p>
               ) : (
                 <div className="space-y-4">
                   {menteeGoals.map((goal) => (
@@ -68,15 +67,15 @@ export default async function GoalsPage() {
                   ))}
                 </div>
               )}
-            </>
-          )}
-        </section>
+            </section>
+          </div>
+        )
       ) : null}
 
       {/* Mentor view */}
       {isMentor ? (
         <section className="space-y-4">
-          <h2 className="text-xl font-semibold">{t('menteeGoals')}</h2>
+          <h2 className="font-display text-h2 text-ink">{t('menteeGoals')}</h2>
           {mentorGroups.length === 0 ? (
             <p className="text-muted-foreground">{t('noPairings')}</p>
           ) : (

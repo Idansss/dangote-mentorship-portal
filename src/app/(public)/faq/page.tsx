@@ -11,7 +11,7 @@ export default async function FaqPage() {
   ];
 
   return (
-    <div className="mx-auto max-w-3xl space-y-12 pb-8">
+    <div className="mx-auto max-w-3xl space-y-12 px-4 py-12 pb-8 sm:px-6">
       {/* Hero */}
       <section className="space-y-3">
         <p className="text-micro uppercase text-green-strong">{t('eyebrow')}</p>

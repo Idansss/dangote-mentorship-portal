@@ -100,7 +100,7 @@ const RAIL_NODES: RailNode[] = [
 
 export default function DesignSystemPreview() {
   return (
-    <div className="mx-auto max-w-5xl space-y-10 pb-24">
+    <div className="mx-auto max-w-5xl space-y-10 px-4 py-12 pb-24 sm:px-6">
       <header className="space-y-2">
         <p className="text-micro uppercase text-ink-3">Design System · §19</p>
         <h1 className="text-display text-ink">Component preview</h1>

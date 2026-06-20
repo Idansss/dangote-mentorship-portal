@@ -21,15 +21,15 @@ export default async function AdminHomePage() {
 
   return (
     <div className="space-y-8">
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="font-display text-h1 font-medium text-ink">{t('title')}</h1>
-          <p className="text-body text-ink-2">{t('overviewSubtitle')}</p>
-        </div>
-        <NextActionButton />
+      <header className="space-y-1">
+        <h1 className="font-display text-h1 font-bold text-ink">{t('title')}</h1>
+        <p className="text-body text-ink-2">{t('overviewSubtitle')}</p>
       </header>
 
       <AdminSummary data={dashboard} />
+
+      {/* AI suggested actions — full-width indigo band (Stitch admin) */}
+      <NextActionButton />
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">

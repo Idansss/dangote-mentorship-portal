@@ -65,7 +65,7 @@ export function GlobalSearch({ navItems }: { navItems: SearchNavItem[] }) {
         onFocus={() => setOpen(true)}
         placeholder={t('placeholder')}
         aria-label={t('placeholder')}
-        className="h-10 w-full rounded-md border border-border bg-surface pl-9 pr-3 text-body text-ink placeholder:text-ink-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green/30"
+        className="h-10 w-full rounded-full border border-border bg-surface-2 pl-9 pr-3 text-body text-ink placeholder:text-ink-3 focus-visible:outline-none focus-visible:border-green-light focus-visible:ring-2 focus-visible:ring-green-light/15"
       />
 
       {showDropdown && (

@@ -52,7 +52,7 @@ export default async function SessionsPage() {
 
               {mentorGroups.map((group) => (
                 <div key={group.mentee.menteeId} className="space-y-3">
-                  <h2 className="text-lg font-semibold">{group.mentee.menteeName}</h2>
+                  <h2 className="font-display text-h2 text-ink">{group.mentee.menteeName}</h2>
                   {group.logs.length === 0 ? (
                     <p className="text-sm text-muted-foreground">{t('noLogsYet')}</p>
                   ) : (
@@ -70,7 +70,7 @@ export default async function SessionsPage() {
       {/* Mentee: view logs + reflect */}
       {isMentee ? (
         <section className="space-y-4">
-          <h2 className="text-xl font-semibold">{t('mySessions')}</h2>
+          <h2 className="font-display text-h2 text-ink">{t('mySessions')}</h2>
           {!menteePairing ? (
             <p className="text-muted-foreground">{t('notEligible')}</p>
           ) : menteeLogs.length === 0 ? (

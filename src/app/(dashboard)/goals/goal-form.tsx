@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { Check, Sparkles } from 'lucide-react';
 import { saveGoalForm, requestGoalCoach, type GoalActionState } from '@/features/goals/actions';
 import type { CoachResult } from '@/features/goals/coach';
 import type { GoalDraftFields, SmartDimension } from '@/features/goals/smart';
@@ -11,6 +12,66 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
+
+// SMART step rail (Stitch "Create SMART Goal" header). The five dimensions light
+// up green as the matching fields are filled, so it's a real progress indicator —
+// not a decorative stepper.
+const SMART_STEPS: { key: SmartDimension; field: keyof Values | (keyof Values)[] }[] = [
+  { key: 'specific', field: ['title', 'competency'] },
+  { key: 'measurable', field: 'successMeasure' },
+  { key: 'achievable', field: 'learningActivity' },
+  { key: 'relevant', field: 'whyMatters' },
+  { key: 'timeBound', field: 'endDate' },
+];
+
+function SmartRail({ values, labelFor }: { values: Values; labelFor: (d: SmartDimension) => string }) {
+  const done = (f: keyof Values | (keyof Values)[]) =>
+    (Array.isArray(f) ? f : [f]).every((k) => values[k].trim().length > 0);
+  const filledCount = SMART_STEPS.filter((s) => done(s.field)).length;
+  const currentIndex = SMART_STEPS.findIndex((s) => !done(s.field));
+
+  return (
+    <div className="relative py-2">
+      <div className="absolute left-4 right-4 top-[1.35rem] h-0.5 bg-surface-2" aria-hidden />
+      <div
+        className="absolute left-4 top-[1.35rem] h-0.5 rounded-full bg-green transition-[width] duration-500"
+        style={{ width: `calc((100% - 2rem) * ${SMART_STEPS.length > 1 ? filledCount / (SMART_STEPS.length - 1) : 0})` }}
+        aria-hidden
+      />
+      <ol className="relative flex justify-between">
+        {SMART_STEPS.map((s, i) => {
+          const isDone = done(s.field);
+          const isCurrent = i === currentIndex;
+          return (
+            <li key={s.key} className="flex flex-col items-center gap-1.5">
+              <span
+                className={cn(
+                  'flex size-8 items-center justify-center rounded-full border-2 bg-surface text-small font-bold transition-colors',
+                  isDone
+                    ? 'border-green bg-green text-white'
+                    : isCurrent
+                      ? 'border-green text-green'
+                      : 'border-border text-ink-3',
+                )}
+              >
+                {isDone ? <Check className="size-4" /> : i + 1}
+              </span>
+              <span
+                className={cn(
+                  'text-micro uppercase tracking-wider',
+                  isDone || isCurrent ? 'font-bold text-green-strong' : 'text-ink-3',
+                )}
+              >
+                {labelFor(s.key)}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+  );
+}
 
 type Values = Required<{ [K in keyof GoalDraftFields]: string }>;
 
@@ -96,11 +157,14 @@ export function GoalForm({
   }
 
   return (
-    <form action={action} className="space-y-4">
+    <form action={action} className="space-y-5">
       {goalId ? <input type="hidden" name="goalId" value={goalId} /> : null}
 
+      {/* SMART step rail — lights up as fields are completed */}
+      <SmartRail values={values} labelFor={(d) => t(`smart.${d}`)} />
+
       {enableDraft && draftStatus === 'saved' ? (
-        <p className="text-xs text-muted-foreground">{td('saved')}</p>
+        <p className="text-xs text-ink-3">{td('saved')}</p>
       ) : null}
 
       <div className="space-y-1">
@@ -128,42 +192,48 @@ export function GoalForm({
       <TextField id={`${formKey}-learningActivity`} label={t('learningActivity')} name="learningActivity" value={values.learningActivity} onChange={(v) => set('learningActivity', v)} />
       <TextField id={`${formKey}-successMeasure`} label={t('successMeasure')} name="successMeasure" value={values.successMeasure} onChange={(v) => set('successMeasure', v)} />
 
-      {/* Goal Coach — advisory; suggestion is editable before anything saves. */}
-      <div className="rounded border bg-muted/30 p-3 space-y-2">
+      {/* Goal Coach — advisory; suggestion is editable before anything saves.
+          Indigo AI container (Stitch "AI Suggested Metrics"). */}
+      <div className="space-y-2 rounded-md border border-info/20 bg-info/[0.07] p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="text-sm font-medium">{t('coachTitle')}</p>
+          <p className="flex items-center gap-2 text-h3 text-info">
+            <span className="inline-flex size-6 items-center justify-center rounded-full bg-info/15">
+              <Sparkles className="size-3.5" />
+            </span>
+            {t('coachTitle')}
+          </p>
           <Button type="button" size="sm" variant="outline" onClick={runCoach} disabled={coachPending || !values.title.trim()}>
             {coachPending ? t('coaching') : t('askCoach')}
           </Button>
         </div>
-        <p className="text-xs text-muted-foreground">{t('coachIntro')}</p>
+        <p className="text-small text-ink-2">{t('coachIntro')}</p>
 
         {coach ? (
-          <div className="space-y-2 text-sm">
-            <p>
-              {t('smartScore')}: <span className="font-semibold">{coach.assessment.score}%</span>
+          <div className="space-y-2 text-small">
+            <p className="text-ink">
+              {t('smartScore')}: <span className="font-bold text-info">{coach.assessment.score}%</span>
             </p>
             {coach.assessment.missing.length > 0 ? (
-              <p className="text-muted-foreground">
+              <p className="text-ink-2">
                 {t('coachMissing')}:{' '}
                 {coach.assessment.missing.map((d: SmartDimension) => t(`smart.${d}`)).join(', ')}
               </p>
             ) : null}
 
             {coach.suggestion ? (
-              <div className="space-y-1 rounded border bg-background p-2">
+              <div className="space-y-1 rounded-md border border-info/20 bg-surface p-3">
                 {coach.suggestion.rationale ? (
-                  <p className="text-xs text-muted-foreground">{coach.suggestion.rationale}</p>
+                  <p className="text-small italic text-ink-2">{coach.suggestion.rationale}</p>
                 ) : null}
-                {coach.suggestion.title ? <p><strong>{t('titleField')}:</strong> {coach.suggestion.title}</p> : null}
-                {coach.suggestion.successMeasure ? <p><strong>{t('successMeasure')}:</strong> {coach.suggestion.successMeasure}</p> : null}
-                {coach.suggestion.learningActivity ? <p><strong>{t('learningActivity')}:</strong> {coach.suggestion.learningActivity}</p> : null}
+                {coach.suggestion.title ? <p className="text-ink"><strong>{t('titleField')}:</strong> {coach.suggestion.title}</p> : null}
+                {coach.suggestion.successMeasure ? <p className="text-ink"><strong>{t('successMeasure')}:</strong> {coach.suggestion.successMeasure}</p> : null}
+                {coach.suggestion.learningActivity ? <p className="text-ink"><strong>{t('learningActivity')}:</strong> {coach.suggestion.learningActivity}</p> : null}
                 <Button type="button" size="sm" variant="secondary" onClick={applySuggestion}>
                   {t('applySuggestion')}
                 </Button>
               </div>
             ) : (
-              <p className="text-xs text-muted-foreground">
+              <p className="text-small text-ink-2">
                 {coach.aiEnabled ? t('coachNoSuggestion') : t('coachUnavailable')}
               </p>
             )}

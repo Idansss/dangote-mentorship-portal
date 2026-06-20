@@ -82,7 +82,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
     : await buildParticipantNavSections(user.roles, unread);
 
   const labels: AppShellLabels = {
-    brand: tCommon('appName'),
+    brand: tCommon('appShortName'),
+    subtitle: tShell('enterprisePortal'),
     search: tShell('search'),
     notifications: tNav('notifications'),
     notificationsTitle: tNav('notifications'),

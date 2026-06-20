@@ -1,37 +1,61 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
-import { LogIn } from 'lucide-react';
 import { getCurrentUser } from '@/lib/auth/rbac';
 import { defaultDashboardPath } from '@/lib/auth/roles';
 import { isEntraConfigured } from '@/lib/auth/entra';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { BrandMark } from '@/components/brand-logo';
 import { LoginForm } from './login-form';
 
+// Login (Stitch redesign — docs/stitch-redesign.md). Centered brand header → SSO
+// + credentials card → request-access + legal footer, matching the Stitch Login
+// screen. Auth wiring (Entra SSO, credentials, forgot-password) is preserved in
+// LoginForm.
 export default async function LoginPage() {
   // Already signed in → go straight to the role-correct dashboard.
   const user = await getCurrentUser();
   if (user) redirect(defaultDashboardPath(user.roles));
 
   const t = await getTranslations('auth');
+  const tc = await getTranslations('common');
+
   return (
-    <Card className="w-full max-w-md rounded-[1.5rem] shadow-elevation-lg">
-      <CardHeader className="space-y-3">
-        <span className="inline-flex size-12 items-center justify-center rounded-xl bg-gradient-to-br from-green-light to-green text-white shadow-glow">
-          <LogIn className="size-5" />
-        </span>
-        <CardTitle className="font-display text-h1">{t('loginTitle')}</CardTitle>
-        <CardDescription>{t('loginSubtitle')}</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-5">
+    <div>
+      {/* Brand header */}
+      <div className="mb-8 flex flex-col items-center">
+        <div className="mb-4 rounded-2xl bg-surface-2 p-3 shadow-elevation">
+          <BrandMark className="size-14" />
+        </div>
+        <h1 className="text-center font-display text-h1 text-green-strong">{tc('appShortName')}</h1>
+        <p className="mt-1 text-small text-ink-2">{t('enterprisePortal')}</p>
+      </div>
+
+      {/* Card */}
+      <div className="rounded-2xl border border-border bg-surface p-6 shadow-elevation transition-shadow hover:shadow-elevation-lg">
         <LoginForm entraEnabled={isEntraConfigured()} />
-        <div className="border-t border-border pt-4 text-center text-small text-ink-2">
+      </div>
+
+      {/* Footer */}
+      <footer className="mt-10 text-center">
+        <p className="text-small text-ink-2">
           {t('noAccount')}{' '}
-          <Link href="/signup" className="font-medium text-green-strong hover:underline">
-            {t('signupLink')}
+          <Link href="/signup" className="font-bold text-green-light hover:underline">
+            {t('requestAccess')}
+          </Link>
+        </p>
+        <div className="mt-4 flex justify-center gap-6 opacity-70">
+          <Link href="/faq" className="text-micro text-ink-2 hover:text-green-strong">
+            {t('privacyPolicy')}
+          </Link>
+          <Link href="/faq" className="text-micro text-ink-2 hover:text-green-strong">
+            {t('termsOfService')}
+          </Link>
+          <Link href="/support" className="text-micro text-ink-2 hover:text-green-strong">
+            {t('supportLink')}
           </Link>
         </div>
-      </CardContent>
-    </Card>
+        <p className="mt-4 text-micro text-ink-3">{t('copyright')}</p>
+      </footer>
+    </div>
   );
 }

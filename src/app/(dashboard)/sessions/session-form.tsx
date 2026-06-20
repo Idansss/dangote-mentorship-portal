@@ -114,6 +114,16 @@ export function SessionForm({ mentees }: { mentees: { id: string; name: string |
   const [aiPending, startAi] = useTransition();
   const [ai, setAi] = useState<SessionSummaryOutcome | null>(null);
 
+  // Completion meter (Stitch session-log header) — share of the key fields that
+  // carry content, so it's a real progress indicator, not a placeholder.
+  const completionFields = [
+    v.date, v.time, v.meetingType, v.competencyDiscussed, v.goalDiscussed,
+    v.discussionSummary, v.actionsAgreed, v.challenges, v.nextActionPlan, v.nextMeetingDate,
+  ];
+  const completionPct = Math.round(
+    (completionFields.filter((f) => String(f).trim().length > 0).length / completionFields.length) * 100,
+  );
+
   function runAssistant() {
     if (!v.roughNotes.trim() || !v.menteeId) return;
     setAi(null);
@@ -171,6 +181,22 @@ export function SessionForm({ mentees }: { mentees: { id: string; name: string |
       }}
       className="space-y-4"
     >
+      {/* Completion meter (Stitch session-log header) */}
+      <div className="rounded-lg border border-border bg-surface-2/60 p-4">
+        <div className="flex items-center justify-between text-micro font-bold uppercase tracking-wider">
+          <span className="text-ink-2">{t('loggingSession')}</span>
+          <span className="text-green-strong tabular-nums">
+            {completionPct}% {t('complete')}
+          </span>
+        </div>
+        <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-2">
+          <div
+            className="h-full rounded-full bg-gradient-to-r from-green-light to-green transition-[width] duration-500"
+            style={{ width: `${completionPct}%` }}
+          />
+        </div>
+      </div>
+
       {/* Mentee + meeting basics */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1">

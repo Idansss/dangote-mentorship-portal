@@ -35,7 +35,7 @@ import {
 } from 'lucide-react';
 import { signOutAction } from '@/lib/auth/actions';
 import { LocaleSwitcher } from '@/components/locale-switcher';
-import { Wordmark } from '@/components/wordmark';
+import { BrandMark } from '@/components/brand-logo';
 import { GlobalSearch } from '@/components/shell/global-search';
 import { cn } from '@/lib/utils';
 
@@ -116,6 +116,7 @@ export interface NavSection {
 
 export interface AppShellLabels {
   brand: string;
+  subtitle: string;
   search: string;
   notifications: string;
   notificationsTitle: string;
@@ -201,9 +202,9 @@ export function AppShell({ sections, user, unread, recent, labels, children }: A
       {/* ── Sidebar ── */}
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-50 flex flex-col border-r border-border bg-green-soft/50 transition-[width,transform] duration-200 ease-out motion-reduce:transition-none',
-          collapsed ? 'lg:w-[4.5rem]' : 'lg:w-64',
-          'w-64', // mobile drawer width
+          'fixed inset-y-0 left-0 z-50 flex flex-col border-r border-border bg-surface transition-[width,transform] duration-200 ease-out motion-reduce:transition-none',
+          collapsed ? 'lg:w-[4.5rem]' : 'lg:w-[280px]',
+          'w-[280px]', // mobile drawer width
           mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
         )}
       >
@@ -212,18 +213,18 @@ export function AppShell({ sections, user, unread, recent, labels, children }: A
           <Link
             href="/"
             className={cn(
-              'flex items-center gap-2.5 overflow-hidden',
+              'flex min-w-0 items-center gap-2.5 overflow-hidden',
               collapsed && 'lg:hidden', // narrow rail shows only the collapse chevron
             )}
           >
-            <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-b from-green-light to-green font-display text-h3 font-medium text-white shadow-glow">
-              D
-            </span>
+            <BrandMark className="size-9 shrink-0" />
             {!collapsed && (
-              <Wordmark
-                name={labels.brand}
-                className="truncate font-display text-h3 font-bold text-ink"
-              />
+              <span className="min-w-0 leading-tight">
+                <span className="block truncate font-display text-h3 font-bold text-green-strong">
+                  {labels.brand}
+                </span>
+                <span className="block truncate text-micro text-ink-3">{labels.subtitle}</span>
+              </span>
             )}
           </Link>
 
@@ -256,7 +257,7 @@ export function AppShell({ sections, user, unread, recent, labels, children }: A
           {sections.map((section, si) => (
             <div key={section.label ?? si} className="space-y-1">
               {section.label && !collapsed && (
-                <p className="px-3 pb-1 text-micro uppercase tracking-wider text-green-strong">
+                <p className="px-3 pb-1 text-micro uppercase tracking-wider text-ink-3">
                   {section.label}
                 </p>
               )}
@@ -270,25 +271,25 @@ export function AppShell({ sections, user, unread, recent, labels, children }: A
                     title={collapsed ? item.label : undefined}
                     aria-current={active ? 'page' : undefined}
                     className={cn(
-                      'group flex items-center gap-3 rounded-xl px-3 py-2 text-small font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green/30 motion-reduce:transition-none',
+                      'group flex items-center gap-3 rounded-lg px-3 py-2.5 text-small transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-light/30 motion-reduce:transition-none',
                       collapsed && 'lg:justify-center lg:px-0',
                       active
-                        ? 'bg-gradient-to-b from-green to-green-strong text-white shadow-glow'
-                        : 'text-ink-2 hover:bg-surface hover:text-ink hover:shadow-elevation',
+                        ? 'rounded-r-none border-r-[3px] border-green bg-green-soft/60 font-bold text-green-strong'
+                        : 'font-medium text-ink-2 hover:bg-surface-2 hover:text-ink',
                     )}
                   >
                     <Icon
                       className={cn(
                         'size-5 shrink-0',
-                        active ? 'text-white' : 'text-ink-3 group-hover:text-green-light',
+                        active ? 'text-green-strong' : 'text-ink-3 group-hover:text-green-light',
                       )}
                     />
                     {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
                     {!collapsed && item.badge ? (
                       <span
                         className={cn(
-                          'inline-flex min-w-5 items-center justify-center rounded-full px-1.5 text-micro',
-                          active ? 'bg-white/25 text-white' : 'bg-green text-white',
+                          'inline-flex min-w-5 items-center justify-center rounded-full px-1.5 text-micro text-white',
+                          active ? 'bg-green-strong' : 'bg-green',
                         )}
                       >
                         {item.badge}
@@ -301,21 +302,40 @@ export function AppShell({ sections, user, unread, recent, labels, children }: A
           ))}
         </nav>
 
-        {/* Sign out */}
-        <div className="border-t border-border p-3">
-          <form action={signOutAction}>
-            <button
-              type="submit"
-              className={cn(
-                'flex w-full items-center gap-3 rounded-md px-3 py-2 text-small font-medium text-ink-2 transition-colors hover:bg-surface hover:text-ink',
-                collapsed && 'lg:justify-center lg:px-0',
-              )}
-              title={collapsed ? labels.signOut : undefined}
+        {/* Profile card + sign out (Stitch bottom-of-rail profile) */}
+        <div className="p-3">
+          <div
+            className={cn(
+              'flex items-center gap-3 rounded-xl bg-surface-2 p-2.5',
+              collapsed && 'lg:justify-center lg:bg-transparent lg:p-0',
+            )}
+          >
+            <Link
+              href="/profile"
+              className="flex size-10 shrink-0 items-center justify-center rounded-full bg-green-soft text-small font-bold text-green-strong"
+              title={user.name}
             >
-              <LogOut className="size-5 shrink-0" />
-              {!collapsed && <span>{labels.signOut}</span>}
-            </button>
-          </form>
+              {user.initials}
+            </Link>
+            {!collapsed && (
+              <Link href="/profile" className="min-w-0 flex-1 leading-tight">
+                <span className="block truncate text-small font-bold text-ink">{user.name}</span>
+                <span className="block truncate text-micro uppercase tracking-wider text-ink-3">
+                  {user.roleLabel}
+                </span>
+              </Link>
+            )}
+            <form action={signOutAction} className={cn(collapsed && 'lg:hidden')}>
+              <button
+                type="submit"
+                aria-label={labels.signOut}
+                title={labels.signOut}
+                className="rounded-md p-1.5 text-ink-3 transition-colors hover:bg-surface hover:text-risk"
+              >
+                <LogOut className="size-5" />
+              </button>
+            </form>
+          </div>
         </div>
       </aside>
 
@@ -323,11 +343,11 @@ export function AppShell({ sections, user, unread, recent, labels, children }: A
       <div
         className={cn(
           'flex min-h-screen flex-col transition-[padding] duration-200 ease-out motion-reduce:transition-none',
-          collapsed ? 'lg:pl-[4.5rem]' : 'lg:pl-64',
+          collapsed ? 'lg:pl-[4.5rem]' : 'lg:pl-[280px]',
         )}
       >
         {/* Top bar */}
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-bg/80 px-4 backdrop-blur sm:px-6">
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-surface px-4 sm:px-6">
           <button
             type="button"
             aria-label={labels.openMenu}
@@ -368,28 +388,46 @@ export function AppShell({ sections, user, unread, recent, labels, children }: A
                   />
                   <div className="absolute right-0 z-50 mt-2 w-80 overflow-hidden rounded-xl border border-border bg-surface shadow-elevation-lg">
                     <div className="border-b border-border px-4 py-3">
-                      <p className="text-small font-semibold text-ink">{labels.notificationsTitle}</p>
+                      <p className="text-small font-semibold text-ink">
+                        {labels.notificationsTitle}
+                      </p>
                     </div>
                     {recent.length === 0 ? (
-                      <p className="px-4 py-6 text-center text-small text-ink-3">{labels.noNotifications}</p>
+                      <p className="px-4 py-6 text-center text-small text-ink-3">
+                        {labels.noNotifications}
+                      </p>
                     ) : (
                       <ul className="max-h-80 divide-y divide-border overflow-y-auto">
                         {recent.map((n) => {
                           const inner = (
                             <div className="flex items-start gap-2">
                               {!n.read && (
-                                <span aria-hidden className="mt-1.5 size-2 shrink-0 rounded-full bg-green" />
+                                <span
+                                  aria-hidden
+                                  className="mt-1.5 size-2 shrink-0 rounded-full bg-green"
+                                />
                               )}
                               <div className={cn('min-w-0', n.read && 'pl-4')}>
-                                <p className="truncate text-small font-medium text-ink">{n.title}</p>
-                                {n.body && <p className="line-clamp-2 text-micro text-ink-2">{n.body}</p>}
+                                <p className="truncate text-small font-medium text-ink">
+                                  {n.title}
+                                </p>
+                                {n.body && (
+                                  <p className="line-clamp-2 text-micro text-ink-2">{n.body}</p>
+                                )}
                               </div>
                             </div>
                           );
                           return (
-                            <li key={n.id} className={cn('px-4 py-3', !n.read && 'bg-green-soft/40')}>
+                            <li
+                              key={n.id}
+                              className={cn('px-4 py-3', !n.read && 'bg-green-soft/40')}
+                            >
                               {n.link ? (
-                                <Link href={n.link} onClick={() => setNotifOpen(false)} className="block hover:opacity-80">
+                                <Link
+                                  href={n.link}
+                                  onClick={() => setNotifOpen(false)}
+                                  className="block hover:opacity-80"
+                                >
                                   {inner}
                                 </Link>
                               ) : (
@@ -413,15 +451,10 @@ export function AppShell({ sections, user, unread, recent, labels, children }: A
             </div>
             <Link
               href="/profile"
-              className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 hover:bg-surface-2"
+              aria-label={user.name}
+              className="ml-1 flex size-9 items-center justify-center rounded-full border border-border bg-green-soft text-small font-bold text-green-strong transition-colors hover:border-green-light"
             >
-              <span className="flex size-8 items-center justify-center rounded-full bg-green-soft text-small font-semibold text-green-strong">
-                {user.initials}
-              </span>
-              <span className="hidden text-left leading-tight md:block">
-                <span className="block text-small font-medium text-ink">{user.name}</span>
-                <span className="block text-micro text-ink-3">{user.roleLabel}</span>
-              </span>
+              {user.initials}
             </Link>
           </div>
         </header>
