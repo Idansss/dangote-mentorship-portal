@@ -9,10 +9,14 @@ updates:
       # Batch low-risk updates so they don't flood the PR queue.
       minor-and-patch:
         update-types: ['minor', 'patch']
-    # SheetJS (xlsx) is installed from the SheetJS CDN tarball, not npm — exclude
-    # it so Dependabot doesn't try (and fail) to track it against the registry.
     ignore:
+      # SheetJS (xlsx) is installed from the SheetJS CDN tarball, not npm — exclude
+      # it so Dependabot doesn't try (and fail) to track it against the registry.
       - dependency-name: 'xlsx'
+      # Major bumps (Next 16, Tailwind 4, Zod 4, ESLint 10, …) are breaking and
+      # need deliberate migration — don't auto-propose them. Handle majors by hand.
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
 
   - package-ecosystem: github-actions
     directory: '/'
