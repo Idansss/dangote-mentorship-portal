@@ -16,7 +16,7 @@ jobs:
       DIRECT_URL: postgresql://postgres:postgres@localhost:5432/postgres?schema=public
       AUTH_SECRET: ci-placeholder-secret-not-used-at-runtime
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-node@v6
         with:
@@ -64,7 +64,7 @@ jobs:
       SEED_SUPER_ADMIN_EMAIL: admin@dangote.com
       SEED_DEFAULT_PASSWORD: ChangeMe!2026
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-node@v6
         with:
