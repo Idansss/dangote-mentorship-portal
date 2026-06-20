@@ -15,7 +15,7 @@ Legend: ⬜ todo · ✅ done · 🔁 env-gated (activates when its env vars are 
 ## High
 
 - ✅ **H5** — `global-error.tsx` root error boundary
-- 🔁 **H2** — Error tracking (Sentry, env-gated) + `instrumentation`
+- ✅ **H2** — Error tracking (Sentry, env-gated) — full server+edge+browser via `withSentryConfig`
 - 🔁 **H1** — Shared rate-limit store (Upstash, env-gated)
 - ✅ **H3** — `vercel.json` cron schedule
 - ✅ **H4** — CI gates: security / Lighthouse / pa11y / ZAP workflows
@@ -59,12 +59,15 @@ transitive `postcss`-via-`next` moderates remain, fixed by a Next major bump).
 - **B3** `auth.config.ts`: `/design` only joins `PUBLIC_PREFIXES` when `NODE_ENV !== production`.
 - **H5** Added `src/app/global-error.tsx` (own `<html>`/`<body>`, static copy, Sentry capture);
   renamed `app/error.tsx`'s export to `RouteError` and wired `Sentry.captureException`.
-- **H2** Added `@sentry/nextjs`; `src/instrumentation.ts` (Node-runtime `register()` + `onRequestError`,
-  Sentry imported lazily) and `src/lib/observability/report.ts` (server seam used by the cron route).
-  No-op until `SENTRY_DSN` is set. Covers server components, route handlers, server actions, and API.
-  **Edge/client capture is deferred** to a `withSentryConfig` follow-up: importing Sentry into the
-  edge runtime triggers `EvalError: Code generation from strings disallowed` and breaks middleware —
-  caught during live verification, hence the lazy Node-only wiring. Env documented in `.env.example`.
+- **H2** Added `@sentry/nextjs`, now wired **fully via `withSentryConfig`** (next.config.mjs):
+  `src/sentry.server.config.ts`, `src/sentry.edge.config.ts`, `src/instrumentation-client.ts`,
+  and `src/instrumentation.ts` (`register()` loads the per-runtime init + re-exports `onRequestError`).
+  Error boundaries (`app/error.tsx`, `app/global-error.tsx`) call `Sentry.captureException`; the
+  server seam `src/lib/observability/report.ts` is used by the cron route. All no-op until
+  `SENTRY_DSN` / `NEXT_PUBLIC_SENTRY_DSN` are set. **The edge `EvalError` from the first hand-rolled
+  attempt is resolved** — `withSentryConfig` makes the edge runtime use Sentry's edge-safe build
+  (verified: clean build + live `/login` 200 + headers + `/api/health` 200, no middleware errors).
+  CSP allows `https://*.sentry.io`. Setup steps in `docs/deployment.md`; env in `.env.example`.
 - **H1** Added `@upstash/redis` + `src/lib/auth/rate-limit-shared.ts` (`checkRateLimit`, atomic
   INCR+EXPIRE, fails open). Switched all 6 limiter call sites (login, forgot-password, reset,
   invite-accept, copilot, search) to `await checkRateLimit`. Falls back to the in-memory limiter

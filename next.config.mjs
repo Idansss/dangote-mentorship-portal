@@ -1,6 +1,7 @@
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import createNextIntlPlugin from 'next-intl/plugin';
+import { withSentryConfig } from '@sentry/nextjs';
 
 const projectRoot = dirname(fileURLToPath(import.meta.url));
 
@@ -24,7 +25,9 @@ const contentSecurityPolicy = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self'",
-  `connect-src 'self' ${supabaseOrigin} ${supabaseWs}`.trim(),
+  // *.sentry.io is only contacted when NEXT_PUBLIC_SENTRY_DSN is set (client
+  // error reporting); harmless otherwise.
+  `connect-src 'self' ${supabaseOrigin} ${supabaseWs} https://*.sentry.io`.trim(),
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
@@ -68,4 +71,20 @@ const nextConfig = {
   },
 };
 
-export default withNextIntl(nextConfig);
+// Sentry (production-readiness-report.md H2). withSentryConfig configures the
+// webpack build so Sentry is bundled correctly per runtime — crucially, it makes
+// the EDGE runtime use Sentry's edge-safe build, which is what lets us wire
+// edge/client capture without the `EvalError` a hand-rolled edge import causes.
+// Source-map upload runs only when SENTRY_AUTH_TOKEN (+ SENTRY_ORG/SENTRY_PROJECT)
+// are set; without them the build still succeeds and runtime capture still works.
+export default withSentryConfig(withNextIntl(nextConfig), {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  silent: !process.env.CI,
+  widenClientFileUpload: true,
+  // Strip Sentry's debug logging from the client bundle in production.
+  webpack: { treeshake: { removeDebugLogging: true } },
+  // No tunnelRoute: the client posts directly to *.sentry.io (allowed in the CSP
+  // connect-src above). A tunnel would need a public /monitoring route carved out
+  // of the auth middleware — not worth it for an internal portal.
+});

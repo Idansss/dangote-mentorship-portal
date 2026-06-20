@@ -112,3 +112,44 @@ cohort, at programme close:
 - the right-to-export / right-to-delete process for an individual on request.
 Document the chosen windows here once Dangote confirms its policy; until then the
 default is "retain for the programme lifetime, purge on explicit admin request".
+
+## Error tracking — Sentry setup
+
+Sentry is wired (server + edge + browser via `withSentryConfig`) but inert until
+you give it a DSN. To turn it on:
+
+1. Create a project at <https://sentry.io> (platform: **Next.js**).
+2. Project → **Settings → Client Keys (DSN)** — copy the DSN.
+3. In **Vercel → Settings → Environment Variables** (Production, and Preview if
+   used), add:
+   - `SENTRY_DSN` = the DSN (server + edge capture)
+   - `NEXT_PUBLIC_SENTRY_DSN` = the same DSN (browser capture)
+   - *(optional)* `SENTRY_TRACES_RATE` / `NEXT_PUBLIC_SENTRY_TRACES_RATE` to tune
+     tracing volume (default `0.1`).
+4. *(optional, recommended)* For readable stack traces, enable build-time
+   source-map upload by also setting `SENTRY_ORG`, `SENTRY_PROJECT`, and
+   `SENTRY_AUTH_TOKEN` (Sentry → Settings → Auth Tokens, scope `project:releases`).
+   Without these the build still succeeds; traces are just minified.
+5. Redeploy. Verify by throwing a test error (or visiting a route that 500s) and
+   confirming it lands in Sentry.
+
+The CSP already allows `https://*.sentry.io` in `connect-src`, so browser events
+aren't blocked. No tunnel route is used.
+
+## Shared rate limiting — Upstash setup
+
+Auth + AI rate limiting falls back to a per-process in-memory store, which barely
+throttles across Vercel's many serverless instances. Back it with Upstash Redis:
+
+1. Create a database at <https://upstash.com> (Redis; pick the region closest to
+   the app — e.g. `eu-central-1` to match Supabase Frankfurt).
+2. In the database's **REST API** panel, copy `UPSTASH_REDIS_REST_URL` and
+   `UPSTASH_REDIS_REST_TOKEN`.
+3. Add both to **Vercel → Environment Variables** (Production + Preview).
+4. Redeploy. `checkRateLimit` (`src/lib/auth/rate-limit-shared.ts`) auto-detects
+   them and switches to the shared, atomic store; with them unset it stays on the
+   in-memory limiter. It **fails open** — if Upstash is unreachable it allows the
+   request rather than locking users out.
+
+> Local dev: leave both unset to use the in-memory limiter, or point them at a
+> personal Upstash DB to exercise the shared path.

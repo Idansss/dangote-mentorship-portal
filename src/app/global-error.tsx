@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import * as Sentry from '@sentry/nextjs';
 import './globals.css';
 
 // Last-resort boundary for errors thrown in the ROOT layout itself
@@ -14,7 +15,9 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Server capture via src/instrumentation.ts; client capture is a follow-up.
+    // Capture the root-layout error on the client (no-op until the public DSN
+    // is set); server capture happens via src/instrumentation.ts.
+    Sentry.captureException(error);
     console.error(error);
   }, [error]);
 

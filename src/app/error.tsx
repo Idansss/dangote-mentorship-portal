@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useTranslations } from 'next-intl';
+import * as Sentry from '@sentry/nextjs';
 import { Button } from '@/components/ui/button';
 
 export default function RouteError({
@@ -14,8 +15,9 @@ export default function RouteError({
   const t = useTranslations('common');
 
   useEffect(() => {
-    // Server-side errors are captured by Sentry via src/instrumentation.ts;
-    // client capture is a follow-up via Sentry's withSentryConfig (H2).
+    // Client capture (no-op until NEXT_PUBLIC_SENTRY_DSN is set); server errors
+    // are captured via src/instrumentation.ts.
+    Sentry.captureException(error);
     console.error(error);
   }, [error]);
 
