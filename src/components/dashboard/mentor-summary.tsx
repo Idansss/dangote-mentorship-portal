@@ -72,7 +72,7 @@ export async function MentorSummary({ data }: { data: MentorDashboard }) {
 
       <div className="grid gap-4 md:grid-cols-2">
         {/* My mentees */}
-        <Card className="md:col-span-2">
+        <Card>
           <CardHeader>
             <CardTitle className="text-h3">{t('myMentees')}</CardTitle>
           </CardHeader>
@@ -80,7 +80,7 @@ export async function MentorSummary({ data }: { data: MentorDashboard }) {
             {data.mentees.length === 0 ? (
               <p className="text-muted-foreground">{t('noMentees')}</p>
             ) : (
-              <div className="grid gap-2 sm:grid-cols-2">
+              <div className="grid gap-2">
                 {data.mentees.map((m) => (
                   <Link
                     key={m.id}
@@ -103,7 +103,7 @@ export async function MentorSummary({ data }: { data: MentorDashboard }) {
         </Card>
 
         {/* Next meetings */}
-        <Card className="md:col-span-2">
+        <Card>
           <CardHeader className="flex-row items-center justify-between space-y-0">
             <CardTitle className="text-h3">{t('nextMeetings')}</CardTitle>
             <Button asChild size="sm" variant="ghost">

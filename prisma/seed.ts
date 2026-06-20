@@ -11,6 +11,7 @@
 import {
   ActionItemStatus,
   AttendanceStatus,
+  ClinicStatus,
   CohortStatus,
   CompetencyType,
   GoalStage,
@@ -783,6 +784,37 @@ async function main() {
       },
     });
     console.log(`  Demo invite (mentor): /invite/${token}`);
+  }
+
+  // --- Engagement content: cohort resources + an upcoming clinic ------------
+  // So the mentee dashboard's "New resources" and "Upcoming clinic" cards render
+  // from real records. Insert-if-empty so re-seeding stays idempotent.
+  if ((await prisma.resource.count({ where: { cohortId: cohort.id, deletedAt: null } })) === 0) {
+    await prisma.resource.createMany({
+      data: [
+        { cohortId: cohort.id, title: '2026 Strategy Playbook', category: 'Guide', lang: Language.EN, url: 'https://example.com/resources/strategy-playbook.pdf' },
+        { cohortId: cohort.id, title: 'Managing Upwards', category: 'Video', lang: Language.EN, url: 'https://example.com/resources/managing-upwards' },
+        { cohortId: cohort.id, title: 'Donner un feedback efficace', category: 'Article', lang: Language.FR, url: 'https://example.com/resources/feedback-efficace' },
+      ],
+    });
+  }
+  const hasUpcomingClinic = await prisma.clinic.count({
+    where: { cohortId: cohort.id, deletedAt: null, status: ClinicStatus.SCHEDULED, scheduledAt: { gte: new Date() } },
+  });
+  if (hasUpcomingClinic === 0) {
+    const friday = new Date();
+    friday.setUTCHours(16, 0, 0, 0);
+    friday.setUTCDate(friday.getUTCDate() + (((5 - friday.getUTCDay() + 7) % 7) || 7));
+    await prisma.clinic.create({
+      data: {
+        cohortId: cohort.id,
+        title: 'Leadership in Chaos',
+        topic: 'Crisis management and rapid scaling',
+        scheduledAt: friday,
+        joinUrl: 'https://example.com/clinics/leadership-in-chaos',
+        status: ClinicStatus.SCHEDULED,
+      },
+    });
   }
 
   console.log('Seed complete.');

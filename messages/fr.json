@@ -302,7 +302,15 @@
       "tip2": "Après chaque rencontre, écrivez une courte réflexion. De petites notes dressent un portrait clair de votre progression.",
       "tip3": "Bloqué sur un objectif ? Décomposez-le en la prochaine action concrète à faire cette semaine.",
       "tip4": "Le temps de votre mentor est précieux — donnez suite aux actions convenues et dites-lui ce qui a fonctionné."
-    }
+    },
+    "upcomingClinic": "Clinique de savoir",
+    "clinicJoin": "Rejoindre",
+    "newResources": "Nouvelles ressources",
+    "openResource": "Ouvrir",
+    "engagementHeatmap": "Carte d’engagement",
+    "less": "Moins",
+    "more": "Plus",
+    "noEngagementYet": "Aucune activité de séance enregistrée pour l’instant."
   },
   "admin": {
     "title": "Administration",

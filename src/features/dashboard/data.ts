@@ -1,6 +1,7 @@
 import 'server-only';
 import {
   ActionItemStatus,
+  ClinicStatus,
   GoalStatus,
   Language,
   MatchStatus,
@@ -13,9 +14,9 @@ import { getMenteePairing, getMentorPairings } from '@/lib/pairings';
 import { stageProgressPercent } from '@/features/goals/stage';
 
 // Read models for the personalized role dashboards (experience-layer.md §1.1).
-// Each answers "what matters to me right now," above the fold, from real records.
-// Cards that need later-milestone data (clinics M4, risk monitor + reviews M3)
-// are intentionally absent rather than stubbed (CLAUDE.md §16).
+// Each answers "what matters to me right now," above the fold, from real records
+// (the next clinic and cohort resources are read from seeded data; RSVP/upload
+// management land with the full M4 clinic + resource tooling).
 
 const ACTIVE_ITEM_STATUSES: ActionItemStatus[] = [
   ActionItemStatus.OPEN,
@@ -36,13 +37,15 @@ export interface MenteeDashboard {
   nextMeeting: { id: string; title: string; startsAt: Date | null } | null;
   goals: { id: string; title: string; status: GoalStatus; percent: number }[];
   actionItems: { id: string; title: string; dueDate: Date | null; status: ActionItemStatus; overdue: boolean }[];
+  nextClinic: { id: string; title: string; topic: string | null; scheduledAt: Date | null; joinUrl: string | null } | null;
+  resources: { id: string; title: string; url: string | null; category: string | null }[];
 }
 
 export async function getMenteeDashboard(userId: string): Promise<MenteeDashboard> {
   const pairing = await getMenteePairing(userId);
   const now = new Date();
 
-  const [mentorProfile, nextMeeting, goals, actionItems] = await Promise.all([
+  const [mentorProfile, nextMeeting, goals, actionItems, nextClinic, resources] = await Promise.all([
     pairing
       ? prisma.mentorProfile.findFirst({
           where: { userId: pairing.mentorId, cohortId: pairing.cohortId, deletedAt: null },
@@ -74,6 +77,28 @@ export async function getMenteeDashboard(userId: string): Promise<MenteeDashboar
       take: 6,
       select: { id: true, title: true, dueDate: true, status: true },
     }),
+    // Next upcoming clinic for the cohort (CLAUDE.md §10) — read-only here.
+    pairing
+      ? prisma.clinic.findFirst({
+          where: {
+            cohortId: pairing.cohortId,
+            deletedAt: null,
+            status: ClinicStatus.SCHEDULED,
+            scheduledAt: { gte: now },
+          },
+          orderBy: { scheduledAt: 'asc' },
+          select: { id: true, title: true, topic: true, scheduledAt: true, joinUrl: true },
+        })
+      : Promise.resolve(null),
+    // Cohort resources, in the mentee's language first.
+    pairing
+      ? prisma.resource.findMany({
+          where: { cohortId: pairing.cohortId, deletedAt: null },
+          orderBy: { createdAt: 'desc' },
+          take: 3,
+          select: { id: true, title: true, url: true, category: true },
+        })
+      : Promise.resolve([]),
   ]);
 
   return {
@@ -100,6 +125,8 @@ export async function getMenteeDashboard(userId: string): Promise<MenteeDashboar
       status: a.status,
       overdue: a.dueDate !== null && a.dueDate.getTime() < now.getTime(),
     })),
+    nextClinic,
+    resources,
   };
 }
 

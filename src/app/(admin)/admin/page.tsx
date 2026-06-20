@@ -4,8 +4,10 @@ import { FolderKanban, Layers } from 'lucide-react';
 import { prisma } from '@/lib/db/prisma';
 import { getAdminDashboard } from '@/features/dashboard/data';
 import { getCohortRisk, resolveActiveCohortId } from '@/features/risk/data';
+import { getPairsTimeline } from '@/features/matching/timeline';
 import { RiskPanel } from '@/features/risk/risk-panel';
 import { AdminSummary } from '@/components/dashboard/admin-summary';
+import { EngagementHeatmap } from '@/components/dashboard/engagement-heatmap';
 import { NextActionButton } from '@/components/next-action-button';
 import { StatTile } from '@/components/ui/stat-tile';
 
@@ -17,7 +19,9 @@ export default async function AdminHomePage() {
     getAdminDashboard(),
     resolveActiveCohortId(),
   ]);
-  const risk = cohortId ? await getCohortRisk(cohortId) : null;
+  const [risk, timeline] = cohortId
+    ? await Promise.all([getCohortRisk(cohortId), getPairsTimeline(cohortId)])
+    : [null, null];
 
   return (
     <div className="space-y-8">
@@ -30,6 +34,9 @@ export default async function AdminHomePage() {
 
       {/* AI suggested actions — full-width indigo band (Stitch admin) */}
       <NextActionButton />
+
+      {/* Engagement heatmap — real session metadata across the programme months */}
+      {timeline && timeline.pairs.length > 0 ? <EngagementHeatmap timeline={timeline} /> : null}
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">

@@ -302,7 +302,15 @@
       "tip2": "After every meeting, write a short reflection. Small notes add up to a clear picture of your growth.",
       "tip3": "Stuck on a goal? Break it into the next single action you can take this week.",
       "tip4": "Your mentor's time is a gift — follow up on the actions you agreed, and tell them what worked."
-    }
+    },
+    "upcomingClinic": "Knowledge clinic",
+    "clinicJoin": "Join clinic",
+    "newResources": "New resources",
+    "openResource": "Open",
+    "engagementHeatmap": "Engagement heatmap",
+    "less": "Less",
+    "more": "More",
+    "noEngagementYet": "No session activity logged yet."
   },
   "admin": {
     "title": "Administration",

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
-import { Video, MoreVertical, ArrowRight } from 'lucide-react';
+import { Video, MoreVertical, ArrowRight, CalendarDays, FileText } from 'lucide-react';
 import type { MenteeDashboard } from '@/features/dashboard/data';
 import { Badge } from '@/components/ui/badge';
 import { ProgressRing } from '@/components/ui/progress-ring';
@@ -31,8 +31,10 @@ export async function MenteeSummary({ data }: { data: MenteeDashboard }) {
 
   return (
     <div className="grid gap-4 md:grid-cols-12">
+      {/* Left column — next meeting + upcoming clinic */}
+      <div className="flex flex-col gap-4 md:col-span-4">
       {/* Next meeting — with the matched mentor */}
-      <section className="flex flex-col rounded-lg border border-border bg-surface p-6 shadow-elevation md:col-span-4">
+      <section className="flex flex-1 flex-col rounded-lg border border-border bg-surface p-6 shadow-elevation">
         <div className="flex items-center justify-between">
           <span className="rounded-full bg-green-soft px-2.5 py-1 text-micro font-bold uppercase tracking-wider text-green-strong">
             {t('nextMeeting')}
@@ -81,6 +83,34 @@ export async function MenteeSummary({ data }: { data: MenteeDashboard }) {
         )}
       </section>
 
+      {/* Upcoming clinic (real data — deep-teal card, Stitch clinic card) */}
+      {data.nextClinic ? (
+        <section className="relative overflow-hidden rounded-lg bg-gradient-to-br from-green-strong via-green to-green-strong p-6 text-white shadow-elevation">
+          <span className="inline-flex rounded-full bg-white/15 px-2.5 py-1 text-micro font-bold uppercase tracking-wider">
+            {t('upcomingClinic')}
+          </span>
+          <h3 className="mt-3 text-h2 text-white">{data.nextClinic.title}</h3>
+          {data.nextClinic.topic ? (
+            <p className="mt-1 text-small text-green-soft">{data.nextClinic.topic}</p>
+          ) : null}
+          <p className="mt-3 flex items-center gap-2 text-small font-medium">
+            <CalendarDays className="size-4" />
+            {fmtDateTime(data.nextClinic.scheduledAt)}
+          </p>
+          {data.nextClinic.joinUrl ? (
+            <a
+              href={data.nextClinic.joinUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-4 inline-flex w-full items-center justify-center rounded-md bg-white py-2.5 text-small font-bold text-green-strong transition-colors hover:bg-green-soft"
+            >
+              {t('clinicJoin')}
+            </a>
+          ) : null}
+        </section>
+      ) : null}
+      </div>
+
       {/* Active goals — circular progress */}
       <section className="rounded-lg border border-border bg-surface p-6 shadow-elevation md:col-span-5">
         <div className="mb-5 flex items-center justify-between">
@@ -117,9 +147,46 @@ export async function MenteeSummary({ data }: { data: MenteeDashboard }) {
         )}
       </section>
 
-      {/* Weekly tip (warm recognition card) */}
-      <div className="md:col-span-3">
-        <WeeklyTip className="h-full" />
+      {/* Right column — weekly tip + new resources */}
+      <div className="flex flex-col gap-4 md:col-span-3">
+        <WeeklyTip />
+        {data.resources.length > 0 ? (
+          <section className="rounded-lg border border-border bg-surface p-6 shadow-elevation">
+            <h3 className="mb-4 text-micro font-bold uppercase tracking-wider text-ink-2">
+              {t('newResources')}
+            </h3>
+            <ul className="space-y-3">
+              {data.resources.map((r) => {
+                const inner = (
+                  <span className="flex items-start gap-3">
+                    <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-green-soft text-green-strong">
+                      <FileText className="size-4" />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block truncate text-small font-bold text-ink">{r.title}</span>
+                      {r.category ? (
+                        <span className="block text-micro uppercase tracking-wider text-ink-3">
+                          {r.category}
+                        </span>
+                      ) : null}
+                    </span>
+                  </span>
+                );
+                return (
+                  <li key={r.id}>
+                    {r.url ? (
+                      <a href={r.url} target="_blank" rel="noreferrer" className="block hover:opacity-80">
+                        {inner}
+                      </a>
+                    ) : (
+                      inner
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        ) : null}
       </div>
 
       {/* Pending action items */}
