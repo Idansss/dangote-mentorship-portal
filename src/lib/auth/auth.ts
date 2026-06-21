@@ -4,6 +4,8 @@ import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import { RoleName } from '@prisma/client';
 import { prisma } from '@/lib/db/prisma';
+import { ADMIN_ROLES } from './roles';
+import type { AdminCohortScope } from './scope';
 import { verifyPassword } from './password';
 import { authConfig } from './auth.config';
 
@@ -12,13 +14,35 @@ const credentialsSchema = z.object({
   password: z.string().min(1),
 });
 
-async function loadRoleNames(userId: string): Promise<RoleName[]> {
+interface RoleGrants {
+  roles: RoleName[];
+  adminCohortScope: AdminCohortScope;
+}
+
+/**
+ * Loads a user's role names plus the cross-cohort reach their admin grants confer
+ * (m2-audit-findings H1). A null-cohort admin grant (the global Super Admin) means
+ * every cohort ('ALL'); otherwise the admin is confined to the specific cohorts
+ * they were granted in. Non-admins get an empty scope (never consulted — admin
+ * reads are requireRole-gated regardless).
+ */
+async function loadRoleGrants(userId: string): Promise<RoleGrants> {
   const userRoles = await prisma.userRole.findMany({
     where: { userId, deletedAt: null },
     include: { role: true },
   });
   // De-duplicate role names across cohort-scoped grants.
-  return Array.from(new Set(userRoles.map((ur) => ur.role.name)));
+  const roles = Array.from(new Set(userRoles.map((ur) => ur.role.name)));
+
+  const adminGrants = userRoles.filter((ur) => ADMIN_ROLES.includes(ur.role.name));
+  const hasGlobalGrant = adminGrants.some((ur) => ur.cohortId === null);
+  const adminCohortScope: AdminCohortScope = hasGlobalGrant
+    ? 'ALL'
+    : Array.from(
+        new Set(adminGrants.map((ur) => ur.cohortId).filter((c): c is string => c !== null)),
+      );
+
+  return { roles, adminCohortScope };
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -47,13 +71,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const ok = await verifyPassword(password, user.passwordHash);
         if (!ok) return null;
 
-        const roles = await loadRoleNames(user.id);
+        const { roles, adminCohortScope } = await loadRoleGrants(user.id);
         return {
           id: user.id,
           email: user.email,
           name: user.name,
           image: user.image,
           roles,
+          adminCohortScope,
           locale: user.locale,
         };
       },
@@ -67,13 +92,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user, trigger }) {
       if (user) {
         token.id = user.id;
-        // Credentials sign-in already carried roles; SSO sign-in did not.
-        const userWithRoles = user as { roles?: RoleName[]; locale?: string };
-        token.roles = userWithRoles.roles ?? (await loadRoleNames(user.id as string));
-        token.locale = userWithRoles.locale ?? 'EN';
+        // Credentials sign-in already carried roles + scope; SSO sign-in did not.
+        const u = user as {
+          roles?: RoleName[];
+          adminCohortScope?: AdminCohortScope;
+          locale?: string;
+        };
+        if (u.roles && u.adminCohortScope !== undefined) {
+          token.roles = u.roles;
+          token.adminCohortScope = u.adminCohortScope;
+        } else {
+          const grants = await loadRoleGrants(user.id as string);
+          token.roles = grants.roles;
+          token.adminCohortScope = grants.adminCohortScope;
+        }
+        token.locale = u.locale ?? 'EN';
       }
       if (trigger === 'update' && token.sub) {
-        token.roles = await loadRoleNames(token.sub);
+        const grants = await loadRoleGrants(token.sub);
+        token.roles = grants.roles;
+        token.adminCohortScope = grants.adminCohortScope;
       }
       return token;
     },

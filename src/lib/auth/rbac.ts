@@ -1,5 +1,6 @@
 import { RoleName } from '@prisma/client';
 import { auth } from './auth';
+import { type AdminCohortScope, cohortFilterFor, scopeAllows } from './scope';
 
 // Authorization errors. Server actions translate these into typed results
 // (CLAUDE.md §3: every mutation authenticates → authorizes → validates …).
@@ -24,6 +25,7 @@ export interface SessionUser {
   email: string;
   name?: string | null;
   roles: RoleName[];
+  adminCohortScope: AdminCohortScope;
   locale: string;
 }
 
@@ -36,6 +38,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
     email: session.user.email ?? '',
     name: session.user.name,
     roles: session.user.roles ?? [],
+    adminCohortScope: session.user.adminCohortScope ?? 'ALL',
     locale: session.user.locale ?? 'EN',
   };
 }
@@ -64,4 +67,29 @@ export async function requireRole(allowed: RoleName | RoleName[]): Promise<Sessi
     throw new ForbiddenError();
   }
   return user;
+}
+
+/**
+ * Prisma `where` fragment that confines an admin read to the cohorts the admin
+ * may actually see (m2-audit-findings H1). Spread it into any cohort-scoped admin
+ * query: `where: { deletedAt: null, ...adminCohortFilter(user) }`.
+ *
+ * A global admin ('ALL') gets `{}` (every cohort, unchanged). A cohort-scoped
+ * admin gets `{ cohortId: { in: [...] } }` — an empty scope yields `{ in: [] }`,
+ * which matches nothing (fail-closed).
+ */
+export function adminCohortFilter(user: SessionUser): { cohortId?: { in: string[] } } {
+  return cohortFilterFor(user.adminCohortScope);
+}
+
+/** True when `user` may act on data in `cohortId`. */
+export function canAccessCohort(user: SessionUser, cohortId: string): boolean {
+  return scopeAllows(user.adminCohortScope, cohortId);
+}
+
+/** Asserts cohort access, throwing ForbiddenError otherwise. */
+export function assertCohortAccess(user: SessionUser, cohortId: string): void {
+  if (!canAccessCohort(user, cohortId)) {
+    throw new ForbiddenError('This record belongs to a cohort you cannot access.');
+  }
 }
