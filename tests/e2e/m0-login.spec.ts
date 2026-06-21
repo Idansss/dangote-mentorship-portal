@@ -16,7 +16,9 @@ test('super admin signs in and lands on the admin dashboard', async ({ page }) =
 
   // Admin role → /admin (lib/auth/roles.ts defaultDashboardPath).
   await page.waitForURL('**/admin');
-  await expect(page.getByRole('heading', { name: 'Administration' })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Enterprise Health Dashboard' }),
+  ).toBeVisible();
 
   // The admin sidebar exposes the M0 management areas.
   const sidebar = page.getByRole('complementary');
