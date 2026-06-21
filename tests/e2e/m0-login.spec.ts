@@ -9,12 +9,16 @@ test('super admin signs in and lands on the admin dashboard', async ({ page }) =
   await page.goto('/login');
 
   await page.getByLabel('Email').fill(ADMIN_EMAIL);
-  await page.getByLabel('Password').fill(ADMIN_PASSWORD);
+  // Exact match so the field isn't confused with the "Show password" toggle
+  // button, whose aria-label also contains "password".
+  await page.getByLabel('Password', { exact: true }).fill(ADMIN_PASSWORD);
   await page.getByRole('button', { name: 'Sign in' }).click();
 
   // Admin role → /admin (lib/auth/roles.ts defaultDashboardPath).
   await page.waitForURL('**/admin');
-  await expect(page.getByRole('heading', { name: 'Administration' })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Enterprise Health Dashboard' }),
+  ).toBeVisible();
 
   // The admin sidebar exposes the M0 management areas.
   const sidebar = page.getByRole('complementary');
