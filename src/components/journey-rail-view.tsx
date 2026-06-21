@@ -146,7 +146,7 @@ export function JourneyRailView({
                         node.state === 'completed' || node.isCurrent
                           ? 'font-bold text-green-strong'
                           : node.state === 'pending'
-                            ? 'text-ink-3 opacity-70'
+                            ? 'text-ink-3'
                             : 'text-ink-2',
                       )}
                     >

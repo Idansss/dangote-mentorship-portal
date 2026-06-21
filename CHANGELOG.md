@@ -269,3 +269,9 @@ The first slice of the screen sweep, on the spec's hero screens (the rest follow
 - **Upload integrity (production-readiness-report.md M1).** Goal-evidence uploads now verify the file's magic-byte signature server-side against the declared MIME (`src/lib/files/sniff.ts`) — a forged `Content-Type` whose bytes don't match (e.g. HTML claiming `image/png`) is rejected before storage. The evidence stream route now serves `Content-Disposition: attachment` (was `inline`) so a file can never render as a top-level document in our origin.
 - **Next 16 `proxy` convention.** Renamed `src/middleware.ts` → `src/proxy.ts` (same edge entry point), clearing the Next 16 deprecation warning.
 - Verified: typecheck ✅, lint ✅ (0 errors), 272/272 tests ✅, `next build` ✅.
+
+## Fix — CI gates green (pa11y contrast + E2E login selector)
+
+- **pa11y-ci (WCAG 2.1 AA contrast).** Fixed the 7 contrast failures on the public `/` and `/login` pages so both URLs pass: the wordmark accent green `#10b91f` (2.6:1) → `#0C8517` (4.79:1) and gold period `#d39b2b` (2.5:1) → `#9A6A12` (4.73:1); the `--ink-3` muted token nudged `#707979` → `#6F7878` (4.53:1 on white) and the homepage journey-rail "pending" labels lost their compounding `opacity-70`; the public footer tagline moved `text-ink-3` → `text-ink-2` (8.94:1 on the tinted canvas). All verified ≥4.5:1.
+- **E2E happy path.** `getByLabel('Password')` matched two elements once the password field gained a "Show password" toggle (its aria-label also contains "password"); pinned the fill to `getByLabel('Password', { exact: true })`.
+- These were pre-existing failures surfaced by the first real run of the newly-added pa11y/E2E CI gates, not regressions from the H1 security PR.

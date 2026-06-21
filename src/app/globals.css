@@ -25,7 +25,7 @@
     --border: 226 232 240; /* #E2E8F0 hairlines, dividers, input borders */
     --ink: 25 28 28; /* #191C1C primary text (on-surface) */
     --ink-2: 64 72 73; /* #404849 secondary text, labels (on-surface-variant) */
-    --ink-3: 112 121 121; /* #707979 muted text, placeholders (outline) */
+    --ink-3: 111 120 120; /* #6F7878 muted text, placeholders (outline) — 4.5:1 on white (WCAG AA) */
 
     /* Brand green ramp, derived from the BLAK MOH logo green (#10b91f). The vivid
      * logo green is too light for white text, so the ramp keeps a bright accent
