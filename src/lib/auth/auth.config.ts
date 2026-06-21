@@ -2,6 +2,7 @@ import type { NextAuthConfig } from 'next-auth';
 import type { RoleName } from '@prisma/client';
 import MicrosoftEntraID from 'next-auth/providers/microsoft-entra-id';
 import { isEntraConfigured } from './entra';
+import type { AdminCohortScope } from './scope';
 
 // Edge-safe base config. NO Prisma import here (not even the RoleName enum) —
 // this config is what middleware.ts instantiates, so it must stay outside the
@@ -77,6 +78,11 @@ export const authConfig = {
       if (session.user) {
         session.user.id = (token.sub ?? token.id) as string;
         session.user.roles = (token.roles ?? []) as RoleName[];
+        // Legacy tokens issued before H1 lack this claim. Default to 'ALL' so a
+        // live admin session isn't locked out mid-flight; the next sign-in (≤12h)
+        // re-issues a token with the precise scope. Harmless for non-admins —
+        // the scope is only ever consulted inside requireRole-gated admin reads.
+        session.user.adminCohortScope = (token.adminCohortScope ?? 'ALL') as AdminCohortScope;
         session.user.locale = (token.locale ?? 'EN') as string;
       }
       return session;

@@ -9,6 +9,7 @@ import { requireUser } from '@/lib/auth/rbac';
 import { writeAuditLog } from '@/lib/audit/audit';
 import { notify } from '@/lib/notifications/notify';
 import { getStorageProvider } from '@/lib/storage';
+import { verifyFileSignature } from '@/lib/files/sniff';
 import { mapActionError, ok, fail, type ActionResult } from '@/lib/actions/result';
 import { checkRateLimit } from '@/lib/auth/rate-limit-shared';
 import { getMenteePairing, isMentorOfGoal } from './data';
@@ -401,6 +402,11 @@ export async function uploadGoalEvidence(
 
     const key = evidenceKey(goal.cohortId, goal.id, ext);
     const bytes = new Uint8Array(await file.arrayBuffer());
+    // Don't trust the browser-supplied MIME: confirm the bytes match the format
+    // before anything is persisted (production-readiness-report.md M1).
+    if (!verifyFileSignature(bytes, file.type)) {
+      return fail({ code: 'VALIDATION', message: "File contents don't match its type." });
+    }
     await getStorageProvider().put({ key, bytes, contentType: file.type });
 
     // Submitting evidence moves the progress bar to "Evidence submitted" unless
